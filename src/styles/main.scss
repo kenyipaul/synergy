@@ -1,14 +1,18 @@
 @use "./global" as *;
-@use "./navbar";
-@use "./home";
-@use "./job_card";
-@use "./job_view";
-@use "./event_card";
-@use "./event_view";
-@use "./event_board";
-@use "./community_card";
-@use "./community_board";
-@use "./community_view";
+
+@use "./modules/navbar";
+
+@use "./cards/job_card";
+@use "./cards/event_card";
+@use "./cards/community_card";
+
+@use "./boards/event_board";
+@use "./boards/community_board";
+
+@use "./views/home_view";
+@use "./views/job_view";
+@use "./views/event_view";
+@use "./views/community_view";
 
 
 #app {
@@ -31,7 +35,6 @@
 
     &.dark {
         background: $darker;
-        // background: #000 linear-gradient(-315deg, $darker, $dark);
     }
 }
 

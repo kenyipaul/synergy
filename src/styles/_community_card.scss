@@ -1,0 +1,103 @@
+.community-card {
+    width: 100%;
+    max-width: 350px;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    box-shadow: 0 .5rem .5rem .2rem #00000010;
+    position: relative;
+    z-index: 0;
+
+    .header {
+        height: 100px;
+        padding: 1rem;
+        position: relative;
+        margin-bottom: 4rem;
+        background: #e4bcff;
+        background-image: url(/pattern.svg);
+        
+        .profile {
+            left: 1rem;
+            width: 6rem;
+            height: 6rem;
+            bottom: -3rem;
+            position: absolute;
+            border-radius: 20%;
+            background: #9900ff;
+            border: .4rem solid #fff;
+        }
+    }
+
+
+    .main {
+        gap: 1rem;
+        display: grid;
+        padding: .5rem 1.5rem;
+
+        .tags {
+            gap: 1rem;
+            display: flex;
+            align-items: center;
+
+            p { color: #9900ff !important; }
+        }
+
+        h1 {
+            font-size: clamp(1.3em, 5vw, 1.5em);
+        }
+
+        p {
+            color: #555;
+            hyphens: auto;
+        }
+    }
+
+
+    .footer {
+        display: flex;
+        align-items: center;
+        padding-bottom: .5rem;
+
+        div {
+            gap: 1rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+    }
+}
+
+
+#app.dark .community-card {
+    box-shadow: none;
+    background: #0A0F20;
+    border: 1px solid #ffffff10;
+    background: #000 linear-gradient(315deg, #0A0F20, #10132C);
+
+    &::before {
+        content: "";
+        right: 1rem;
+        bottom: -1rem;
+        width: 7rem;
+        height: 7rem;
+        filter: blur(5.5rem);
+        position: absolute;
+        border-radius: 50%;
+        background: #9900ff linear-gradient(315deg, #ff0053, #9900ff);
+        z-index: -1;
+    }
+
+    .header .profile {
+        border: .4rem solid #0A0F20;
+    }
+
+    .main {
+        h1 { color: #fff; }
+        p { color: #ddd; }
+    }
+
+    .footer div {
+        color: #999;
+    }
+
+}

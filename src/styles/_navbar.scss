@@ -1,0 +1,187 @@
+@use "./global" as *;
+
+#navbar {
+    width: 100%;
+    display: flex;
+    padding: 1rem;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+
+    section {
+        &:nth-child(1) {
+            gap: .5rem;
+            display: flex;
+            align-items: center;
+
+            h1 {
+                cursor: pointer;
+                font-size: 1.6em;
+                font-family: $secondary-font;
+            }
+
+            svg {
+                width: 1.8rem;
+                height: 1.8rem;
+                cursor: pointer;
+            }
+
+            ul {
+                top: 0;
+                left: 0;
+                gap: 2rem;
+                width: 100%;
+                height: 100vh;
+                max-width: 0;
+                background: #fff;
+                align-items: center;
+                border-right: 1px solid #ddd;
+                position: absolute;
+                overflow: hidden;
+                transition: .5s ease;
+                
+                &.active {
+                    max-width: 250px;
+                    padding: 3rem 1rem;
+                }
+
+                li {
+                    cursor: pointer;
+                    list-style: none;
+                    padding: 1rem;
+                    white-space: nowrap;
+
+                    &:hover { color: #9900ff !important; }
+                }
+
+                .closeBtn {
+                    top: 1rem;
+                    right: 1rem;
+                    position: absolute;
+                }
+            }
+        }
+
+        &:nth-child(2) {
+            gap: 1rem;
+            display: flex;
+            align-items: center;
+
+            .buttons {
+                gap: 1rem;
+                display: none;
+                align-items: center;
+
+                button {
+                    all: unset;
+                    color: #555;
+                    cursor: pointer;
+                    border-radius: 50rem;
+                    padding: .5rem 1rem;
+                    
+                    &:nth-child(2) {
+                        color: #fff;
+                        font-size: .9em;
+                        background: #9900ff;
+                    }
+                }
+            }
+
+            svg {
+                width: 1.7rem;
+                height: 1.7rem;
+                cursor: pointer;
+            }
+
+            .profile {
+                width: 2rem;
+                height: 2rem;
+                padding: .5rem;
+                background: #eee;
+                border-radius: 1rem;
+            }
+        }
+    }
+}
+
+
+@media (min-width: 600px) {
+    #navbar section {
+
+        &:nth-child(2) {
+            .buttons { display: flex; }
+            .profile { display: none;  }
+        }
+
+    }
+}
+
+
+@media (min-width: 1000px) {
+    #navbar {
+        margin: auto;
+        max-width: 1280px;
+
+        section {
+            &:nth-child(1) {
+                gap: 2rem;
+
+                h1 { font-size: 1.7em; }
+
+                ul, ul.active {
+                    all: unset;
+                    gap: 2rem;
+                    display: flex;
+                    position: relative;
+                    align-items: center;
+
+                
+                    li {
+                        all: unset;
+                        cursor: pointer;
+                    }
+
+                    .closeBtn { display: none; }
+                }
+
+                svg { display: none; }
+            }
+
+            &:nth-child(2) {
+                .buttons button {
+                    &:nth-child(2) {
+                        padding: .7rem 1.5rem;
+                    }
+                }
+
+                svg { 
+                    width: 1.8rem;
+                    height: 1.8rem;
+                }
+            }
+        }
+    }
+}
+
+
+
+#app.dark #navbar {
+    background: $darker;
+
+    section {
+        h1 { color: #fff; }
+
+        ul {
+            border: none;
+            background: $darker;
+        
+            li { color: #fff; }
+            svg { color: #fff; }
+        }
+
+
+        button { color: #fff; }
+        svg { color: #ccc; }
+    }
+}

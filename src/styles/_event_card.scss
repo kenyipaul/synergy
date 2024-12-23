@@ -1,0 +1,121 @@
+.event-card {
+    width: 100%;
+    max-width: 350px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 1.5rem;
+    box-shadow: 0 .5rem .5rem .2rem #00000010;
+    z-index: 0;
+
+    .poster {
+        height: 200px;
+        background: #10132C url(/assets/images/color-festival.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .content {
+        padding: 1.5rem;
+
+        .date {
+            color: #ff0053;
+            margin-bottom: .5rem;
+        }
+
+        h1 {
+            hyphens: auto;
+            font-size: clamp(1.3em, 5vw, 1.5em);
+        }
+
+        .tags {
+            gap: 1rem;
+            display: flex;
+            margin: .5rem 0;
+            align-items: center;
+
+            p {
+                color: #9900ff;
+            }
+        }
+
+        .description {
+            color: #555;
+            hyphens: auto;
+            display: -webkit-box;
+            line-clamp: 3;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .footer {
+            display: flex;
+            margin-top: 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+
+            button {
+                all: unset;
+                gap: .5rem;
+                cursor: pointer;
+                font-weight: 900;
+                display: flex;
+                white-space: nowrap;
+                align-items: center;
+                // padding: 1.5rem 0 0 .5rem;
+                
+                svg {
+                    width: 1.7rem;
+                    height: 1.7rem;
+                }
+    
+                &:hover {
+                    color: #9900ff !important;
+                }
+            }
+
+            svg {
+                cursor: pointer;
+                &:hover {
+                    color: #9900ff !important;
+                }
+            }
+        }
+
+    }
+}
+
+
+#app.dark .event-card {
+    box-shadow: none;
+    background: #0A0F20;
+    border: 1px solid #ffffff10;
+    background: #000 linear-gradient(315deg, #0A0F20, #10132C);
+
+
+    &::before {
+        content: "";
+        right: 1rem;
+        bottom: -1rem;
+        width: 7rem;
+        height: 7rem;
+        filter: blur(5.5rem);
+        position: absolute;
+        border-radius: 50%;
+        background: #9900ff linear-gradient(315deg, #ff0053, #9900ff);
+        z-index: -1;
+    }
+
+    .content {
+        h1 { color: #fff; }
+        .description { color: #ccc; }
+        .footer {
+            button { 
+                color: #fff; 
+                &:hover svg { color: #9900ff; }
+            }
+            svg { color: #fff; }
+        }
+    }
+}

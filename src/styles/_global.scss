@@ -1,0 +1,22 @@
+@font-face {
+    font-family: roboto-condensed;
+    src: url(/assets/fonts/RobotoCondensed-Regular.ttf);
+}
+
+@font-face {
+    font-family: roboto-condensed-bold;
+    src: url(/assets/fonts/RobotoCondensed-Bold.ttf);
+}
+
+$dark: #1b202e;
+$darker: #0A0F20;
+
+$primary-font: roboto-condensed;
+$secondary-font: roboto-condensed-bold;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $primary-font, roboto, sans-serif;
+}

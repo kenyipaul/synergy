@@ -1,0 +1,49 @@
+@use "./global" as *;
+
+#job-view {
+
+    .job-banner {
+        height: 400px;
+        background-size: cover;
+        background-position: center;
+        background-color: #00000090;
+        background-blend-mode: overlay;
+        background-image: url(/assets/images/job_banner.jpg);
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .banner {
+            width: 100%;
+            margin: auto;
+            max-width: 1280px;
+            
+            .content {
+                gap: 1rem;
+                display: grid;
+                max-width: 600px;
+                place-items: start;
+                padding: 1rem 2rem;
+
+                h1 {
+                    color: #fff;
+                }
+                p {
+                    color: #ccc;
+                }
+                button {
+                    all: unset;
+                    color: #fff;
+                    font-size: .9em;
+                    cursor: pointer;
+                    text-align: center;
+                    padding: 1rem 1.5rem;
+                    border-radius: 50rem;
+                    background: #9900ff;
+                }
+            }
+        }
+    }
+
+}

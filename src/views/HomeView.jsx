@@ -14,6 +14,26 @@ export default function HomeView() {
                         <button>Get Started</button>
                     </div>
                 </main>
+                <div className="service-board">
+                    <div className="service-grid">
+                        <div className="service">
+                            <h1>Synergy Connections</h1>
+                            <p>Connect with Professionals: Emphasize networking, mentorship, and collaboration opportunities within the community.</p>
+                        </div>
+                        
+                        <div className="bar"></div>
+                        <div className="service">
+                            <h1>Synergy Careers</h1>
+                            <p>Find Synergistic Opportunities: Frame job postings as chances for collaborative growth and impact.</p>
+                        </div>
+
+                        <div className="bar"></div>
+                        <div className="service">
+                            <h1>Synergy Events</h1>
+                            <p>Attend Networking Events: Focus on events designed for making connections and fostering synergy.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <CommunityBoard />
@@ -24,7 +44,7 @@ export default function HomeView() {
                 </div>
             </div>
 
-            <EventBoard />
+            {/* <EventBoard /> */}
 
             <div className="testimonial-board">
                 <div className="top-bar">

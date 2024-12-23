@@ -6,10 +6,14 @@ import Navbar from "./modules/Navbar"
 import { useSelector } from "react-redux"
 import CommunityView from "./views/CommunityView"
 import JobView from "./views/JobView"
+import Signup from "./views/Signup"
+import Login from "./views/Login"
 
 export default function App() {
 
     const themeState = useSelector(store => store.themeState);
+    const loginState = useSelector(store => store.loginState)
+    const signupState = useSelector(store => store.signupState)
 
     return (
         <div id="app" className={themeState == "dark" && "dark"}>
@@ -25,6 +29,9 @@ export default function App() {
                     </Routes>
                 </div>
             </Router>
+
+            { signupState && <Signup /> }
+            { loginState && <Login /> }
         </div>
     )
 }

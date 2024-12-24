@@ -1,6 +1,7 @@
 import EventCard from "../modules/EventCard"
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion"
+import Footer from "../modules/Footer";
 
 export default function EventView() {
 
@@ -110,6 +111,8 @@ export default function EventView() {
                     </div>
                 </div>
             </div>
+
+            <Footer />
 
         </motion.div>
     )

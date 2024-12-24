@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import Footer from "../modules/Footer"
 
 export default function CommunityView() {
     return (
@@ -70,6 +71,7 @@ export default function CommunityView() {
 
             </div>
 
+            <Footer />
         </motion.div>
     )
 }

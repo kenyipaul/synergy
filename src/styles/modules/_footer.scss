@@ -1,0 +1,57 @@
+@use "../global" as *;
+
+#footer {
+    padding: 1rem;
+    margin-top: 2rem;
+    background: #fff;
+    
+    .content {
+        gap: 2rem;
+        display: flex;
+        margin: auto;
+        padding: 0 1rem;
+        flex-wrap: wrap;
+        max-width: 1280px;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .social-links {
+        gap: 1rem;
+        display: flex;
+        align-items: center;
+
+        svg {
+            color: #555;
+            cursor: pointer;
+        }
+    }
+
+    .links {
+        gap: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        a {
+            color: #000;
+            text-decoration: none;
+
+            &:hover { color: #9900ff; }
+        }
+    }
+}
+
+#app.dark #footer {
+    background: $darker;
+    border-top: 1px solid #ffffff20;
+
+    p { color: #fff; }
+
+    svg { color: #ccc; }
+
+    a { 
+        color: #fff; 
+        &::hover { color: #9900ff !important; }
+    }
+}

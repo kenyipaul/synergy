@@ -53,6 +53,7 @@
                     white-space: nowrap;
 
                     &:hover { color: #9900ff !important; }
+                    &.active { color: #9900ff !important; font-weight: 900; }
                 }
 
                 .closeBtn {
@@ -70,8 +71,19 @@
 
             .buttons {
                 gap: 1rem;
-                display: none;
+                top: 4rem;
+                right: 1rem;
+                flex-direction: column;
                 align-items: center;
+                position: absolute;
+                background: $dark;
+                padding: 2rem;
+                border: 1px solid #9900ff;
+                display: none;
+
+                &.active {
+                    display: flex;
+                }
 
                 button {
                     all: unset;
@@ -83,7 +95,7 @@
                     &:nth-child(2) {
                         color: #fff;
                         font-size: .9em;
-                        background: #9900ff;
+                        background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);
                     }
                 }
             }
@@ -100,6 +112,7 @@
                 padding: .5rem;
                 background: #eee;
                 border-radius: 1rem;
+                border: 1px solid #9900ff;
             }
         }
     }
@@ -110,7 +123,14 @@
     #navbar section {
 
         &:nth-child(2) {
-            .buttons { display: flex; }
+            .buttons { 
+                all: unset;
+                display: flex; 
+                gap: 1rem;
+                display: flex;
+                align-items: center;
+            }
+
             .profile { display: none;  }
         }
 
@@ -174,7 +194,7 @@
 
         ul {
             border: none;
-            background: $darker;
+            background: $dark;
         
             li { color: #fff; }
             svg { color: #fff; }
@@ -183,5 +203,16 @@
 
         button { color: #fff; }
         svg { color: #ccc; }
+
+        .profile {
+            background: $dark;
+            border: 1px solid #9900ff;
+        }
+    }
+}
+
+@media (min-width: 1000px) {
+    #app.dark #navbar section ul {
+        background: none;
     }
 }

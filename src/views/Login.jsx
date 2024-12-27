@@ -1,21 +1,56 @@
+import Axios from "axios"
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginState } from "../store/states/loginState";
 import { setSignupState } from "../store/states/signupState";
+import { useRef } from "react";
+import { loginRoute } from "../routes/routes";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const registerForm = () => {
         dispatch(setSignupState(true))
         dispatch(setLoginState(false))
     }
 
+    const emailRef = useRef();
+    const passwordRef = useRef();
+
+    const login = () => {
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
+
+        if (email && password) {
+
+            Axios({
+                method: 'POST',
+                url: loginRoute,
+                data: { email, password }
+            }).then((response) => {
+                if (response.data.acknowledged) {
+                    sessionStorage.setItem("_token", response.data.token)
+                    navigate("/")
+                    window.location.reload();
+                }
+            }).catch((err) => {
+                if(!err.response.data.acknowledged){
+                    alert(err.response.data.msg)
+                }
+            })
+
+        } else {
+            alert("Please fill in the form")
+        }
+    }
+
     return (
         <div id="form-container">
 
-            <svg onClick={() => dispatch(setLoginState(false))} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>
+            <svg onClick={() => dispatch(setLoginState(false))} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
             <motion.div 
                 initial={{
@@ -38,17 +73,17 @@ export default function Login() {
 
                 <div className="input-area">
                     <label htmlFor="email">Email</label>
-                    <input type="email" name="email" id="email" />
+                    <input ref={emailRef} type="email" name="email" id="email" />
                 </div>
 
                 <div className="input-area">
                     <label htmlFor="password">Password</label>
-                    <input type="password" name="password" id="password" />
+                    <input ref={passwordRef} type="password" name="password" id="password" />
                 </div>
 
                 <a href="#">I forgot my password?</a>
 
-                <button>Log In</button>
+                <button onClick={login}>Log In</button>
 
                 <div className="option">
                     <p>Don't have an account?</p>

@@ -35,7 +35,9 @@ export default function CommunityBoard() {
                         duration: .5,
                         ease: "backInOut"
                     }}
-                className="community"></motion.div>
+                className="community">
+                    <h1>Gaming Club</h1>
+                </motion.div>
 
                 <motion.div 
                     initial={{
@@ -52,7 +54,9 @@ export default function CommunityBoard() {
                         duration: .5,
                         ease: "backInOut"
                     }}
-                className="community"></motion.div>
+                className="community">
+                    <h1>Programming Club</h1>
+                </motion.div>
 
                 <motion.div 
                     initial={{
@@ -69,7 +73,9 @@ export default function CommunityBoard() {
                         duration: .5,
                         ease: "backInOut"
                     }}
-                className="community"></motion.div>
+                className="community">
+                    <h1>Party Club</h1>
+                </motion.div>
 
                 <motion.div 
                     initial={{
@@ -86,7 +92,9 @@ export default function CommunityBoard() {
                         duration: .5,
                         ease: "backInOut"
                     }}
-                className="community"></motion.div>
+                className="community">
+                    <h1>Engineers Club</h1>
+                </motion.div>
 
                 <motion.div 
                     initial={{
@@ -103,7 +111,9 @@ export default function CommunityBoard() {
                         duration: .5,
                         ease: "backInOut"
                     }}
-                className="community"></motion.div>
+                className="community">
+                    <h1>Science Club</h1>
+                </motion.div>
 
                 <motion.div 
                     initial={{
@@ -120,7 +130,9 @@ export default function CommunityBoard() {
                         duration: .5,
                         ease: "backInOut"
                     }}
-                className="community"></motion.div>
+                className="community">
+                    <h1>Food & Drinks</h1>
+                </motion.div>
 
             </div>
             <motion.button

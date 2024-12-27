@@ -72,17 +72,24 @@
             .buttons {
                 gap: 1rem;
                 top: 4rem;
-                right: 1rem;
+                right: 0;
                 flex-direction: column;
                 align-items: center;
                 position: absolute;
-                background: $dark;
-                padding: 2rem;
+                // background: $dark;
+                background: #fff;
+                transition: 0.2s ease;
                 border: 1px solid #9900ff;
-                display: none;
-
+                display: flex;
+                padding: 0 2rem;
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                
                 &.active {
-                    display: flex;
+                    opacity: 1;
+                    padding: 2rem;
+                    max-height: 150px;
                 }
 
                 button {
@@ -114,6 +121,55 @@
                 border-radius: 1rem;
                 border: 1px solid #9900ff;
             }
+
+            .auth-user {
+                cursor: pointer;
+                background: #eee;
+                border-radius: 50rem;
+                border: 1px solid #ddd;
+                padding: .2rem 1rem .2rem .2rem;
+                position: relative;
+
+                .user-info {
+                    gap: .5rem;
+                    display: flex;
+                    align-items: center;
+
+                    .profile-image {
+                        width: 2rem;
+                        height: 2rem;
+                        border-radius: 50rem;
+                        background: #ff0053;
+                    }
+
+                    h1 {
+                        font-size: 1em;
+                    }
+                }
+
+                .auth-menu {
+                    right: 0;
+                    top: 3rem;
+                    background: #fff;
+                    position: absolute;
+                    padding: 2rem 1rem;
+                    border: 1px solid #ddd;
+                
+                    ul {
+                        li {
+                            list-style: none;
+                            cursor: pointer;
+                            white-space: nowrap;
+                            padding: .5rem 1rem;
+
+                            &:hover {
+                                font-weight: 900;
+                                color: #9900ff;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -125,10 +181,12 @@
         &:nth-child(2) {
             .buttons { 
                 all: unset;
-                display: flex; 
                 gap: 1rem;
+                display: flex; 
                 display: flex;
                 align-items: center;
+
+                &.active { all: unset; }
             }
 
             .profile { display: none;  }
@@ -169,9 +227,11 @@
             }
 
             &:nth-child(2) {
-                .buttons button {
-                    &:nth-child(2) {
-                        padding: .7rem 1.5rem;
+                .buttons {
+                    button {
+                        &:nth-child(2) {
+                            padding: .7rem 1.5rem;
+                        }
                     }
                 }
 
@@ -200,13 +260,32 @@
             svg { color: #fff; }
         }
 
+        .buttons {
+            background: $darker;   
+            button { color: #fff; }
+        }
 
-        button { color: #fff; }
         svg { color: #ccc; }
 
         .profile {
             background: $dark;
             border: 1px solid #9900ff;
+        }
+
+        .auth-user {
+            background: $dark;
+            border: 1px solid #ffffff20;
+
+            .auth-menu {
+                background: $dark;
+                position: absolute;
+                padding: 2rem 1rem;
+                border: 1px solid #ffffff30;
+            
+                ul li:hover {
+                    color: #9900ff;
+                }
+            }
         }
     }
 }

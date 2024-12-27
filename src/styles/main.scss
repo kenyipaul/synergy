@@ -16,6 +16,8 @@
 @use "./views/event_view";
 @use "./views/community_view";
 
+@use "./creators/communityCreator.scss";
+
 
 #app {
     display: flex;
@@ -31,13 +33,28 @@
         height: 100%;
         overflow: hidden;
         overflow-y: auto;
+        position: relative;
 
         &::-webkit-scrollbar { width: 2px }
         &::-webkit-scrollbar-thumb { background: #9900ff linear-gradient(#9900ff, #0099ff); }
+    
+        .dimmer {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: #ffffffcc;
+            backdrop-filter: blur(1rem);
+        }
     }
 
     &.dark {
         background: $darker;
+
+        #main .dimmer {
+            background: #0a0f20ce;
+        }
     }
 }
 

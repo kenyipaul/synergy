@@ -44,14 +44,28 @@
             border-radius: 1.5rem;
             transform: rotate(0) !important;
             outline: 5px solid #fcf9fd;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            box-shadow: inset 0 -3rem 5rem $dark;
 
-            // &:nth-child(1) { background: #0f0; }
-            // &:nth-child(2) { background: #9900ff; }
-            // &:nth-child(3) { background: #ff0; }
+            &:nth-child(1) { background-image: url(/assets/images/gaming.jpg); }
+            &:nth-child(2) { background-image: url(/assets/images/coding.jpg); }
+            &:nth-child(3) { background-image: url(/assets/images/music.jpg); }
+            &:nth-child(4) { background-image: url(/assets/images/engineer.jpg); }
+            &:nth-child(5) { background-image: url(/assets/images/science.jpg); }
+            &:nth-child(6) { background-image: url(/assets/images/food&drinks.jpg); }
 
-            // &:nth-child(4) { background: #ff0053; }
-            // &:nth-child(5) { background: #0f0; }
-            // &:nth-child(6) { background: #9900ff; }
+            h1 {
+                left: 50%;
+                width: 100%;
+                bottom: 1rem;
+                color: #fff;
+                font-size: 1.3em;
+                position: absolute;
+                text-align: center;
+                transform: translateX(-50%);
+            }
         }
     }
 
@@ -93,7 +107,7 @@
     }
 
     .community {
-        background: $darker;
+        // background: $darker;
         outline: 5px solid $dark;
     }
 }

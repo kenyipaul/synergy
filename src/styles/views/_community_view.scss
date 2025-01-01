@@ -3,7 +3,10 @@
 #community-view {
     height: 100%;
     overflow: auto;
+    display: flex;
     background: #eee;
+    flex-direction: column;
+    justify-content: space-between;
 
     &::-webkit-scrollbar { width: 2px }
         &::-webkit-scrollbar-thumb { background: #9900ff linear-gradient(#9900ff, #0099ff); }

@@ -1,0 +1,121 @@
+@use "../global" as *;
+
+.profile-view {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-top: 1px solid #eee;
+
+    .header {
+        gap: 1rem;
+        display: grid;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        //background: #fff url(/pattern.svg);
+
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: transparent linear-gradient(transparent, transparent, #fff, #fff);
+            z-index: -1;
+        }
+
+        section {
+            width: 100%;
+            margin: auto;
+            max-width: 1280px;
+
+            &:nth-child(1) {
+                padding: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .profile {
+                    gap: 1rem;
+                    display: flex;
+                    align-items: center;
+
+                    .image {
+                        width: 4rem;
+                        height: 4rem;
+                        border-radius: 50%;
+                        background: #ff0053;
+                    }
+                }
+
+                button {
+                    all: unset;
+                    cursor: pointer;
+                    font-size: .9em;
+                    background: #fff;
+                    border-radius: 50rem;
+                    padding: 1rem 1.5rem;
+                    border: 1px solid #000;
+                }
+
+            }
+
+            &:nth-child(2) {
+                padding: 0 1rem;
+
+                button {
+                    all: unset;
+                    cursor: pointer;
+                    padding: 1rem 1.5rem;
+
+                    &:nth-child(1) {
+                        background: #fff;
+                        border-top-left-radius: .7rem;
+                        border-top-right-radius: .7rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#app.dark .profile-view {
+    .header {
+        background: #0A0F20 url(/dark-background.svg);
+        &::before { background: transparent linear-gradient(transparent, transparent, #0A0F20, #0A0F20); }
+
+        section {
+            &:nth-child(1) {
+                .profile {
+                    .image {
+                        width: 5rem;
+                        height: 5rem;
+                        border-radius: 50%;
+                        background: #ff0053;
+                    }
+
+                    h1 { color: #fff; }
+                }
+
+                button {
+                    color: #fff;
+                    background: none;
+                    border: 1px solid #fff;
+                }
+            }
+
+            &:nth-child(2) {
+                button {
+                    color: #fff;
+
+                    &:nth-child(1) {
+                        color: #fff;
+                        background: #10132C;
+                    }
+                }
+            }
+        }
+    }
+}

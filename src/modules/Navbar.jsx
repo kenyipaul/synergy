@@ -64,7 +64,7 @@ export default function Navbar() {
                     <li className={location.pathname == "/" ? "active" : ""} onClick={() => route("/") }>Home</li>
                     <li className={location.pathname == "/events" ? "active" : ""} onClick={() => route("/events") }>Events</li>
                     <li className={location.pathname == "/jobs" ? "active" : ""} onClick={() => route("/jobs") }>Job Board</li>
-                    <li className={location.pathname == "/community" ? "active" : ""} onClick={() => route("/community") }>Community</li>
+                    <li className={location.pathname == "/communities" ? "active" : ""} onClick={() => route("/communities") }>Community</li>
                     <li className={location.pathname == "/about" ? "active" : ""} onClick={() => route("/about") }>About Us</li>
 
                     <svg onClick={() => dispatch(setNavbarState(false))} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>                </ul>

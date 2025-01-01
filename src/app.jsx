@@ -5,14 +5,17 @@ import HomeView from "./views/HomeView"
 import EventView from "./views/EventView"
 import Navbar from "./modules/Navbar"
 import { useSelector, useDispatch } from "react-redux"
-import CommunityView from "./views/CommunityView"
+import CommunityView from "./views/community_views/CommunityView.jsx"
 import JobView from "./views/JobView"
 import Signup from "./views/Signup"
 import Login from "./views/Login"
+import ProfileView from "./views/ProfileView.jsx"
 import CommunityCreator from "./creators/communityCreator"
 import { useEffect } from "react"
 import { authRoute } from "./routes/routes"
 import { setUser } from "./store/states/userState"
+import CommunityViewContent from "./views/community_views/CommunitViewContent.jsx"
+import CommunityProfile from "./views/community_views/CommunityProfile.jsx"
 
 export default function App() {
 
@@ -26,16 +29,22 @@ export default function App() {
     const dimmerState = useSelector(store => store.dimmerState)
 
     useEffect(() => {
-        const token = sessionStorage.getItem("_token")
+        const token = sessionStorage.getItem("token")
 
         if (token) {
+            let auth = JSON.parse(token)
+            console.log(auth)
+
             Axios({
-                method: "POST",
+                method: "GET",
                 url: authRoute,
-                data: { token }
+                headers: {
+                    "Authorization": `Bearer ${auth.access}`
+                }
             }).then((response) => {
                 dispatch(setUser(response.data.data))
             })
+            // 72c4dc3b7b90662822d7a2cc09c14756a028a801
         }
 
     }, [])
@@ -49,8 +58,14 @@ export default function App() {
                     <Routes>
                         <Route path="/" element={<HomeView />} />
                         <Route path="/events" element={<EventView />} />
-                        <Route path="/community" element={<CommunityView />} />
-                        <Route path="/jobs" element={<JobView />} />
+                        
+                        <Route path="/communities" element={<CommunityView />}>
+                            <Route path="" element={<CommunityViewContent /> } />
+                            <Route path="community" element={<CommunityProfile />} />
+                        </Route>
+
+                        <Route path="/jobs" element={<JobView />} children={[]} />
+                        <Route path="/profile" element={<ProfileView />} />
                     </Routes>
 
                     { dimmerState && <div className="dimmer"></div> }

@@ -33,7 +33,12 @@ export default function Signup() {
             Axios({
                 method: 'POST',
                 url: signupRoute,
-                data: { username, firstName, lastName, email, password }
+                data: { 
+                    username, 
+                    first_name: firstName, 
+                    last_name: lastName, 
+                    email, 
+                    password }
             }).then((response) => {
                 if (response.data.acknowledged) {
                     if (confirm("Signup was successful, would you like to login?")) {

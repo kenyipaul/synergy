@@ -29,16 +29,23 @@ export default function Login() {
             Axios({
                 method: 'POST',
                 url: loginRoute,
-                data: { email, password }
-            }).then((response) => {
-                if (response.data.acknowledged) {
-                    sessionStorage.setItem("_token", response.data.token)
-                    navigate("/")
-                    window.location.reload();
+                data: { 
+                    username: email,
+                    password
+                },
+                headers: {
+                    "Content-Type": "application/json"
                 }
+            }).then((response) => {
+                sessionStorage.setItem("token", JSON.stringify({
+                    access: response.data.access,
+                    refresh: response.data.refresh,
+                }))
+                navigate("/")
+                window.location.reload();
             }).catch((err) => {
-                if(!err.response.data.acknowledged){
-                    alert(err.response.data.msg)
+                if(err.response.data.non_field_errors) {
+                    alert("Incorrect username or password")
                 }
             })
 

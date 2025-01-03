@@ -1,80 +1,48 @@
 import Axios from "axios"
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 
-import HomeView from "./views/HomeView"
-import EventView from "./views/EventView"
-import Navbar from "./modules/Navbar"
-import { useSelector, useDispatch } from "react-redux"
-import CommunityView from "./views/community_views/CommunityView.jsx"
-import JobView from "./views/JobView"
-import Signup from "./views/Signup"
-import Login from "./views/Login"
-import ProfileView from "./views/ProfileView.jsx"
-import CommunityCreator from "./creators/communityCreator"
 import { useEffect } from "react"
+import Navbar from "./modules/Navbar"
+import { Outlet } from "react-router-dom"
 import { authRoute } from "./routes/routes"
-import { setUser } from "./store/states/userState"
-import CommunityViewContent from "./views/community_views/CommunitViewContent.jsx"
-import CommunityProfile from "./views/community_views/CommunityProfile.jsx"
+import { useSelector, useDispatch } from "react-redux"
+import { setAuthorized, setUser  } from "./store/states/authorizedState"
+
 
 export default function App() {
 
     const dispatch = useDispatch();
-
-    const userState = useSelector(store => store.userState);
-    const loginState = useSelector(store => store.loginState);
     const themeState = useSelector(store => store.themeState);
-    const signupState = useSelector(store => store.signupState);
-    const comCreatorState = useSelector(store => store.comCreatorState);
-    const dimmerState = useSelector(store => store.dimmerState)
+    const authorizedState = useSelector(store => store.authorizedState);
 
     useEffect(() => {
         const token = sessionStorage.getItem("token")
+        const user = sessionStorage.getItem("user")
 
-        if (token) {
-            let auth = JSON.parse(token)
-            console.log(auth)
+
+        if (token && user) {
+
+            dispatch(setUser(JSON.parse(user)))
 
             Axios({
-                method: "GET",
+                method: "POST",
                 url: authRoute,
                 headers: {
-                    "Authorization": `Bearer ${auth.access}`
+                    "Authorization": `Bearer ${token}`
                 }
             }).then((response) => {
-                dispatch(setUser(response.data.data))
+                dispatch(setAuthorized(true))
             })
-            // 72c4dc3b7b90662822d7a2cc09c14756a028a801
         }
 
     }, [])
 
     return (
         <div id="app" className={themeState == "dark" ? "dark" : "light"}>
-            <Router>
-                <Navbar />
+            <Navbar />
 
-                <div id="main">
-                    <Routes>
-                        <Route path="/" element={<HomeView />} />
-                        <Route path="/events" element={<EventView />} />
-                        
-                        <Route path="/communities" element={<CommunityView />}>
-                            <Route path="" element={<CommunityViewContent /> } />
-                            <Route path="community" element={<CommunityProfile />} />
-                        </Route>
-
-                        <Route path="/jobs" element={<JobView />} children={[]} />
-                        <Route path="/profile" element={<ProfileView />} />
-                    </Routes>
-
-                    { dimmerState && <div className="dimmer"></div> }
-                </div>
-
-                { signupState && <Signup /> }
-                { loginState && <Login /> }
-                { comCreatorState && <CommunityCreator /> }
-            </Router>
+            <div id="main">
+                <Outlet />
+            </div>
         </div>
     )
 }

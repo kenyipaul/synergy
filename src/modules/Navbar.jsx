@@ -3,59 +3,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom"
 import { setNavbarState } from "../store/states/navbarState";
 import { setTheme } from "../store/states/themeState";
-import { setLoginState } from "../store/states/loginState";
-import { setSignupState } from "../store/states/signupState";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
 
     const location = useLocation();
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [user, setUser] = useState({});
-    const [profileMenuState, setProfileMenuState] = useState(false)
-
-    const userState = useSelector(store => store.userState);
-    const themeState = useSelector(store => store.themeState);
-    const navbarState = useSelector(store => store.navbarState);
-
     const route = (url) => {
         navigate(url)
-        dispatch(setNavbarState(false));
+        dispatch(setNavbarState(false))
     }
 
-    const loginForm = () => {
-        dispatch(setLoginState(true));
-        dispatch(setSignupState(false));
-        setProfileMenuState(false)
-    }
-    const signupForm = () => {
-        dispatch(setSignupState(true));
-        dispatch(setLoginState(false));
-        setProfileMenuState(false)
-    }
+    const [menuState, setMenuState] = useState(false);
+    const [profileMenuState, setProfileMenuState] = useState(false)
 
-    useEffect(() => {
-        if (Object.keys(userState).length > 0) {
-            setUser(userState)
-        }
-    }, [userState])
+    const themeState = useSelector(store => store.themeState);
+    const navbarState = useSelector(store => store.navbarState);
+    const authorizedState = useSelector(store => store.authorizedState);
 
     return (
-        <motion.div 
-            initial={{
-                translateY: -55
-            }}
-            whileInView={{
-                translateY: 0
-            }}
-            transition={{
-                duration: .3,
-                ease: "backInOut"
-            }}
-        id="navbar">
+        <motion.div initial={{ translateY: -55 }} whileInView={{ translateY: 0 }} transition={{ duration: .3, ease: "backInOut" }} id="navbar">
 
             <section>
                 <svg onClick={() => dispatch(setNavbarState(!navbarState))} width="2.5rem" height="2.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Menu_Alt_05"> <path id="Vector" d="M5 17H13M5 12H19M11 7H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
@@ -73,14 +42,14 @@ export default function Navbar() {
             <section>
                 
 
-                { Object.keys(user).length > 0 ?
+                { authorizedState.authorized ?
 
                     <div className="auth-user">
-                        <div className="user-info">
+                        <div className="user-info" onClick={() => setMenuState(!menuState)}>
                             <div className="profile-image"></div>
-                            <h1>{`${user.firstName} ${user.lastName}`}</h1>
+                            <h1>{`${authorizedState.user.firstName} ${authorizedState.user.lastName}`}</h1>
                         </div>
-                        <div className="auth-menu">
+                        <div className={menuState ? "auth-menu active" : "auth-menu"}>
                             <ul>
                                 <li>Edit Profile</li>
                                 <li>Bookmarks</li>
@@ -94,8 +63,8 @@ export default function Navbar() {
                     :
                     <>                
                         <div className={profileMenuState ? "buttons active" : "buttons" }>
-                            <button onClick={loginForm}>Log In</button>
-                            <button onClick={signupForm}>Register</button>
+                            <button onClick={() => navigate("/login")}>Log In</button>
+                            <button onClick={() => navigate("/signup")}>Register</button>
                         </div>
                         <svg onClick={() => setProfileMenuState(!profileMenuState)} className="profile" width="2rem" height="2rem" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"> <defs> </defs> <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-180.000000, -2159.000000)" fill="currentColor"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M134,2008.99998 C131.783496,2008.99998 129.980955,2007.20598 129.980955,2004.99998 C129.980955,2002.79398 131.783496,2000.99998 134,2000.99998 C136.216504,2000.99998 138.019045,2002.79398 138.019045,2004.99998 C138.019045,2007.20598 136.216504,2008.99998 134,2008.99998 M137.775893,2009.67298 C139.370449,2008.39598 140.299854,2006.33098 139.958235,2004.06998 C139.561354,2001.44698 137.368965,1999.34798 134.722423,1999.04198 C131.070116,1998.61898 127.971432,2001.44898 127.971432,2004.99998 C127.971432,2006.88998 128.851603,2008.57398 130.224107,2009.67298 C126.852128,2010.93398 124.390463,2013.89498 124.004634,2017.89098 C123.948368,2018.48198 124.411563,2018.99998 125.008391,2018.99998 C125.519814,2018.99998 125.955881,2018.61598 126.001095,2018.10898 C126.404004,2013.64598 129.837274,2010.99998 134,2010.99998 C138.162726,2010.99998 141.595996,2013.64598 141.998905,2018.10898 C142.044119,2018.61598 142.480186,2018.99998 142.991609,2018.99998 C143.588437,2018.99998 144.051632,2018.48198 143.995366,2017.89098 C143.609537,2013.89498 141.147872,2010.93398 137.775893,2009.67298" id="profile-[#1341]"> </path> </g> </g> </g> </svg>
                     </>

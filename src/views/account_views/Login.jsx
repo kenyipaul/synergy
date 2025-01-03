@@ -1,21 +1,15 @@
 import Axios from "axios"
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import { setLoginState } from "../store/states/loginState";
-import { setSignupState } from "../store/states/signupState";
 import { useRef } from "react";
-import { loginRoute } from "../routes/routes";
 import { useNavigate } from "react-router-dom";
+import { loginRoute } from "../../routes/routes";
+import { useDispatch } from "react-redux";
+import { setAuthorized, setUser } from "../../store/states/authorizedState";
 
 export default function Login() {
 
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const registerForm = () => {
-        dispatch(setSignupState(true))
-        dispatch(setLoginState(false))
-    }
+    const dispatch = useDispatch();
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -30,23 +24,21 @@ export default function Login() {
                 method: 'POST',
                 url: loginRoute,
                 data: { 
-                    username: email,
+                    email,
                     password
                 },
                 headers: {
                     "Content-Type": "application/json"
                 }
             }).then((response) => {
-                sessionStorage.setItem("token", JSON.stringify({
-                    access: response.data.access,
-                    refresh: response.data.refresh,
-                }))
+                dispatch(setAuthorized(true));
+                dispatch(setUser(response.data.user));
+                sessionStorage.setItem("token", response.data.token)
+                sessionStorage.setItem("user", JSON.stringify(response.data.user))
                 navigate("/")
-                window.location.reload();
             }).catch((err) => {
-                if(err.response.data.non_field_errors) {
+                if (err.response.status == 401)
                     alert("Incorrect username or password")
-                }
             })
 
         } else {
@@ -57,7 +49,7 @@ export default function Login() {
     return (
         <div id="form-container">
 
-            <svg onClick={() => dispatch(setLoginState(false))} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+            <svg onClick={() => navigate("/")} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
             <motion.div 
                 initial={{
@@ -94,7 +86,7 @@ export default function Login() {
 
                 <div className="option">
                     <p>Don't have an account?</p>
-                    <p onClick={registerForm} className="link">Register</p>
+                    <p onClick={() => navigate("/signup")} className="link">Register</p>
                 </div>
 
             </motion.div>

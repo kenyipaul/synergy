@@ -2,8 +2,10 @@ import React, { useContext, useState } from "react";
 import { motion } from "framer-motion"
 import { Outlet } from "react-router-dom";
 import Footer from "../layout/Footer";
+import CommCreator from "../creators/commCreator";
 
-const CommFormContext = React.createContext(null);
+
+export const CommFormContext = React.createContext(null);
 
 export default function CommPage() {
 
@@ -14,7 +16,7 @@ export default function CommPage() {
         <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ duration: .5 }} id="community-page">
             <Outlet />
             <Footer />
-            {/* <CommForm /> */}
+            { comFormState ? <CommCreator /> : <></> }
         </motion.div>
         </CommFormContext.Provider>
     )
@@ -186,85 +188,3 @@ function Community() {
 }
 
 
-
-
-
-function CommForm() {
-
-    const [communityName, setCommunityName] = useState("");
-    const [comFormState, setComFormState] = useContext(CommFormContext);
-    const [communityDescription, setCommunityDescription] = useState("Your community description");
-
-    const changeCommunityName = (e) => {
-        let communityNameInput = document.getElementById("communityName")
-
-        if (communityNameInput.value == "") {
-            setCommunityName("")
-        } else {
-            setCommunityName(e.target.value.replace(/\s/g, ''))
-        }
-    }
-
-    const changeDescription = (e) => {
-        let communityInput = document.getElementById("description")
-
-        if (communityInput.value == "") {
-            setCommunityDescription("Your community description")
-        } else {
-            setCommunityDescription(e.target.value)
-        }
-    }
-
-    return (
-        <div id="community-creator">
-            
-            <div className="container">
-
-                <div className="form">
-                    <div className="top-bar">
-                        <h1>Create a community</h1>
-                        <h2>Tell us about your Community</h2>
-                    </div>
-
-                    <div className="replica">
-                        <div className="top-bar">
-                            <div className="profile"></div>
-                            <div>
-                                <h1>@/{communityName !== "" ? communityName : "communityname"}</h1>
-                                <div className="info">
-                                    <p>1 member</p>
-                                    <p>1 online</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="description">
-                            <p>{communityDescription}</p>
-                        </div>
-                    </div>
-
-                    <div className="input-area">
-                        <label htmlFor="communityName">Community Name</label>
-                        <input value={communityName} type="text" name="communityName" id="communityName" onChange={changeCommunityName} maxLength={20} />
-                    </div>
-
-                    <div className="input-area">
-                        <label htmlFor="icon">Community Icon</label>
-                        <input type="file" name="icon" id="icon" />
-                    </div>
-
-                    <div className="input-area">
-                        <label htmlFor="description">Description</label>
-                        <textarea name="description" id="description" onChange={changeDescription}></textarea>
-                    </div>
-
-                    <div className="buttons">
-                        <button onClick={() => dispatch(setComCreatorState(false))}>Cancel</button>
-                        <button>Next</button>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    )
-}

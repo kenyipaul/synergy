@@ -1,6 +1,6 @@
 import Axios from "axios"
-import { useRef } from "react";
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginRoute } from "../routes/routes";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,9 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem("theme") || "light"
+    })
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -47,7 +50,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div id="form-container">
+        <div id="form-container" className={theme == "dark" && theme}>
 
             <svg onClick={() => navigate("/")} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 

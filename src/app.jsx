@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom"
 import { authRoute } from "./routes/routes"
 import { useSelector, useDispatch } from "react-redux"
 import { setAuthorized, setUser  } from "./store/states/authorizedState"
+import { setTheme } from "./store/states/themeState"
 
 
 export default function App() {
@@ -30,6 +31,14 @@ export default function App() {
             }).then((response) => {
                 dispatch(setAuthorized(true))
             })
+        }
+
+        const theme = localStorage.getItem("theme")
+
+        if (theme) {
+            dispatch(setTheme(theme));
+        } else {
+            dispatch(setTheme("light"));
         }
 
     }, [])

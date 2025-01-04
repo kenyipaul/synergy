@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { Outlet } from "react-router-dom";
 import Footer from "../layout/Footer";
 import CommCreator from "../creators/commCreator";
+import { useSelector } from "react-redux";
 
 
 export const CommFormContext = React.createContext(null);
@@ -103,6 +104,9 @@ function Post() {
 
 export function CommunityPage() {
 
+    const authorizedState = useSelector(store => store.authorizedState)
+    const [comFormState, setComFormState] = useContext(CommFormContext);
+
     return (
         <div className="community-view-content">
         <div className="community-banner">
@@ -110,7 +114,9 @@ export function CommunityPage() {
                 <div className="content">
                     <h1>The Community Hub: Learn, Share and Grow</h1>
                     <p>The Community Hub: Where learning, sharing, and growth are at the heart of everything we do.</p>
-                    <button onClick={() => dispatch(setComCreatorState(true))}>Create Your Community</button>
+                    <button onClick={() => {
+                        authorizedState.authorized ? setComFormState(true) : navigate("/login")
+                    }}>Create Your Community</button>
                 </div>
             </div>
         </div>

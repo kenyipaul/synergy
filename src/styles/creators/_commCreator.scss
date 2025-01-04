@@ -6,12 +6,20 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    background: #fff;
     z-index: 999999;
     padding: 1rem;
     display: flex;
     align-items: center;
+    background: #ffffffaa;
     justify-content: center;
+    backdrop-filter: blur(2rem);
+
+    .closeBtn {
+        top: 2rem;
+        right: 2rem;
+        cursor: pointer;
+        position: absolute;
+    }
 
     .container {
         width: 100%;
@@ -19,12 +27,15 @@
         align-items: center;
         justify-content: center;
     }
-
+    
     .form {
         gap: 1rem;
         width: 100%;
         display: grid;
-        max-width: 450px;
+        padding: 1.5rem;
+        max-width: 500px;
+        background: #fff;
+        border-radius: 1rem;
 
         .top-bar {
             margin-bottom: 1rem;
@@ -227,9 +238,15 @@
 
 
 #app.dark #community-creator {
-    background: $darker;
+    background: #0A0F2090;
+
+    .closeBtn {
+        color: #fff;
+    }
 
     .form {
+        background: $darker;
+
         .top-bar {
             h1 { color: #fff; }
             h2 { color: #ccc; }

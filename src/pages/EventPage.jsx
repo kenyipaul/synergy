@@ -3,11 +3,17 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion"
 import Footer from "../layout/Footer";
 import EventCreator from "../creators/eventCreator";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function EventPage() {
 
     const pastRef = useRef();
     const upcomingRef = useRef();
+    const navigate = useNavigate();
+    const [creator, setCreator] = useState(false); 
+
+    const authorizedState = useSelector(state => state.authorizedState)
 
     const scrollFRight = () => { upcomingRef.current.scrollBy(300, 0); }
     const scrollFLeft = () => { upcomingRef.current.scrollBy(-300, 0); }
@@ -24,15 +30,18 @@ export default function EventPage() {
                 duration: .5
             }}
         className="event-page">
+            {console.log(authorizedState)}
 
-            <EventCreator />
+            { creator ? <EventCreator /> : <></> }
 
             <div className="event-banner">
                 <div className="container">
                     <div className="content">
                         <h1>The Event Hub: Your Source for All Events</h1>
                         <p>The Event Hub: Simplifying your event search and connecting you to experiences that matter.</p>
-                        <button>Post An Event</button>
+                        <button onClick={() => {
+                            authorizedState.authorized ? setCreator(true) : navigate("/login")
+                        }}>Post An Event</button>
                     </div>
                 </div>
             </div>

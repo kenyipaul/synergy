@@ -8,11 +8,14 @@ const CommDescContext = React.createContext(null);
 export default function CommCreator() {
 
     const [step, setStep] = useState(1);
+    const [comFromState, setComFormState] = useContext(CommFormContext);
     const [communityName, setCommunityName] = useState("");
     const [communityDesc, setCommunityDesc] = useState("Your community description");
 
     return (
         <div id="community-creator">
+
+            <svg onClick={() => setComFormState(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>
 
             <CommDescContext.Provider value={[communityDesc, setCommunityDesc]}>
             <CommNameContext.Provider value={[communityName, setCommunityName]}>
@@ -34,6 +37,7 @@ export default function CommCreator() {
 function Step1() {
 
     const [step, setStep] = useContext(StepContext);
+    const [comFormState, setComFormState] = useContext(CommFormContext);
     const [communityName, setCommunityName] = useContext(CommNameContext);
     const [communityDescription, setCommunityDescription] = useContext(CommDescContext)
 
@@ -144,7 +148,7 @@ function Step1() {
             </div>
 
             <div className="buttons">
-                <button onClick={() => dispatch(setComCreatorState(false))}>Cancel</button>
+                <button onClick={() => setComFormState(false)}>Cancel</button>
                 <button onClick={() => setStep(step + 1)}>Next</button>
             </div>
         </div>

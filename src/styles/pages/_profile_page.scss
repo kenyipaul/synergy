@@ -1,0 +1,214 @@
+@use "../global" as *;
+
+#profile-page {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+
+    .header {
+        gap: 1rem;
+        display: grid;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        //background: #fff url(/pattern.svg);
+
+        // &::before {
+        //     content: "";
+        //     top: 0;
+        //     left: 0;
+        //     width: 100%;
+        //     height: 100%;
+        //     position: absolute;
+        //     background: transparent linear-gradient(transparent, transparent, #fff, #fff);
+        //     z-index: -1;
+        // }
+
+        section {
+            width: 100%;
+            margin: auto;
+            max-width: 1280px;
+
+            &:nth-child(1) {
+                padding: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .profile {
+                    gap: 1rem;
+                    display: flex;
+                    align-items: center;
+
+                    .image {
+                        width: 4rem;
+                        height: 4rem;
+                        border-radius: 50%;
+                        background: #ff0053;
+                    }
+                }
+
+                button {
+                    all: unset;
+                    cursor: pointer;
+                    font-size: .9em;
+                    background: #fff;
+                    border-radius: 50rem;
+                    padding: 1rem 1.5rem;
+                    border: 1px solid #000;
+                }
+
+            }
+
+            &:nth-child(2) {
+                display: grid;
+                
+                .buttons {
+                    display: flex;
+                    overflow-x: scroll;
+                    align-items: center;
+                    scrollbar-width: none;
+                }
+
+                button {
+                    all: unset;
+                    cursor: pointer;
+                    min-width: 60px;
+                    text-align: center;
+                    white-space: nowrap;
+                    padding: 1rem 1.5rem;
+
+                    &:nth-child(1) {
+                        color: #9900ff;
+                        font-weight: 900;
+                        margin-left: 1rem;
+                        border-top-left-radius: .7rem;
+                        border-top-right-radius: .7rem;
+                        border-bottom: 2px solid #9900ff;
+                    }
+                }
+            }
+        }
+    }
+
+
+    .main {
+        gap: 1rem;
+        margin: auto;
+        padding: 1rem;
+        display: grid;
+        max-width: 1280px;
+
+        .info-card {
+            gap: 1.5rem;
+            display: grid;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 1rem;
+            border: 1px solid #00000020;
+
+            .top-bar {
+                display: flex;
+                align-items: center;
+                padding-bottom: 1rem;
+                justify-content: space-between;
+                border-bottom: 1px solid #00000020;
+
+                h1 {
+                    font-size: 1.3em;
+                }
+
+                svg {
+                    cursor: pointer;
+                }
+            }
+
+            .body {
+                p {
+                    color: #555;
+                    hyphens: auto;
+                }
+
+                ul {
+                    gap: .5rem;
+                    display: grid;
+
+                    li {
+                        gap: .5rem;
+                        display: flex;
+                        color: #999;    
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+#app.dark #profile-page {
+    background: $darker;
+
+    .header {
+        background: $darker;
+
+        section {
+            &:nth-child(1) {
+                .profile {
+                    .image {
+                        border-radius: 50%;
+                        background: #ff0053;
+                    }
+
+                    h1 { color: #fff; }
+                }
+
+                button {
+                    color: #fff;
+                    background: none;
+                    border: 1px solid #fff;
+                }
+            }
+
+            &:nth-child(2) {
+                button {
+                    color: #fff;
+
+                    &:nth-child(1) {
+                        color: #9900ff;
+                    }
+                }
+            }
+        }
+    }
+
+    .main {
+        .info-card {
+            background: $dark;
+            
+            .top-bar {
+                border-bottom: 1px solid #ffffff40;
+
+                h1 { color: #fff; }
+                svg { color: #fff; }
+            }
+
+            .body {
+                p { color: #ccc; }
+                ul li {
+                    color: #fff;    
+                    b { color: #ccc; }
+                }
+            }
+        }
+    }
+}

@@ -1,19 +1,18 @@
 import { useState } from "react"
+import Footer from "../layout/Footer"
 import { motion } from "framer-motion"
-import Navbar from "../modules/Navbar"
-import CommunityBoard from "../modules/CommunityBoard"
-import EventBoard from "../modules/EventBoard"
-import Footer from "../modules/Footer"
 
-export default function HomeView() {
+export default function HomePage() {
     return (
-        <motion.div initial={{ scale: 1.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} id="home">
+        <motion.div 
+            initial={{ scale: 0 }} 
+            animate={{ scale: 1 }} 
+            transition={{ duration: .5 }} 
+        id="home-page">
             
             <Header />
             <CommunityBoard />
-            {/* <Banner />    */}
             <TestimonialBoard />
-            {/* <EventBoard /> */}
 
             <div className="qnb">
                 <div className="content">
@@ -154,3 +153,34 @@ const faqs = [
         "answer": "Synergy is a web-based platform designed to foster a strong sense of community among its users. It aims to connect individuals through shared interests, facilitate collaboration, and provide valuable resources such as event listings, community blogs, discussion forums, and a job board."
     }
 ]
+
+
+
+function CommunityBoard() {
+    return (
+        <div className="community-board">
+            <div className="title-bar">
+                <h1>Welcome To Our Community</h1>
+                <p>We believe in the power of working together. Welcome to our community of synergy.</p>
+            </div>
+            <div className="community-grid">
+
+                <Community title="Gaming Club" />
+                <Community title="Programming Club" />
+                <Community title="Party Club" />
+                <Community title="Engineers Club" />
+                <Community title="Science Club" />
+                <Community title="Food & Drinks" />
+
+            </div>
+
+            <button>Create Your Community</button>
+        </div>
+    )
+}
+
+function Community(props) {
+    return (
+        <div className="community"> <h1>{props.title}</h1> </div>
+    )
+}

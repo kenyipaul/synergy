@@ -1,4 +1,4 @@
-@use "../global" as *;
+@use "../../styles/global" as *;
 
 #footer {
     padding: 1rem;
@@ -34,7 +34,7 @@
         justify-content: center;
 
         a {
-            color: #000;
+            color: #0099ff;
             text-decoration: none;
 
             &:hover { color: #9900ff; }
@@ -51,7 +51,7 @@
     svg { color: #ccc; }
 
     a { 
-        color: #fff; 
+        color: #0099ff; 
         &::hover { color: #9900ff !important; }
     }
 }

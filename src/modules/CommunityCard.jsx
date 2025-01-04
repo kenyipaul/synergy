@@ -1,3 +1,5 @@
+import "./styles/_comm_card.scss"
+
 export default function CommunityCard() {
     return (
         <div className="community-card">

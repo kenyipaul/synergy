@@ -1,9 +1,9 @@
 import EventCard from "../modules/EventCard"
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion"
-import Footer from "../modules/Footer";
+import Footer from "../layout/Footer";
 
-export default function EventView() {
+export default function EventPage() {
 
     const pastRef = useRef();
     const upcomingRef = useRef();
@@ -14,46 +14,15 @@ export default function EventView() {
     const scrollLRight = () => { pastRef.current.scrollBy(300, 0); }
     const scrollLLeft = () => { pastRef.current.scrollBy(-300, 0); }
 
-    // useEffect(() => {
-    //     handleResize()
-
-    //     function handleResize(e) {
-    //         let device_width = window.innerWidth
-
-    //         if (device_width >= 1280) {
-    //             let eventCard = document.querySelectorAll(".event-grid")
-
-    //             eventCard.forEach((elem) => {
-    //                 elem.firstChild.style.marginLeft = (device_width - 1280) / 2 + "px"
-    //             })
-    //         }
-    //     }
-
-    //     window.addEventListener('resize', handleResize)
-    //     window.addEventListener('fullscreenchange', handleResize)
-    //     window.addEventListener('orientationchange', handleResize)
-    
-    //     return () => {
-    //         window.removeEventListener("resize", handleResize)
-    //         window.removeEventListener("fullscreenchange", handleResize)
-    //         window.removeEventListener("orientationchange", handleResize)
-    //     }
-    // }, [])
 
     return (
         <motion.div 
-            initial={{
-                scale: 2,
-                opacity: 0
-            }}
-            whileInView={{
-                scale: 1,
-                opacity: 1
-            }}
+            initial={{scale: 0}}
+            animate={{scale: 1}}
             transition={{
                 duration: .5
             }}
-        className="event-view">
+        className="event-page">
 
             <div className="event-banner">
                 <div className="container">

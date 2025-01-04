@@ -1,3 +1,5 @@
+import "./styles/_job_card.scss"
+
 export default function JobCard() {
     return (
         <div className="job-card">

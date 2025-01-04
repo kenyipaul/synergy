@@ -1,7 +1,7 @@
 import Axios from "axios"
 
 import { useEffect } from "react"
-import Navbar from "./modules/Navbar"
+import Navbar from "./layout/Navbar"
 import { Outlet } from "react-router-dom"
 import { authRoute } from "./routes/routes"
 import { useSelector, useDispatch } from "react-redux"
@@ -12,12 +12,10 @@ export default function App() {
 
     const dispatch = useDispatch();
     const themeState = useSelector(store => store.themeState);
-    const authorizedState = useSelector(store => store.authorizedState);
 
     useEffect(() => {
         const token = sessionStorage.getItem("token")
         const user = sessionStorage.getItem("user")
-
 
         if (token && user) {
 
@@ -39,7 +37,6 @@ export default function App() {
     return (
         <div id="app" className={themeState == "dark" ? "dark" : "light"}>
             <Navbar />
-
             <div id="main">
                 <Outlet />
             </div>

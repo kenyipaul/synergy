@@ -1,4 +1,4 @@
-@use "../global" as *;
+@use "../../styles/global" as *;
 
 #navbar {
     width: 100%;
@@ -124,9 +124,9 @@
 
             .auth-user {
                 cursor: pointer;
-                background: #eee;
+                background: #fff;
                 border-radius: 50rem;
-                border: 1px solid #ddd;
+                border: 1px solid #00000025;
                 padding: .2rem 1rem .2rem .2rem;
                 position: relative;
 
@@ -156,7 +156,8 @@
                     background: #fff;
                     position: absolute;
                     transition: .5s ease;
-                    
+                    border-radius: 1.5rem;
+
                     &.active {
                         opacity: 1;
                         max-height: 257px;

@@ -1,12 +1,12 @@
 import Axios from "axios"
-import { motion } from "framer-motion";
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { loginRoute } from "../../routes/routes";
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { setAuthorized, setUser } from "../../store/states/authorizedState";
+import { loginRoute } from "../routes/routes";
+import { useNavigate } from "react-router-dom";
+import { setAuthorized, setUser } from "../store/states/authorizedState";
 
-export default function Login() {
+export default function LoginPage() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();

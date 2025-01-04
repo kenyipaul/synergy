@@ -1,6 +1,6 @@
 @use "../global" as *;
 
- #home {
+ #home-page {
     width: 100%;
     
     #header {
@@ -293,12 +293,12 @@
 
 @media (min-width: 900px) {
 
-    #home #header {
+    #home-page #header {
         min-height: unset;
         height: calc(100vh - 70px);
     }
     
-    #home .service-board {
+    #home-page .service-board {
         .service-grid {
             display: grid !important;
             place-items: center;
@@ -325,7 +325,7 @@
 
 
 
-#app.dark #home {
+#app.dark #home-page {
     #header {
         background-image: url(/dark-grid.svg);
         
@@ -408,5 +408,121 @@
                 hyphens: auto;
             }
         }
+    }
+}
+
+
+
+// COMMUNITY BOARD 
+
+
+
+.community-board {
+    gap: 2rem;
+    width: 100%;
+    display: flex;
+    padding: 4rem 0;
+    background: #fcf9fd;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    .title-bar {
+        gap: 1rem;
+        display: grid;
+        text-align: center;
+
+        h1 { 
+            color: #000; 
+            font-size: clamp(1.3em, 5vw, 2em);
+        }
+    
+        p {
+            color: #555;
+        }
+    }
+
+    .community-grid {
+        gap: .5rem;
+        width: 100%;
+        padding: 1rem;
+        display: grid;
+        max-width: 1280px;
+        aspect-ratio: 16/9;
+        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+    
+        .community {
+            width: 100%;
+            max-height: 100%;
+            min-height: 200px;
+            background: #fff;
+            border-radius: 1.5rem;
+            transform: rotate(0) !important;
+            outline: 5px solid #fcf9fd;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            box-shadow: inset 0 -3rem 5rem $dark;
+
+            &:nth-child(1) { background-image: url(/assets/images/gaming.jpg); }
+            &:nth-child(2) { background-image: url(/assets/images/coding.jpg); }
+            &:nth-child(3) { background-image: url(/assets/images/music.jpg); }
+            &:nth-child(4) { background-image: url(/assets/images/engineer.jpg); }
+            &:nth-child(5) { background-image: url(/assets/images/science.jpg); }
+            &:nth-child(6) { background-image: url(/assets/images/food&drinks.jpg); }
+
+            h1 {
+                left: 50%;
+                width: 100%;
+                bottom: 1rem;
+                color: #fff;
+                font-size: 1.3em;
+                position: absolute;
+                text-align: center;
+                transform: translateX(-50%);
+            }
+        }
+    }
+
+    button {
+        all: unset;
+        color: #fff;
+        cursor: pointer;
+        padding: 1rem 1.5rem;
+        border-radius: 50rem;
+        background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);
+    }
+}
+
+
+@media (min-width: 600px) {
+    
+    .community-board {
+        .community-grid {
+            max-height: 600px;
+            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+
+            .community {
+                transform: rotate(unset) !important;
+            }
+        }
+    }
+
+}
+
+
+#app.dark .community-board {
+    background: $dark;
+
+    .title-bar {
+        h1 { color: #fff; }
+        p { color: #ccc; }
+    }
+
+    .community {
+        // background: $darker;
+        outline: 5px solid $dark;
     }
 }

@@ -1,20 +1,12 @@
 import { motion } from "framer-motion"
 
-export default function JobView() {
+export default function JobPage() {
     return (
         <motion.div 
-            initial={{
-                scale: 2,
-                opacity: 0
-            }}
-            whileInView={{
-                scale: 1,
-                opacity: 1
-            }}
-            transition={{
-                duration: .5
-            }}
-        id="job-view">
+            initial={{scale: 0,}}
+            whileInView={{scale: 1,}}
+            transition={{duration: .5}}
+        id="job-page">
 
             <div className="job-banner">
                 <div className="banner">

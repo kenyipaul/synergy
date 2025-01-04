@@ -1,9 +1,9 @@
 @use "../global" as *;
 
-.event-view {
+.event-page {
     width: 100%;
     overflow-y: auto;
-    background: #eee;
+    background: #fff;
     overflow-x: hidden;
 
     .event-banner {
@@ -93,13 +93,15 @@
             input {
                 width: 100%;
                 border: none;
+                outline: none;
                 font-size: 1em;
                 padding: 1.1rem;
                 background: #fff;
                 padding-left: 3.5rem;
                 border-radius: .5rem;
+                border: 1px solid #00000025;
 
-                &:focus { outline: 2px solid #9900ff; }
+                &:focus { border: 1px solid #9900ff; }
             }
         }
     }
@@ -163,7 +165,7 @@
                 width: 20%;
                 height: 100%;
                 position: absolute;
-                background-image: linear-gradient(to right, transparent, #eee);
+                background-image: linear-gradient(to right, transparent, #fff);
                 z-index: 9;
             }
 
@@ -193,7 +195,7 @@
 }
 
 
-#app.dark .event-view  {
+#app.dark .event-page  {
     background: $darker;
 
     .search-area {

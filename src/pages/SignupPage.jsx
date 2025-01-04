@@ -1,17 +1,14 @@
 import Axios from "axios"
-import { createContext, useContext, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { signupRoute } from "../../routes/routes";
-import dataurlToBlob from "dataurl-to-blob";
-import { form } from "framer-motion/client";
+import { signupRoute } from "../routes/routes";
+import { createContext, useContext, useRef, useState } from "react";
 
 const StageContext = createContext(null);
 
-export default function Signup() {
+export default function SignupPage() {
 
     const navigate = useNavigate();
-
     const [stage, setStage] = useState(1);
 
     return (

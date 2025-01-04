@@ -1,3 +1,5 @@
+import "./styles/_event_card.scss"
+
 export default function EventCard() {
     return (
         <div className="event-card">

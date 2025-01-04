@@ -1,14 +1,22 @@
 import App from "../app";
-import Login from "../views/account_views/Login";
-import Signup from "../views/account_views/Signup";
 import { createHashRouter } from "react-router-dom";
-import HomeView from "../views/HomeView";
-import EventView from "../views/EventView";
-import JobView from "../views/JobView";
-import CommunityView from "../views/community_views/CommunityView";
-import CommunityViewContent from "../views/community_views/CommunitViewContent";
-import CommunityProfile from "../views/community_views/CommunityProfile";
-import ProfileView from "../views/account_views/ProfileView";
+
+import JobPage from "../pages/JobPage";
+import HomePage from "../pages/HomePage";
+import CommPage from "../pages/CommPage";
+import EventPage from "../pages/EventPage";
+import AboutPage from "../pages/AboutPage";
+import ProfilePage from "../pages/ProfilePage";
+
+import LoginPage from "../pages/LoginPage";
+import SignupPage from "../pages/SignupPage";
+
+import { CommunityPage, CommunityProfile } from "../pages/CommPage";
+
+// import CommunityView from "../views/community_views/CommunityView";
+// import CommunityViewContent from "../views/community_views/CommunitViewContent";
+// import CommunityProfile from "../views/community_views/CommunityProfile";
+// import ProfileView from "../views/account_views/ProfileView";
 
 export const router = createHashRouter([
     {
@@ -17,23 +25,23 @@ export const router = createHashRouter([
         children: [
             {
                 path: "/",
-                element: <HomeView />
+                element: <HomePage />
             },
             {
                 path: "/events",
-                element: <EventView />
+                element: <EventPage />
             },
             {
                 path: "/jobs",
-                element: <JobView />
+                element: <JobPage />
             },
             {
                 path: "/communities",
-                element: <CommunityView />,
+                element: <CommPage />,
                 children: [
                     {
                         path: "/communities",
-                        element: <CommunityViewContent />
+                        element: <CommunityPage />
                     },
                     {
                         path: "/communities/community",
@@ -43,20 +51,20 @@ export const router = createHashRouter([
             },
             {
                 path: "/about",
-                element: <h1>ABOUT US</h1>
+                element: <AboutPage />
             },
             {
                 path: "/profile",
-                element: <ProfileView />
+                element: <ProfilePage />
             }
         ]
     },
     {
         path: "/login",
-        element: <Login />
+        element: <LoginPage />
     },
     {
         path: "/signup",
-        element: <Signup />
+        element: <SignupPage />
     }
 ])

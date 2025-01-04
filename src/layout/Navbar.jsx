@@ -1,3 +1,4 @@
+import "./styles/_navbar.scss"
 import { motion } from "framer-motion"
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom"
@@ -51,10 +52,9 @@ export default function Navbar() {
                         </div>
                         <div className={menuState ? "auth-menu active" : "auth-menu"}>
                             <ul>
-                                <li>Edit Profile</li>
                                 <li>Bookmarks</li>
                                 <li>My Community</li>
-                                <li>Profile Settings</li>
+                                <li onClick={() => route("/profile")}>Profile Settings</li>
                                 <li></li>
                                 <li>Log Out</li>
                             </ul>

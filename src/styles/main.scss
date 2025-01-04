@@ -1,23 +1,11 @@
 @use "./global" as *;
 
-@use "./account/form";
-
-@use "./modules/navbar";
-@use "./modules/footer";
-
-@use "./cards/job_card";
-@use "./cards/event_card";
-@use "./cards/community_card";
-
-@use "./boards/event_board";
-@use "./boards/community_board";
-
-@use "./views/home_view";
-@use "./views/job_view";
-@use "./views/event_view";
-@use "./views/community_view";
-@use "./views/community_profile";
-@use "./views/profile_view";
+@use "./pages/job_page";
+@use "./pages/comm_page";
+@use "./pages/form_page";
+@use "./pages/home_page";
+@use "./pages/event_page";
+@use "./pages/profile_page";
 
 @use "./creators/communityCreator.scss";
 

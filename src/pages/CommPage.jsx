@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { motion } from "framer-motion"
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "../layout/Footer";
 import CommCreator from "../creators/commCreator";
 import { useSelector } from "react-redux";
@@ -104,6 +104,7 @@ function Post() {
 
 export function CommunityPage() {
 
+    const navigate = useNavigate();
     const authorizedState = useSelector(store => store.authorizedState)
     const [comFormState, setComFormState] = useContext(CommFormContext);
 
@@ -172,6 +173,7 @@ export function CommunityPage() {
     </div>
     )
 }
+
 
 function Community() {
     return (

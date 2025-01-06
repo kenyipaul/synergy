@@ -30,6 +30,12 @@ export default function App() {
                 }
             }).then((response) => {
                 dispatch(setAuthorized(true))
+            }).catch((error) => {
+                if (error.response.data.acknowledged) {
+                    alert(error.response.data.msg)
+                    sessionStorage.removeItem("token")
+                    sessionStorage.removeItem("user")
+                }
             })
         }
 

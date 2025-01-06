@@ -1,6 +1,9 @@
+import Axios from "axios"
 import { TagInput } from "rsuite";
 import 'rsuite/TagInput/styles/index.css';
-import React, { useState , useContext} from "react";
+import React, { useState , useContext, useRef} from "react";
+import { EventCreatorContext } from "../pages/EventPage";
+import { eventRoute } from "../routes/routes";
 
 const StepContext = React.createContext(null);
 
@@ -36,27 +39,47 @@ export default function EventCreator() {
 function Step1() {
 
     const [step, setStep] = useContext(StepContext);
+    const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
+
+    const titleRef = useRef(null);
+    const dateRef = useRef(null);
+    const descriptionRef = useRef(null);
+
+    const next = () => {
+        const title = titleRef.current.value;
+        const date = dateRef.current.value;
+        const description = descriptionRef.current.value;
+
+        if (title && date && description) {
+            const event = { title, date, description }
+            sessionStorage.setItem("event", JSON.stringify(event));
+            setStep(step + 1);
+        } else {
+            alert("Please fill out all fields.")
+        }
+
+    }
 
     return (
         <div className="form-content">
             <div className="input-area">
                 <label htmlFor="title">Event Title</label>
-                <input type="text" id="title" />
+                <input ref={titleRef} type="text" id="title" />
             </div>
 
             <div className="input-area">
                 <label htmlFor="title">Date & Time</label>
-                <input type="datetime-local" id="date" />
+                <input ref={dateRef} type="datetime-local" id="date" />
             </div>
 
             <div className="input-area">
                 <label htmlFor="description">Description</label>
-                <textarea id="textarea"></textarea>
+                <textarea ref={descriptionRef} id="textarea"></textarea>
             </div>
 
             <div className="buttons">
-                <button>Cancel</button>
-                <button onClick={() => setStep(step + 1)}>Next</button>
+                <button onClick={() => setEventCreator(false)}>Cancel</button>
+                <button onClick={next}>Next</button>
             </div>
         </div>
     )
@@ -65,6 +88,7 @@ function Step1() {
 function Step2() {
 
     const [step, setStep] = useContext(StepContext);
+    const [selectedImage, setSelectedImage] = useState("No image selected");
 
     const eventCategories = [
         "Concert/Live Music",
@@ -95,24 +119,58 @@ function Step2() {
         "Tour/Trip",
         "Retreat",
         "Other" // Always useful for those that don't fit the predefined categories
-      ];
+    ];
+
+    const imageRef = useRef();
+    const venueRef = useRef();
+    const categoryRef = useRef();
+
+    const next = () => {
+        const location = venueRef.current.value;
+        const category = categoryRef.current.value;
+        const image = imageRef.current.files[0];
+
+        if (image) {
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = () => {
+                const event = JSON.parse(sessionStorage.getItem("event"));
+                event.location = location;
+                event.category = category;
+                event.image = reader.result;
+                sessionStorage.setItem("event", JSON.stringify(event));
+                setStep(step + 1);
+            }
+        } else {
+            if (location && category) {
+                const event = JSON.parse(sessionStorage.getItem("event"));
+                event.location = location;
+                event.category = category;
+                event.image = "";
+                sessionStorage.setItem("event", JSON.stringify(event));
+                setStep(step + 1);
+            } else {
+                alert("Please fill out the fields.")
+            }
+        }
+    }
 
     return (
         <div className="form-content">
              <div className="image-area">
                 <p>Event Poster</p>
-                <label htmlFor="image">No image selected</label>
-                <input type="file" id="image" />
+                <label htmlFor="image">{selectedImage}</label>
+                <input ref={imageRef} type="file" id="image" onChange={(e) => setSelectedImage(e.target.files[0].name)} />
             </div>
 
             <div className="input-area">
                 <label htmlFor="location">Location/Venue</label>
-                <input type="text" id="location" />
+                <input ref={venueRef} type="text" id="location" />
             </div>
 
             <div className="input-area">
                 <label htmlFor="category">Category/Type</label>
-                <select id="category">
+                <select ref={categoryRef} id="category">
                     {eventCategories.map((category, index) => {
                         return <option key={index} value={category}>{category}</option>
                     })}
@@ -121,7 +179,7 @@ function Step2() {
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button onClick={() => setStep(step + 1)}>Next</button>
+                <button onClick={next}>Next</button>
             </div>
         </div>
     )
@@ -129,28 +187,63 @@ function Step2() {
 
 function Step3() {
 
+    const [tags, setTags] = useState([])
     const [step, setStep] = useContext(StepContext);
+    const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
 
+    const websiteRef = useRef(null);
+    const contactRef = useRef(null);
+
+    const post = () => {
+        const website = websiteRef.current.value;
+        const contact = contactRef.current.value;
+
+        const event = JSON.parse(sessionStorage.getItem("event"));
+        event.tags = tags;
+        event.website = website;
+        event.contact = contact;
+
+        let token = sessionStorage.getItem("token");
+
+        if (token) {
+            Axios({
+                method: "POST",
+                url: eventRoute,
+                data: event,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then((response) => {
+                if (response.data.acknowledged) {
+                    alert("Event posted successfully")
+                    sessionStorage.removeItem("event");
+                    setEventCreator(false)                    
+                }
+            })
+        }
+    }
+    
     return (
         <div className="form-content">
             <div className="input-area">
                 <label htmlFor="tags">Tags (optional)</label>
-                <TagInput block />
+                <TagInput block onChange={(e) => setTags(e)} />
             </div>
 
             <div className="input-area">
                 <label htmlFor="website">Website (optional)</label>
-                <input type="text" id="website" />
+                <input ref={websiteRef} type="text" id="website" />
             </div>
 
             <div className="input-area">
-                <label htmlFor="website">Contact (optional)</label>
-                <input type="text" id="website" />
+                <label htmlFor="contact">Contact (optional)</label>
+                <input ref={contactRef} type="text" id="contact" />
             </div>
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button onClick={() => setStep(step + 1)}>Post Event</button>
+                <button onClick={post}>Post Event</button>
             </div>
         </div>
     )

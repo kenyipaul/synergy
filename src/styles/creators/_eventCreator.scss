@@ -142,6 +142,10 @@
     background: $darker;
     color: #fff;
 
+    .top-bar {
+        p { color: #ccc; }
+    }
+
     .input-area {
         label { color: #ccc; }
         input, textarea, select {

@@ -12,7 +12,7 @@
     align-items: center;
     background: #ffffffaa;
     justify-content: center;
-    backdrop-filter: blur(2rem);
+    backdrop-filter: blur(14rem);
 
     .closeBtn {
         top: 2rem;
@@ -66,6 +66,8 @@
             .banner {
                 height: 70px;
                 background: #eee;
+                background-size: cover;
+                background-position: center;
             }
 
             .top-bar {
@@ -79,7 +81,9 @@
                     width: 3rem;
                     height: 3rem;
                     border-radius: 50%;
-                    background: #ff0053;
+                    background: #e3e3e3;
+                    background-size: cover;
+                    background-position: center;
                 }
 
                 div {
@@ -257,7 +261,11 @@
             background: $dark;
             border: 1px solid #ffffff15;
 
-            .banner { background: #ffffff20; }
+            .banner { 
+                background: #ffffff20; 
+                background-size: cover;
+                background-position: center;
+            }
 
             .description {
                 p { color: #fff; }

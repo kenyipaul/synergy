@@ -40,6 +40,7 @@
                 position: absolute;
                 overflow: hidden;
                 transition: .5s ease;
+                z-index: 999;
                 
                 &.active {
                     max-width: 250px;

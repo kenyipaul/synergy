@@ -1,18 +1,29 @@
+import Axios from "axios"
 import EventCard from "../modules/EventCard"
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion"
 import Footer from "../layout/Footer";
 import EventCreator from "../creators/eventCreator";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import { BackendHost, eventsRoute } from "../routes/routes";
+
+export const EventCreatorContext = React.createContext(null);
+export const SelectedEventContext = React.createContext(null);
+export const EventViewContext = React.createContext(null)
 
 export default function EventPage() {
 
     const pastRef = useRef();
     const upcomingRef = useRef();
     const navigate = useNavigate();
-    const [creator, setCreator] = useState(false); 
 
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [eventCreator, setEventCreator] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null)
+    const [eventViewState, setEventViewState] = useState(false)
     const authorizedState = useSelector(state => state.authorizedState)
 
     const scrollFRight = () => { upcomingRef.current.scrollBy(300, 0); }
@@ -22,17 +33,38 @@ export default function EventPage() {
     const scrollLLeft = () => { pastRef.current.scrollBy(-300, 0); }
 
 
-    return (
-        <motion.div 
-            initial={{scale: 0}}
-            animate={{scale: 1}}
-            transition={{
-                duration: .5
-            }}
-        className="event-page">
-            {console.log(authorizedState)}
+    useEffect(() => {
+        let token = sessionStorage.getItem("token");
 
-            { creator ? <EventCreator /> : <></> }
+        if (token) {
+            Axios({
+                method: "GET",
+                url: eventsRoute,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then((response) => {
+                setEvents(response.data)
+                setLoading(false)
+            }).catch((error) => {
+                if(!error.response.data.acknowledged) {
+                    alert(error.response.data.msg)
+                    navigate("/login")
+                }
+            })
+        }
+    }, [eventCreator])
+
+
+    return (
+        <motion.div initial={{scale: 0}} animate={{scale: 1}} transition={{ duration: .5 }} className="event-page">
+            <SelectedEventContext.Provider value={[selectedEvent, setSelectedEvent]}>
+            <EventCreatorContext.Provider value={[eventCreator, setEventCreator]}>
+            <EventViewContext.Provider value={[eventViewState, setEventViewState]}>
+
+            { eventCreator ? <EventCreator /> : <></> }
+            { eventViewState ? <EventView /> : <></> }
 
             <div className="event-banner">
                 <div className="container">
@@ -40,7 +72,7 @@ export default function EventPage() {
                         <h1>The Event Hub: Your Source for All Events</h1>
                         <p>The Event Hub: Simplifying your event search and connecting you to experiences that matter.</p>
                         <button onClick={() => {
-                            authorizedState.authorized ? setCreator(true) : navigate("/login")
+                            authorizedState.authorized ? setEventCreator(true) : navigate("/login")
                         }}>Post An Event</button>
                     </div>
                 </div>
@@ -63,17 +95,34 @@ export default function EventPage() {
                 </div>
                 <div className="event-grid-container">
                     <div className="event-grid" ref={upcomingRef}>
-                        <EventCard />
-                        <EventCard />
-                        <EventCard />
-                        <EventCard />
-                        <EventCard />
-                        <EventCard />
+                        {
+                            
+                        }
+
+                        {
+                            !loading ? 
+                        
+                                events && events.length > 0 ? events.map((data, key) => {
+                                    return <EventCard data={data} key={key} />
+                                }) : <EventPlaceHolder />
+
+                             : 
+                             <>
+                                <LoadingEvent />
+                                <LoadingEvent />
+                                <LoadingEvent />
+                                <LoadingEvent />
+                                <LoadingEvent />
+                            </>
+                            
+                        }
+                        
+
                     </div>
                 </div>
             </div>
 
-            <div className="past-event event-container">
+            {/* <div className="past-event event-container">
                 <div className="title-bar">
                     <h1>Past Events</h1>
                     <div className="navigation">
@@ -91,10 +140,88 @@ export default function EventPage() {
                         <EventCard />
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <Footer />
 
+            </EventViewContext.Provider>
+            </EventCreatorContext.Provider>
+            </SelectedEventContext.Provider>
         </motion.div>
+    )
+}
+
+function EventPlaceHolder() {
+
+    const authorizedState = useSelector(state => state.authorizedState)
+    const [eventCreator, setEventCreator] = useContext(EventCreatorContext);
+
+    return (
+        <div className="no-event-placeholder">
+        <h1>No Events</h1>
+        <p>There are currently no upcoming events on this page, create one by clicking the button below.</p>
+        <button onClick={() => {
+            authorizedState.authorized ? setEventCreator(true) : navigate("/login")
+        }}>Post An Event</button>
+        </div>
+    )
+}
+
+function LoadingEvent() {
+    return (
+        <div className="loading-event">
+            <div className="slider"></div>
+            <h1>Loading...</h1>
+        </div>
+    )
+}
+
+function EventView() {
+
+    const [selectedEvent, setSelectedEvent] = useContext(SelectedEventContext);
+    const [eventViewState, setEventViewState] = useContext(EventViewContext);
+
+
+    return selectedEvent && (
+        <div className="event-view" style={{
+            backgroundImage: selectedEvent && `url(${BackendHost}/${selectedEvent.poster})`
+        }}>
+            <svg onClick={() => setEventViewState(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+            <div className="container">
+
+                <div className="banner" style={{
+                    backgroundImage: selectedEvent && `url(${BackendHost}/${selectedEvent.poster})`
+                }}></div>
+                <div className="top-bar">
+                    <div>
+                        <h1>{selectedEvent.title}</h1>
+                        <p>{selectedEvent.category}</p>
+                    </div>
+                    {
+                        selectedEvent.website && <button>Visit Website</button>
+                    }
+                </div>
+                <div className="tags">
+                    {
+                        selectedEvent.tags.map((data, key) => {
+                            return <p key={key}>#{data}</p>
+                        })
+                    }
+                </div>
+                <div className="content">
+                    <p>{selectedEvent.description}</p>
+
+                    <ul>
+                        <li><b>Contact: </b>{selectedEvent.contact || "Unavailable"}</li>
+                        <li><b>Venue/Location: </b>{selectedEvent.location || "Unavailable"}</li>
+                        <li><b>Date: </b>{selectedEvent.date || "Unavailable"}</li>
+                    </ul>
+                    <ul>
+                        <li><b>Date Posted: </b>{selectedEvent.createdAt}</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
     )
 }

@@ -1,5 +1,8 @@
-import React, { useState, useContext } from "react"
+import Axios from "axios"
+import React, { useState, useContext, useRef, useEffect } from "react"
 import { CommFormContext } from "../pages/CommPage";
+import { communityRoute } from "../routes/routes";
+import { useNavigate } from "react-router-dom";
 
 const StepContext = React.createContext(null);  
 const CommNameContext = React.createContext(null);
@@ -103,6 +106,33 @@ function Step1() {
         "Photography"
     ]
 
+    const communityNameRef = useRef(null)
+    const communityTopicRef = useRef(null)
+    const communityDescRef = useRef(null)
+
+    const submit = () => {
+
+        const communityName = communityNameRef.current.value;
+        const communityDesc = communityDescRef.current.value;
+        const communityTopic = communityTopicRef.current.value;
+
+        if (communityName && communityDesc && communityTopic) {
+
+            const community = {
+                community_name: communityName,
+                community_topic: communityTopic,
+                community_description: communityDesc
+            }
+
+            sessionStorage.setItem("community", JSON.stringify(community));
+            setStep(step + 1)
+
+        } else {
+            alert("Please fill in the form")
+        }
+
+    }
+
     return (
         <div className="form">
             <div className="top-bar">
@@ -128,12 +158,12 @@ function Step1() {
 
             <div className="input-area">
                 <label htmlFor="communityName">Community Name</label>
-                <input value={communityName} type="text" name="communityName" id="communityName" onChange={changeCommunityName} maxLength={20} />
+                <input value={communityName} ref={communityNameRef} type="text" name="communityName" id="communityName" onChange={changeCommunityName} maxLength={20} />
             </div>
 
             <div className="input-area">
                 <label htmlFor="communityTopic">Community Topic</label>
-                <select id="communityTopic">
+                <select id="communityTopic" ref={communityTopicRef} >
                     {
                         topics.map((data, key) => {
                             return <option key={key} value={data}>{data}</option>
@@ -144,12 +174,12 @@ function Step1() {
 
             <div className="input-area">
                 <label htmlFor="description">Description</label>
-                <textarea name="description" id="description" onChange={changeDescription}></textarea>
+                <textarea name="description" id="description" ref={communityDescRef} onChange={changeDescription}></textarea>
             </div>
 
             <div className="buttons">
                 <button onClick={() => setComFormState(false)}>Cancel</button>
-                <button onClick={() => setStep(step + 1)}>Next</button>
+                <button onClick={submit}>Next</button>
             </div>
         </div>
     )
@@ -162,6 +192,54 @@ function Step2() {
     const [step, setStep] = useContext(StepContext);
     const [communityName, setCommunityName] = useContext(CommNameContext);
     const [communityDescription, setCommunityDescription] = useContext(CommDescContext)
+    const [selectedCommIcon, setSelectedCommIcon] = useState(null);
+    const [selectedCommBanner, setSelectedCommBanner] = useState(null);
+    const [icon, setIcon] = useState("");
+    const [banner, setBanner] = useState("");
+
+    const communityIconRef = useRef(null);
+    const communityBannerRef = useRef(null);
+
+    const submit = () => {
+        const communityIcon = communityIconRef.current.files[0];
+        const communityBanner = communityBannerRef.current.files[0];
+        const communityAdmin = JSON.parse(sessionStorage.getItem("user")).id;
+        const community = JSON.parse(sessionStorage.getItem("community"))
+
+        community.community_icon = icon || "";
+        community.community_banner = banner || "";
+        community.community_admin = communityAdmin
+
+        sessionStorage.setItem("community", JSON.stringify(community))
+        setStep(step + 1)
+    }
+
+
+    useEffect(() => {
+
+        if (selectedCommBanner) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(selectedCommBanner);
+
+            fileReader.onload = function() {
+                setBanner(fileReader.result)
+            }
+        }
+        
+    }, [selectedCommBanner])
+    
+    useEffect(() => {
+
+        if (selectedCommIcon) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(selectedCommIcon);
+            
+            fileReader.onload = function() {
+                setIcon(fileReader.result)
+            }
+        }
+
+    }, [selectedCommIcon])
 
     return (
         <div className="form">
@@ -172,9 +250,13 @@ function Step2() {
             </div>
 
             <div className="replica">
-                <div className="banner"></div>
+                <div className="banner" style={{
+                    backgroundImage: banner && `url(${banner})`
+                }}></div>
                 <div className="top-bar">
-                    <div className="profile"></div>
+                    <div className="profile" style={{
+                        backgroundImage: icon && `url(${icon})`
+                    }}></div>
                     <div>
                         <h1>@/{communityName !== "" ? communityName : "communityname"}</h1>
                         <div className="info">
@@ -190,19 +272,19 @@ function Step2() {
 
             <div className="image-area">
                 <p>Community Icon</p>
-                <label htmlFor="icon">No image selected</label>
-                <input type="file" name="icon" id="icon" />
+                <label htmlFor="icon">{ selectedCommIcon && selectedCommIcon.name || "No image selected"}</label>
+                <input type="file" name="icon" id="icon" ref={communityIconRef} onChange={(e) => setSelectedCommIcon(e.target.files[0])} />
             </div>
 
             <div className="image-area">
                 <p>Community Banner</p>
-                <label htmlFor="banner">No image selected</label>
-                <input type="file" name="banner" id="banner" />
+                <label htmlFor="banner">{ selectedCommBanner && selectedCommBanner.name || "No image selected"}</label>
+                <input type="file" name="banner" id="banner" ref={communityBannerRef} onChange={(e) => setSelectedCommBanner(e.target.files[0])} />
             </div>
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button onClick={() => setStep(step + 1)}>Next</button>
+                <button onClick={submit}>Next</button>
             </div>
 
         </div>
@@ -212,7 +294,41 @@ function Step2() {
 
 function Step3() {
 
+    const navigate = useNavigate();
     const [step, setStep] = useContext(StepContext);
+    const [comFromState, setComFormState] = useContext(CommFormContext);
+
+    const submit = () => {
+        const communityAccess = document.querySelector("input[id='access_type']:checked");
+        const communityMaturity = document.getElementById("mature").checked;
+
+        const community = JSON.parse(sessionStorage.getItem("community"))
+        community.community_access= communityAccess.value;
+        community.community_maturity = communityMaturity;
+
+        const token = sessionStorage.getItem("token")
+
+        if (token) {
+            Axios({
+                method: 'POST',
+                url: `${communityRoute}/create/`,
+                data: community,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then((response) =>  {
+                alert(response.data.msg)
+                sessionStorage.removeItem("community")
+                setComFormState(false);
+            }).catch((err) => {
+                alert(err.response.data.msg)
+            })
+        } else {
+            alert("Session invalid or expired, please login")
+        }
+
+    }
 
     return (
         <div className="form">
@@ -228,21 +344,21 @@ function Step3() {
                         <h1>Public</h1>
                         <p>Anyone can view, post, and comment to this community</p>
                     </div>
-                    <input type="radio" name="type" id="public" />
+                    <input type="radio" name="type" value="public" id="access_type" defaultChecked />
                 </div>
                 <div className="input">
                     <div>
                         <h1>Private</h1>
                         <p>Only approved members can view and contribute to this community</p>
                     </div>
-                    <input type="radio" name="type" id="public" />
+                    <input type="radio" name="type" value="private" id="access_type" />
                 </div>
                 <div className="input">
                     <div>
                         <h1>Restricted</h1>
                         <p>Anyone can view, but only approved users can contribute</p>
                     </div>
-                    <input type="radio" name="type" id="public" />
+                    <input type="radio" name="type" value="restricted" id="access_type" />
                 </div>
             </div>
 
@@ -256,7 +372,7 @@ function Step3() {
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button>Create Community</button>
+                <button onClick={submit}>Create Community</button>
             </div>
 
         </div>

@@ -208,8 +208,8 @@
                 border: 1px solid #555;
 
                 &:checked {
-                    background: #9900ff;
-                    border: 1px solid #9900ff;
+                    background: $primary-theme;
+                    border: 1px solid $primary-theme;
                 }
             }
         }
@@ -231,8 +231,8 @@
 
                 &:nth-child(2) {
                     color: #fff;
-                    background: #9900ff;
-                    border: 1px solid #9900ff;
+                    background: $primary-theme;
+                    border: 1px solid $primary-theme;
                 }
             }
         }
@@ -311,9 +311,9 @@
                     border: 1px solid #fff;
                 
                     &:checked {
-                        background: #9900ff;
+                        background: $primary-theme;
                         border: 2px solid $darker;
-                        outline: 2px solid #9900ff;
+                        outline: 2px solid $primary-theme;
                     }
                 }
             }

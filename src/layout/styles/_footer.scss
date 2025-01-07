@@ -37,7 +37,7 @@
             color: #0099ff;
             text-decoration: none;
 
-            &:hover { color: #9900ff; }
+            &:hover { color: $primary-theme; }
         }
     }
 }
@@ -52,6 +52,6 @@
 
     a { 
         color: #0099ff; 
-        &::hover { color: #9900ff !important; }
+        &::hover { color: $primary-theme !important; }
     }
 }

@@ -8,11 +8,20 @@
     src: url(/assets/fonts/RobotoCondensed-Bold.ttf);
 }
 
-$dark: #1b202e;
-$darker: #0A0F20;
+@font-face {
+    font-family: titillium;
+    src: url(/assets/fonts/TitilliumWeb-Bold.ttf);
+}
+
+$dark: #1b282e;
+// $dark: #1b202e;
+$darker: #0a1920;
+// $darker: #0A0F20;
+$primary-theme: #28b132;
 
 $primary-font: roboto-condensed;
 $secondary-font: roboto-condensed-bold;
+$ternary-font: titillium;
 
 * {
     margin: 0;

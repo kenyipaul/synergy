@@ -9,7 +9,7 @@
     justify-content: space-between;
 
     &::-webkit-scrollbar { width: 2px }
-        &::-webkit-scrollbar-thumb { background: #9900ff linear-gradient(#9900ff, #0099ff); }
+        &::-webkit-scrollbar-thumb { background: $primary-theme linear-gradient($primary-theme, #0099ff); }
 
     .community-banner {
         display: flex;
@@ -69,7 +69,8 @@
                     text-align: center;
                     padding: 1rem 1.5rem;
                     border-radius: 50rem;
-                    background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);
+                    background-color: $primary-theme;
+                    // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);
                 }
             }
         }
@@ -131,7 +132,7 @@
             //     color: #fff;
             //     padding: 1rem;
             //     border-radius: 50rem;
-                // background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);;
+                // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);;
             // }
         }
         
@@ -153,14 +154,13 @@
 
                 button {
                     all: unset;
+                    color: #fff;
                     cursor: pointer;
                     font-size: .95em;
-                    color: #9900ff;
                     text-align: center;
                     border-radius: 50rem;
                     padding: .7rem 1.2rem;
-                    background: #9900ff20;
-                    border: 1px solid #9900ff;
+                    background: $primary-theme;
                 }
             }
 
@@ -213,14 +213,14 @@
                 //             font-size: .9em;
                 //             cursor: pointer;
                 //             border-radius: 50rem;
-                //             color: #9900ff;
+                //             color: $primary-theme;
                 //             padding: .6rem 1.3rem;
-                //             background: #9900ff20;
-                //             border: 1px solid #9900ff;
+                //             background: $primary-theme20;
+                //             border: 1px solid $primary-theme;
 
                 //             &:hover {
                 //                 color: #fff;
-                //                 background: #9900ff;
+                //                 background: $primary-theme;
                 //             }
                 //         }
                 //     }
@@ -302,7 +302,7 @@
         .community-profile-banner {
 
             .cover {
-                background: #9900ff;
+                background: $primary-theme;
                 background-size: cover;
                 background-position: center;
                 aspect-ratio: 16/9;
@@ -327,7 +327,7 @@
                 .image {
                     width: clamp(3rem, 5vw, 4rem);
                     height: clamp(3rem, 5vw, 4rem);
-                    background: #9900ff;
+                    background: $primary-theme;
                     border-radius: 50%;
                     background-size: cover;
                     background-position: center;
@@ -355,20 +355,25 @@
                             background: #000;
                         }
                     }
-                    &:nth-child(2) { color: #fff; background: #9900ff; border: 1px solid #9900ff; }
+                    &:nth-child(2) { color: #fff; background: $primary-theme; border: 1px solid $primary-theme; }
                 }
             }
         }
 
         .navigation-tabs {
             display: flex;
+            border-bottom: 1px solid #eee;
 
             button {
                 all: unset;
                 padding: 1rem;
                 cursor: pointer;
 
-                &:nth-child(1) { color: #9900ff; font-weight: 900; }
+                &.active { 
+                    color: $primary-theme; 
+                    font-weight: 900; 
+                    border-bottom: 2px solid $primary-theme;
+                }
             }
         }
 
@@ -381,12 +386,16 @@
         max-width: 1280px;
 
         &.feed-view {
+            gap: .5rem;
+            width: 100%;
             display: grid;
+            place-content: center;
 
             .post {
                 gap: .5rem;
                 display: grid;
                 padding: 1rem;
+                // border: 1px solid #eee;
 
                 .post-header {
                     gap: .5rem;
@@ -394,20 +403,35 @@
                     align-items: center;
 
                     .post-header-image {
-                        width: 3rem;
-                        height: 3rem;
+                        width: 2.5rem;
+                        height: 2.5rem;
                         border-radius: 50%;
-                        background: #ff0053;
+                        background: $primary-theme;
                     }
 
-                    h1 {
-                        font-size: 1.2em;
+                    div {
+                        gap: .2rem;
+                        display: grid;
+
+                        h1 {
+                            font-size: 1.1em;
+                        }
+                        p {
+                            color: #555;
+                            font-size: .9em;
+                            hyphens: auto;
+                        }
                     }
                 }
 
                 .post-content {
                     h1 {
-                        font-size: 1.3em;
+                        font-size: 1.1em;
+                        font-family: $secondary-font;
+                    }
+                    p {
+                        color: #555;
+                        font-size: 1em;
                     }
                 }
 
@@ -429,22 +453,96 @@
                             color: #fff;
                             cursor: pointer;
                             border-radius: 50%;
-                            background: #9900ff;
+                            background: $primary-theme;
                         }
 
                         &:hover { 
-                            color: #9900ff;
+                            color: $primary-theme;
                         }
                     }
                 }
             }
         }
 
+        &.about-view {
+            gap: 2rem;
+            display: grid;
+
+            .top-bar {
+                gap: 1rem;
+                display: flex;
+                align-items: center;
+
+                .profile {
+                    width: 3rem;
+                    height: 3rem;
+                    border-radius: 50%;
+                    background: $primary-theme;
+                }
+
+                h1 {
+                    font-size: 1.3em;
+                }
+            }
+
+            .content {
+                gap: 1rem;
+                display: grid;
+
+                h1 {
+                    font-size: 1.3em;
+                }
+
+                p {
+                    color: #555;
+                    hyphens: auto;
+                }
+
+                .details {
+                    gap: 1rem;
+                    display: flex;
+                    max-width: 400px;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    div {
+                        gap: .5rem;
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+
+        &.about-view-desktop { display: none; }
+
     }
 
 }
 
 
+@media (min-width: 950px) {
+    .community-profile {
+
+        .community-profile-header {
+            .navigation-tabs { display: none; }
+        }
+
+        .view-container {
+            width: 100%;
+            margin: auto;
+            display: grid;
+            max-width: 1280px;
+            grid-template-columns: [col-start] 1fr [col-end] .5fr;
+            
+            .view.about-view-desktop { 
+                height: 100%;
+                display: grid;
+                align-content: start;
+            }
+        }
+    }
+}
 
 
 @media (min-width: 1285px) {
@@ -478,7 +576,7 @@
     .navigation-tabs button {
         color: #fff;
 
-        &:hover { color: #9900ff; font-weight: 900; }
+        &:hover { color: $primary-theme; font-weight: 900; }
     }
 
     .post {
@@ -495,7 +593,7 @@
         .post-footer {
             button {
                 color: #ccc;
-                &:hover { color: #9900ff; }
+                &:hover { color: $primary-theme; }
             }
         }
     }

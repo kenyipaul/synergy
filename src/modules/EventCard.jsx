@@ -5,10 +5,6 @@ import { EventViewContext, SelectedEventContext } from "../pages/EventPage"
 
 export default function EventCard(props) {
 
-    useEffect(() => {
-        console.log(props.data)
-    }, [])
-
     const [eventViewState, setEventViewState] = useContext(EventViewContext)
     const [selectedEvent, setSelectedEvent] = useContext(SelectedEventContext)
 

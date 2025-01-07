@@ -60,8 +60,10 @@
                     text-align: center;
                     padding: 1rem 2rem;
                     border-radius: 50rem;
-                    // background: #9900ff;
-                    background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);
+                    background: $primary-theme;
+                    // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);
+                    // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);
+                    // background: $primary-theme linear-gradient(-315deg, $primary-theme, #0099ff);
                 }
             }
         }
@@ -146,16 +148,20 @@
         }
 
         .testimonials {
-            gap: 1rem;
             width: 100%;
             margin: auto;
-            display: flex;
             padding: 1rem 0;
             overflow-y: hidden;
-            overflow-x: auto;
             max-width: 1280px;
-            scrollbar-width: none;
             position: relative;
+            
+            .list {
+                gap: 1rem;
+                display: flex;
+                overflow-x: auto;
+                scrollbar-width: none;
+                scroll-behavior: smooth;
+            }
 
             &::before {
                 content: "";
@@ -167,11 +173,11 @@
             }
 
             .testimony {
-                // height: 250px;
                 min-width: 320px;
                 border-radius: 1.5rem;
                 background: #fff;
-                box-shadow: 0 .3rem .5rem #eee;
+                border: 1px solid #ddd;
+                // box-shadow: 0 .3rem .5rem #eee;
 
                 &:first-child {
                     margin-left: 1rem;
@@ -187,7 +193,7 @@
                         width: 2.5rem;
                         height: 2.5rem;
                         border-radius: 50%;
-                        background: #9900ff;
+                        background: $primary-theme;
                     }
 
                     div {
@@ -422,7 +428,7 @@
     width: 100%;
     display: flex;
     padding: 4rem 0;
-    background: #fcf9fd;
+    background: #f9fdf9;
     align-items: center;
     flex-direction: column;
     justify-content: center;
@@ -464,6 +470,16 @@
             background-position: center;
             position: relative;
             box-shadow: inset 0 -3rem 5rem $dark;
+            filter: saturate(40%);
+            overflow: hidden;
+
+            &::before {
+                content: "";
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                background-color: #22a12a70;
+            }
 
             &:nth-child(1) { background-image: url(/assets/images/gaming.jpg); }
             &:nth-child(2) { background-image: url(/assets/images/coding.jpg); }
@@ -481,6 +497,7 @@
                 position: absolute;
                 text-align: center;
                 transform: translateX(-50%);
+                z-index: 99;
             }
         }
     }
@@ -491,7 +508,8 @@
         cursor: pointer;
         padding: 1rem 1.5rem;
         border-radius: 50rem;
-        background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);
+        background: $primary-theme;
+        // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);
     }
 }
 

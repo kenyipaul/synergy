@@ -8,11 +8,9 @@ const authorizedState = createSlice({
     },
     reducers: {
         setAuthorized: (state, action) => {
-            console.log(action)
             state.authorized = action.payload
         },
         setUser: (state, action) => {
-            console.log(action)
             state.user = action.payload
         }
     }

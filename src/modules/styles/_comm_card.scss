@@ -1,35 +1,74 @@
 .community-card {
     width: 100%;
+    // height: 350px;
     max-width: 350px;
     overflow: hidden;
     border-radius: 1.5rem;
-    // box-shadow: 0 .5rem .5rem .2rem #00000010;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 0;
+
+    section {
+    
+        &:nth-child(2) {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+
+    .topBar {
+        height: 58px;
+        display: flex;
+        padding: 1rem 1rem 0 1rem;
+        justify-content: flex-end;
+
+        button {
+            all: unset;
+            cursor: pointer;
+            font-size: .95em;
+            color: #9900ff;
+            text-align: center;
+            border-radius: 50rem;
+            padding: .7rem 1.2rem;
+            background: #9900ff20;
+            border: 1px solid #9900ff;
+
+            &:hover {
+                color: #fff;
+                background: #9900ff;
+            }
+        }
+    }
 
     .header {
         height: 100px;
         padding: 1rem;
         position: relative;
-        margin-bottom: 4rem;
         background: #e4bcff;
-        background-image: url(/pattern.svg);
+        background-size: cover;
+        background-position: center;
         
         .profile {
             left: 1rem;
             width: 6rem;
             height: 6rem;
-            bottom: -3rem;
+            bottom: -4rem;
             position: absolute;
-            border-radius: 20%;
+            border-radius: 50%;
             background: #9900ff;
             border: .4rem solid #fff;
+            background-size: cover;
+            background-position: center;
         }
     }
 
 
     .main {
-        gap: 1rem;
+        gap: .5rem;
         display: grid;
         padding: .5rem 1.5rem;
 
@@ -42,7 +81,7 @@
         }
 
         h1 {
-            font-size: clamp(1.3em, 5vw, 1.5em);
+            font-size: clamp(1.1em, 5vw, 1.3em);
         }
 
         p {
@@ -53,16 +92,25 @@
 
 
     .footer {
+        gap: 1rem;
         display: flex;
+        padding: 1rem;
         align-items: center;
-        padding-bottom: .5rem;
 
         div {
-            gap: 1rem;
+            gap: .5rem;
             color: #555;
             display: flex;
             align-items: center;
-            padding: 1rem 1.5rem;
+
+            svg {
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+
+            p {
+                font-size: .9em;
+            }
         }
     }
 }

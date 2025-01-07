@@ -38,7 +38,7 @@ export default function Navbar() {
                 <ul className={navbarState ? "active" : ""}>
                     <li className={location.pathname == "/" ? "active" : ""} onClick={() => route("/") }>Home</li>
                     <li className={location.pathname == "/events" ? "active" : ""} onClick={() => route("/events") }>Events</li>
-                    <li className={location.pathname == "/jobs" ? "active" : ""} onClick={() => route("/jobs") }>Job Board</li>
+                    {/* <li className={location.pathname == "/jobs" ? "active" : ""} onClick={() => route("/jobs") }>Job Board</li> */}
                     <li className={location.pathname == "/communities" ? "active" : ""} onClick={() => route("/communities") }>Community</li>
                     <li className={location.pathname == "/about" ? "active" : ""} onClick={() => route("/about") }>About Us</li>
 

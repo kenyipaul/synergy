@@ -167,68 +167,78 @@
             .community-list {
                 gap: .7rem;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             
-                .community {
-                    background: #fff;
-                    border-radius: 1rem;
-                    border: 1px solid #00000025;
+                // .community {
+                //     overflow: hidden;
+                //     background: #fff;
+                //     border-radius: 1rem;
+                //     border: 1px solid #00000025;
 
-                    .header {
-                        display: flex;
-                        padding: 1rem;
-                        align-items: center;
-                        justify-content: space-between;
+                //     .banner {
+                //         height: 100px;
+                //         background: #ff0;
+                //         background-size: cover;
+                //         background-position: center;
+                //     }
 
-                        .profile {
-                            gap: .5rem;
-                            display: flex;
-                            align-items: center;
+                //     .header {
+                //         display: flex;
+                //         padding: 1rem;
+                //         align-items: center;
+                //         justify-content: space-between;
 
-                            .image {
-                                width: 2.4rem;
-                                height: 2.4rem;
-                                background: #ff0053;
-                                border-radius: 50%;
-                            }
+                //         .profile {
+                //             gap: .5rem;
+                //             display: flex;
+                //             align-items: center;
 
-                            h1 {
-                                font-size: 1.1em;
-                            }
-                        }
+                //             .image {
+                //                 width: 2.4rem;
+                //                 height: 2.4rem;
+                //                 background: #ff0053;
+                //                 border-radius: 50%;
+                //                 background-size: cover;
+                //                 background-position: center;
+                //             }
 
-                        button {
-                            all: unset;
-                            color: #fff;
-                            font-size: .9em;
-                            cursor: pointer;
-                            border-radius: 50rem;
-                            color: #9900ff;
-                            padding: .6rem 1.3rem;
-                            background: #9900ff20;
-                            border: 1px solid #9900ff;
+                //             h1 {
+                //                 font-size: 1.1em;
+                //             }
+                //         }
 
-                            &:hover {
-                                color: #fff;
-                                background: #9900ff;
-                            }
-                        }
-                    }
+                //         button {
+                //             all: unset;
+                //             color: #fff;
+                //             font-size: .9em;
+                //             cursor: pointer;
+                //             border-radius: 50rem;
+                //             color: #9900ff;
+                //             padding: .6rem 1.3rem;
+                //             background: #9900ff20;
+                //             border: 1px solid #9900ff;
 
-                    .main {
-                        padding: 0 1rem 1rem 1rem;
+                //             &:hover {
+                //                 color: #fff;
+                //                 background: #9900ff;
+                //             }
+                //         }
+                //     }
 
-                        p {
-                            color: #555;
-                            hyphens: auto;
-                            font-size: .9em;
-                        }
-                    }
+                //     .main {
+                //         padding: 0 1rem 1rem 1rem;
 
-                    .footer {
-                        padding: 0 1rem 1rem 1rem;
-                    }
-                }
+                //         p {
+                //             color: #555;
+                //             hyphens: auto;
+                //             font-size: .9em;
+                //         }
+                //     }
+
+                //     .footer {
+                //         padding: 0 1rem 1rem 1rem;
+                //     }
+                // }
             }
         }
     }
@@ -292,8 +302,12 @@
         .community-profile-banner {
 
             .cover {
-                height: 150px;
-                background: #ff0053;
+                background: #9900ff;
+                background-size: cover;
+                background-position: center;
+                aspect-ratio: 16/9;
+                width: 100%;
+                max-height: 200px;
             }
 
             section {
@@ -315,9 +329,11 @@
                     height: clamp(3rem, 5vw, 4rem);
                     background: #9900ff;
                     border-radius: 50%;
+                    background-size: cover;
+                    background-position: center;
                 }
 
-                h1 { font-size: clamp(1.3em, 5vw, 2em); }
+                h1 { font-size: clamp(1.2em, 5vw, 1.5em); }
             }
 
             .buttons {
@@ -332,8 +348,14 @@
                     padding: .8rem 1.5rem;
                     border-radius: 50rem;
 
-                    &:nth-child(1) { border: 1px solid #555; background: none; }
-                    &:nth-child(2) { border: 1px solid #fff; background: #fff; }
+                    &:nth-child(1) { 
+                        border: 1px solid #555; background: none; 
+                        &:hover {
+                            color: #fff;
+                            background: #000;
+                        }
+                    }
+                    &:nth-child(2) { color: #fff; background: #9900ff; border: 1px solid #9900ff; }
                 }
             }
         }
@@ -443,8 +465,13 @@
             h1 { color: #fff; }
             p { color: #ccc; }
         
-            button:nth-child(1) { color: #fff; border: 1px solid #ddd; }
-            button:nth-child(2) { color: #000; }
+            button:nth-child(1) { 
+                color: #fff; border: 1px solid #ddd; 
+                &:hover {
+                    color: #000;
+                    background: #fff;
+                }
+            }
         }
     }
 

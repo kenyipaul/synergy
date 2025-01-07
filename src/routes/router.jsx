@@ -44,7 +44,7 @@ export const router = createHashRouter([
                         element: <CommunityPage />
                     },
                     {
-                        path: "/communities/community",
+                        path: "/communities/community/:id",
                         element: <CommunityProfile />
                     }
                 ]

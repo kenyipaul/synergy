@@ -1,9 +1,12 @@
-import React, { useContext, useState } from "react";
+import Axios from "axios"
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion"
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Footer from "../layout/Footer";
 import CommCreator from "../creators/commCreator";
 import { useSelector } from "react-redux";
+import { BackendHost, communityRoute } from "../routes/routes";
+import CommunityCard from "../modules/CommunityCard";
 
 
 export const CommFormContext = React.createContext(null);
@@ -25,19 +28,41 @@ export default function CommPage() {
 
 
 export function CommunityProfile() {
+
+    const location = useLocation();
+    const [response, setResponse] = useState([])
+
+    const tmp = location.pathname.split("/")
+    const community_id = tmp[tmp.length - 1]
+
+    useEffect(() => {
+
+        Axios({
+            method: "GET",
+            url: `${communityRoute}/fetch/${community_id}`,
+        }).then((response) => {
+            setResponse(response.data)
+        })
+
+    }, [community_id])
+
     return (
         <div className="community-profile">
 
             <div className="community-profile-header">
                 <div className="community-profile-banner">
-                    <div className="cover"></div>
+                    <div className="cover" style={{
+                        backgroundImage: `url(${BackendHost}/${response.community_banner})`
+                    }}></div>
                     
                     <section>
                         <div className="profile">
-                            <div className="image"></div>
+                            <div className="image" style={{
+                            backgroundImage: `url(${BackendHost}/${response.community_icon})`
+                        }}></div>
                             <div>
-                                <h1>BurgerHeads</h1>
-                                <p>144k members</p>
+                                <h1>{response.community_name}</h1>
+                                <p>{response.community_members && response.community_members.length} members</p>
                             </div>
                         </div>
 
@@ -107,6 +132,18 @@ export function CommunityPage() {
     const navigate = useNavigate();
     const authorizedState = useSelector(store => store.authorizedState)
     const [comFormState, setComFormState] = useContext(CommFormContext);
+    const [communities, setCommunities] = useState([]);
+
+    useEffect(() => {
+
+        Axios({
+            method: "GET",
+            url: `${communityRoute}/fetch`,
+        }).then((response) => {
+            setCommunities(response.data)
+        })
+
+    }, [])
 
     return (
         <div className="community-view-content">
@@ -141,18 +178,16 @@ export function CommunityPage() {
                     <button>View All</button>
                 </div>
                 <div className="community-list">
-                    <Community />
-                    <Community />
-                    <Community />
-                    <Community />
-                    <Community />
-                    <Community />
-                    <Community />
-                    <Community />
+                    {
+                        communities.map((data, key) => {
+                            // return <Community data={data} key={key} />
+                            return <CommunityCard data={data} key={key} />
+                        })
+                    }
                 </div>
             </div>
 
-            <div className="community-container">
+            {/* <div className="community-container">
                 <div className="top-bar">
                     <h1>Programming</h1>
                     <button>View All</button>
@@ -167,7 +202,7 @@ export function CommunityPage() {
                     <Community />
                     <Community />
                 </div>
-            </div>
+            </div> */}
 
         </div>
     </div>
@@ -175,21 +210,41 @@ export function CommunityPage() {
 }
 
 
-function Community() {
+function Community(props) {
+    const authorizedState = useSelector(store => store.authorizedState)
+
+    const join = () => {
+        Axios({
+            method: "POST",
+            url: `${communityRoute}/join`,
+            data: {
+                community_id: props.data._id,
+                user_id: authorizedState.user.id
+            }
+        }).then((response) => {
+            console.log(response)
+        })
+    }
+
     return (
         <div className="community">
+            <div className="banner" style={{
+                backgroundImage: `url(${BackendHost}/${props.data.community_banner})`
+            }}></div>
             <div className="header">
                 <div className="profile">
-                    <div className="image"></div>
-                    <h1>BurgerHeads</h1>
+                    <div className="image" style={{
+                        backgroundImage: `url(${BackendHost}/${props.data.community_icon})`
+                    }}></div>
+                    <h1>{props.data.community_name}</h1>
                 </div>
-                <button>Join</button>
+                { !props.data.community_members.includes(authorizedState.user.id) && <button onClick={join}>Join</button> }
             </div>
             <div className="main">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, soluta? Similique odio obcaecati maiores illo.</p>
+                <p>{props.data.community_description}</p>
             </div>
             <div className="footer">
-                <p>12k members</p>
+                <p>{props.data.community_members.length} members</p>
             </div>
         </div>
     )

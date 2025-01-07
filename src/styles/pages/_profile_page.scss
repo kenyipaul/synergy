@@ -11,18 +11,6 @@
         overflow: hidden;
         position: relative;
         z-index: 1;
-        //background: #fff url(/pattern.svg);
-
-        // &::before {
-        //     content: "";
-        //     top: 0;
-        //     left: 0;
-        //     width: 100%;
-        //     height: 100%;
-        //     position: absolute;
-        //     background: transparent linear-gradient(transparent, transparent, #fff, #fff);
-        //     z-index: -1;
-        // }
 
         section {
             width: 100%;
@@ -41,8 +29,8 @@
                     align-items: center;
 
                     .image {
-                        width: 4rem;
-                        height: 4rem;
+                        width: 5rem;
+                        height: 5rem;
                         border-radius: 50%;
                         background: #ff0053;
                     }
@@ -78,7 +66,7 @@
                     white-space: nowrap;
                     padding: 1rem 1.5rem;
 
-                    &:nth-child(1) {
+                    &.active {
                         color: #9900ff;
                         font-weight: 900;
                         margin-left: 1rem;
@@ -170,6 +158,7 @@
                     }
 
                     h1 { color: #fff; }
+                    p { color: #ccc; }
                 }
 
                 button {
@@ -183,7 +172,7 @@
                 button {
                     color: #fff;
 
-                    &:nth-child(1) {
+                    &.active {
                         color: #9900ff;
                     }
                 }

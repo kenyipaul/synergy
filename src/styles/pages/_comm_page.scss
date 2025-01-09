@@ -477,7 +477,9 @@
                     width: 3rem;
                     height: 3rem;
                     border-radius: 50%;
-                    background: $primary-theme;
+                    background-color: $primary-theme;
+                    background-size: cover;
+                    background-position: center;
                 }
 
                 h1 {
@@ -514,11 +516,48 @@
             }
         }
 
+        &.feed-view-desktop { display: none; }
         &.about-view-desktop { display: none; }
+
+        // .about-view-mobile { display: none; }
+        // .feed-view-mobile { display: none; }
+        
+        &.about-view-mobile {
+            padding: 2rem;
+            margin-top: 1rem;
+            max-width: 600px;
+            border: 1px solid #ddd;
+        }
 
     }
 
 }
+
+
+#app.dark .community-profile {
+    .about-view {
+
+        .top-bar {
+            h1 { color: #fff; }
+        }
+
+        .content {
+            h1 { color: #fff; }
+            p { color: #ccc; }
+        }
+
+        .details div {
+            color: #fff;
+            svg { color: #fff; }
+        }
+
+    }
+}
+
+
+
+
+
 
 
 @media (min-width: 950px) {
@@ -540,6 +579,14 @@
                 display: grid;
                 align-content: start;
             }
+
+            .about-view-mobile { display: none; }
+            .feed-view-mobile { display: none; }
+
+            .feed-view-desktop {
+                display: grid;
+            }
+
         }
     }
 }
@@ -573,10 +620,17 @@
         }
     }
 
-    .navigation-tabs button {
-        color: #fff;
+    .navigation-tabs {
+        border-bottom: 1px solid #ffffff20;
 
-        &:hover { color: $primary-theme; font-weight: 900; }
+        button {
+            color: #fff;   
+            &:hover { color: $primary-theme; font-weight: 900; }
+        }
+    }
+
+    .about-view-mobile {
+        border: 1px solid #ffffff20;
     }
 
     .post {

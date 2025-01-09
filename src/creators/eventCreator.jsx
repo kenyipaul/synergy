@@ -135,29 +135,36 @@ function Step2() {
         const category = categoryRef.current.value;
         const image = imageRef.current.files[0];
 
-        if (image) {
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = () => {
-                const event = JSON.parse(sessionStorage.getItem("event"));
-                event.location = location;
-                event.category = category;
-                event.image = reader.result;
-                sessionStorage.setItem("event", JSON.stringify(event));
-                setStep(step + 1);
-            }
-        } else {
-            if (location && category) {
-                const event = JSON.parse(sessionStorage.getItem("event"));
-                event.location = location;
-                event.category = category;
-                event.image = "";
-                sessionStorage.setItem("event", JSON.stringify(event));
-                setStep(step + 1);
+        if (image.size < 3000000) {
+
+            if (image) {
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = () => {
+                    const event = JSON.parse(sessionStorage.getItem("event"));
+                    event.location = location;
+                    event.category = category;
+                    event.image = reader.result;
+                    sessionStorage.setItem("event", JSON.stringify(event));
+                    setStep(step + 1);
+                }
             } else {
-                alert("Please fill out the fields.")
+                if (location && category) {
+                    const event = JSON.parse(sessionStorage.getItem("event"));
+                    event.location = location;
+                    event.category = category;
+                    event.image = "";
+                    sessionStorage.setItem("event", JSON.stringify(event));
+                    setStep(step + 1);
+                } else {
+                    alert("Please fill out the fields.")
+                }
             }
+            
+        } else {
+            alert("Selected image is too large, try an image less than 3MB")
         }
+
     }
 
     return (

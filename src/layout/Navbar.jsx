@@ -29,6 +29,11 @@ export default function Navbar() {
         localStorage.setItem("theme", theme)
     }
 
+    const open = (url) => {
+        route(url);
+        setMenuState(false)
+    }
+
     return (
         <motion.div initial={{ translateY: -55 }} whileInView={{ translateY: 0 }} transition={{ duration: .3, ease: "backInOut" }} id="navbar">
 
@@ -36,11 +41,10 @@ export default function Navbar() {
                 <svg onClick={() => dispatch(setNavbarState(!navbarState))} width="2.5rem" height="2.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Menu_Alt_05"> <path id="Vector" d="M5 17H13M5 12H19M11 7H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
                 <h1 onClick={() => navigate("/")}>Synergy</h1>
                 <ul className={navbarState ? "active" : ""}>
-                    <li className={location.pathname == "/" ? "active" : ""} onClick={() => route("/") }>Home</li>
-                    <li className={location.pathname == "/events" ? "active" : ""} onClick={() => route("/events") }>Events</li>
-                    {/* <li className={location.pathname == "/jobs" ? "active" : ""} onClick={() => route("/jobs") }>Job Board</li> */}
-                    <li className={location.pathname == "/communities" ? "active" : ""} onClick={() => route("/communities") }>Community</li>
-                    <li className={location.pathname == "/about" ? "active" : ""} onClick={() => route("/about") }>About Us</li>
+                    <li className={location.pathname == "/" ? "active" : ""} onClick={() => open("/") }>Home</li>
+                    <li className={location.pathname == "/events" ? "active" : ""} onClick={() => open("/events") }>Events</li>
+                    <li className={location.pathname == "/communities" ? "active" : ""} onClick={() => open("/communities") }>Community</li>
+                    <li className={location.pathname == "/about" ? "active" : ""} onClick={() => open("/about") }>About Us</li>
 
                     <svg onClick={() => dispatch(setNavbarState(false))} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>                
                 </ul>
@@ -58,10 +62,9 @@ export default function Navbar() {
                         </div>
                         <div className={menuState ? "auth-menu active" : "auth-menu"}>
                             <ul>
-                                <li>Bookmarks</li>
-                                <li>My Community</li>
-                                <li onClick={() => route("/profile")}>Profile Settings</li>
-                                <li></li>
+                                <li onClick={() => open("/profile")}>View Profile</li>
+                                {/* <li onClick={() => open("/profile")}>My Community</li> */}
+                                {/* <li></li> */}
                                 <li>Log Out</li>
                             </ul>
                         </div>

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
 import Footer from "../layout/Footer"
 import { motion } from "framer-motion"
+import { useNavigate } from "react-router-dom"
 
 export default function HomePage() {
     return (
@@ -165,6 +166,9 @@ const faqs = [
 
 
 function CommunityBoard() {
+
+    const navigate = useNavigate();
+
     return (
         <div className="community-board">
             <div className="title-bar">
@@ -182,7 +186,7 @@ function CommunityBoard() {
 
             </div>
 
-            <button>Create Your Community</button>
+            <button onClick={() => navigate("/communities")}>Create Your Community</button>
         </div>
     )
 }

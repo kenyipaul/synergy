@@ -53,8 +53,8 @@
                     padding: 1rem;
                     white-space: nowrap;
 
-                    &:hover { color: #9900ff !important; }
-                    &.active { color: #9900ff !important; font-weight: 900; }
+                    &:hover { color: $primary-theme !important; }
+                    &.active { color: $primary-theme !important; font-weight: 900; }
                 }
 
                 .closeBtn {
@@ -80,7 +80,7 @@
                 // background: $dark;
                 background: #fff;
                 transition: 0.2s ease;
-                border: 1px solid #9900ff;
+                border: 1px solid $primary-theme;
                 display: flex;
                 padding: 0 2rem;
                 max-height: 0;
@@ -103,7 +103,8 @@
                     &:nth-child(2) {
                         color: #fff;
                         font-size: .9em;
-                        background: #9900ff linear-gradient(-315deg, #a02de2, #5600e0);
+                        background: $primary-theme;
+                        // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);
                     }
                 }
             }
@@ -120,7 +121,7 @@
                 padding: .5rem;
                 background: #eee;
                 border-radius: 1rem;
-                border: 1px solid #9900ff;
+                border: 1px solid $primary-theme;
             }
 
             .auth-user {
@@ -140,7 +141,7 @@
                         width: 2rem;
                         height: 2rem;
                         border-radius: 50rem;
-                        background: #ff0053;
+                        background: $primary-theme;
                     }
 
                     h1 {
@@ -175,7 +176,7 @@
 
                             &:hover {
                                 font-weight: 900;
-                                color: #9900ff;
+                                color: $primary-theme;
                             }
                         }
                     }
@@ -280,7 +281,7 @@
 
         .profile {
             background: $dark;
-            border: 1px solid #9900ff;
+            border: 1px solid $primary-theme;
         }
 
         .auth-user {
@@ -294,7 +295,7 @@
                 border: 1px solid #ffffff30;
             
                 ul li:hover {
-                    color: #9900ff;
+                    color: $primary-theme;
                 }
             }
         }

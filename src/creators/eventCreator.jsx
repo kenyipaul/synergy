@@ -4,15 +4,20 @@ import 'rsuite/TagInput/styles/index.css';
 import React, { useState , useContext, useRef} from "react";
 import { EventCreatorContext } from "../pages/EventPage";
 import { eventRoute } from "../routes/routes";
+import { useSelector } from "react-redux";
 
 const StepContext = React.createContext(null);
 
 export default function EventCreator() {
 
     const [step, setStep] = useState(1);
+    const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
 
     return (
         <div id="event-creator">
+
+            <svg onClick={() => setEventCreator(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+
             <div className="container">
 
                 <div className="form">
@@ -130,29 +135,36 @@ function Step2() {
         const category = categoryRef.current.value;
         const image = imageRef.current.files[0];
 
-        if (image) {
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = () => {
-                const event = JSON.parse(sessionStorage.getItem("event"));
-                event.location = location;
-                event.category = category;
-                event.image = reader.result;
-                sessionStorage.setItem("event", JSON.stringify(event));
-                setStep(step + 1);
-            }
-        } else {
-            if (location && category) {
-                const event = JSON.parse(sessionStorage.getItem("event"));
-                event.location = location;
-                event.category = category;
-                event.image = "";
-                sessionStorage.setItem("event", JSON.stringify(event));
-                setStep(step + 1);
+        if (image.size < 3000000) {
+
+            if (image) {
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = () => {
+                    const event = JSON.parse(sessionStorage.getItem("event"));
+                    event.location = location;
+                    event.category = category;
+                    event.image = reader.result;
+                    sessionStorage.setItem("event", JSON.stringify(event));
+                    setStep(step + 1);
+                }
             } else {
-                alert("Please fill out the fields.")
+                if (location && category) {
+                    const event = JSON.parse(sessionStorage.getItem("event"));
+                    event.location = location;
+                    event.category = category;
+                    event.image = "";
+                    sessionStorage.setItem("event", JSON.stringify(event));
+                    setStep(step + 1);
+                } else {
+                    alert("Please fill out the fields.")
+                }
             }
+            
+        } else {
+            alert("Selected image is too large, try an image less than 3MB")
         }
+
     }
 
     return (
@@ -190,6 +202,7 @@ function Step3() {
     const [tags, setTags] = useState([])
     const [step, setStep] = useContext(StepContext);
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
+    const authorizedState = useSelector(store => store.authorizedState)
 
     const websiteRef = useRef(null);
     const contactRef = useRef(null);
@@ -202,6 +215,7 @@ function Step3() {
         event.tags = tags;
         event.website = website;
         event.contact = contact;
+        event.admin = authorizedState.user.id
 
         let token = sessionStorage.getItem("token");
 

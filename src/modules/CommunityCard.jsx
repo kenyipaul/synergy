@@ -33,7 +33,7 @@ export default function CommunityCard(props) {
                     }}></div>
                 </div>
                 <div className="topBar">
-                    { !props.data.community_members.includes(authorizedState.user.id) && <button onClick={join}>Join</button> }
+                    { !props.data.community_members.includes(authorizedState.user.id) ? <button onClick={join}>Join</button> : <button className="joined">Joined</button> }
                 </div>
             </section>
             <section>

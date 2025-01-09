@@ -64,7 +64,7 @@
                     text-align: center;
                     padding: 1rem 1.5rem;
                     border-radius: 50rem;
-                    background: #9900ff;
+                    background: $primary-theme;
                 }
             }
         }
@@ -101,7 +101,7 @@
                 border-radius: .5rem;
                 border: 1px solid #00000025;
 
-                &:focus { border: 1px solid #9900ff; }
+                &:focus { border: 1px solid $primary-theme; }
             }
         }
     }
@@ -197,7 +197,6 @@
                 max-width: 340px;
                 min-width: 340px;
                 min-height: 430px;
-                margin-left: 1rem;
                 border-radius: 1.5rem;
                 border: 1px solid #ddd;
                 position: relative;
@@ -206,6 +205,10 @@
                 align-items: center;
                 background: #f3f3f3;
                 justify-content: center;
+
+                &:first-child {
+                    margin-left: 1rem;
+                }
 
                 h1 {
                     z-index: 99;
@@ -259,7 +262,7 @@
                     text-align: center;
                     padding: 1rem 1.5rem;
                     border-radius: 50rem;
-                    background: #9900ff;
+                    background: $primary-theme;
                 }
             }
         }
@@ -339,11 +342,11 @@
                     all: unset;
                     font-size: .85em;
                     text-align: center;
-                    color: #9900ff;
+                    color: $primary-theme;
                     cursor: pointer;
                     padding: 1rem 1.5rem;
-                    background: #9900ff50;
-                    border: 1px solid #9900ff;
+                    background: $primary-theme;
+                    border: 1px solid $primary-theme;
                     border-radius: 50rem;
                 }
             }
@@ -355,7 +358,7 @@
                 align-items: center;
 
                 p {
-                    color: #9900ff;
+                    color: $primary-theme;
                 }
             }
 
@@ -419,6 +422,17 @@
             background: none;
             background-image: linear-gradient(to right, transparent, $darker) !important;
         }
+
+        .loading-event {
+            background: $dark;
+            border: 1px solid #ffffff20;
+
+            h1 { color: #fff; }
+
+            .slider {
+                background-image: linear-gradient(transparent, #ffffff15, #ffffff15, transparent);
+            }
+        }
     }
 
     .event-view {
@@ -446,7 +460,7 @@
                 button {
                     color: #fff;
                     cursor: pointer;
-                    background: #9900ff;
+                    background: $primary-theme;
                 }
             }
 

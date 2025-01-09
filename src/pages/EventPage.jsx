@@ -29,31 +29,26 @@ export default function EventPage() {
     const scrollFRight = () => { upcomingRef.current.scrollBy(300, 0); }
     const scrollFLeft = () => { upcomingRef.current.scrollBy(-300, 0); }
     
-    const scrollLRight = () => { pastRef.current.scrollBy(300, 0); }
-    const scrollLLeft = () => { pastRef.current.scrollBy(-300, 0); }
+    // const scrollLRight = () => { pastRef.current.scrollBy(300, 0); }
+    // const scrollLLeft = () => { pastRef.current.scrollBy(-300, 0); }
 
 
     useEffect(() => {
-        let token = sessionStorage.getItem("token");
-
-        if (token) {
-            Axios({
-                method: "GET",
-                url: eventsRoute,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            }).then((response) => {
-                setEvents(response.data)
-                setLoading(false)
-            }).catch((error) => {
-                if(!error.response.data.acknowledged) {
-                    alert(error.response.data.msg)
-                    navigate("/login")
-                }
-            })
-        }
+        Axios({
+            method: "GET",
+            url: eventsRoute,
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            setEvents(response.data)
+            setLoading(false)
+        }).catch((error) => {
+            if(!error.response.data.acknowledged) {
+                alert(error.response.data.msg)
+                navigate("/login")
+            }
+        })
     }, [eventCreator])
 
 
@@ -153,6 +148,7 @@ export default function EventPage() {
 
 function EventPlaceHolder() {
 
+    const navigate = useNavigate();
     const authorizedState = useSelector(state => state.authorizedState)
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext);
 
@@ -178,9 +174,9 @@ function LoadingEvent() {
 
 function EventView() {
 
+    const navigate = useNavigate();
     const [selectedEvent, setSelectedEvent] = useContext(SelectedEventContext);
     const [eventViewState, setEventViewState] = useContext(EventViewContext);
-
 
     return selectedEvent && (
         <div className="event-view" style={{

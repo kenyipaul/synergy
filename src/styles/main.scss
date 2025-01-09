@@ -28,7 +28,7 @@
         position: relative;
 
         &::-webkit-scrollbar { width: 2px }
-        &::-webkit-scrollbar-thumb { background: #9900ff linear-gradient(#9900ff, #0099ff); }
+        &::-webkit-scrollbar-thumb { background-image: linear-gradient(transparent, $primary-theme); }
     
         .dimmer {
             top: 0;

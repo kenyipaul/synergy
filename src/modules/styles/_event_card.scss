@@ -1,3 +1,5 @@
+@use "../../styles/global" as *;
+
 .event-card {
     width: 100%;
     max-width: 350px;
@@ -35,7 +37,7 @@
             align-items: center;
 
             p {
-                color: #9900ff;
+                color: $primary-theme;
             }
         }
 
@@ -72,14 +74,14 @@
                 }
     
                 &:hover {
-                    color: #9900ff !important;
+                    color: $primary-theme !important;
                 }
             }
 
             svg {
                 cursor: pointer;
                 &:hover {
-                    color: #9900ff !important;
+                    color: $primary-theme !important;
                 }
             }
         }
@@ -104,7 +106,7 @@
         filter: blur(5.5rem);
         position: absolute;
         border-radius: 50%;
-        background: #9900ff linear-gradient(315deg, #ff0053, #9900ff);
+        background: $primary-theme linear-gradient(315deg, #ff0053, $primary-theme);
         z-index: -1;
     }
 
@@ -114,7 +116,7 @@
         .footer {
             button { 
                 color: #fff; 
-                &:hover svg { color: #9900ff; }
+                &:hover svg { color: $primary-theme; }
             }
             svg { color: #fff; }
         }

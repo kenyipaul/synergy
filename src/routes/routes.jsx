@@ -6,3 +6,4 @@ export const authRoute = `${BackendHost}/api/auth/`
 export const eventRoute = `${BackendHost}/api/event/`
 export const eventsRoute = `${BackendHost}/api/events/`
 export const communityRoute = `${BackendHost}/api/community`
+export const postRoute = `${BackendHost}/api/post`

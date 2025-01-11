@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { BackendHost, eventsRoute } from "../routes/routes";
+import { io } from "socket.io-client"
 
 export const EventCreatorContext = React.createContext(null);
 export const SelectedEventContext = React.createContext(null);
@@ -15,6 +16,7 @@ export const EventViewContext = React.createContext(null)
 
 export default function EventPage() {
 
+    const socket = useRef();
     const pastRef = useRef();
     const upcomingRef = useRef();
     const navigate = useNavigate();
@@ -25,15 +27,17 @@ export default function EventPage() {
     const [selectedEvent, setSelectedEvent] = useState(null)
     const [eventViewState, setEventViewState] = useState(false)
     const authorizedState = useSelector(state => state.authorizedState)
-
+    const updaterState = useSelector(state => state.updaterState)
+    
     const scrollFRight = () => { upcomingRef.current.scrollBy(300, 0); }
     const scrollFLeft = () => { upcomingRef.current.scrollBy(-300, 0); }
     
     // const scrollLRight = () => { pastRef.current.scrollBy(300, 0); }
     // const scrollLLeft = () => { pastRef.current.scrollBy(-300, 0); }
-
+    
 
     useEffect(() => {
+
         Axios({
             method: "GET",
             url: eventsRoute,
@@ -49,7 +53,7 @@ export default function EventPage() {
                 navigate("/login")
             }
         })
-    }, [eventCreator])
+    }, [eventCreator, socket])
 
 
     return (
@@ -171,6 +175,7 @@ function LoadingEvent() {
         </div>
     )
 }
+
 
 function EventView() {
 

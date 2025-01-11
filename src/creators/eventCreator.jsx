@@ -1,10 +1,12 @@
 import Axios from "axios"
 import { TagInput } from "rsuite";
 import 'rsuite/TagInput/styles/index.css';
-import React, { useState , useContext, useRef} from "react";
+import React, { useState , useContext, useRef, useEffect} from "react";
 import { EventCreatorContext } from "../pages/EventPage";
-import { eventRoute } from "../routes/routes";
-import { useSelector } from "react-redux";
+import { BackendHost, eventRoute } from "../routes/routes";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client"
+import { setUpdater } from "../store/states/updaterState";
 
 const StepContext = React.createContext(null);
 
@@ -199,6 +201,7 @@ function Step2() {
 
 function Step3() {
 
+    const socket = useRef();
     const [tags, setTags] = useState([])
     const [step, setStep] = useContext(StepContext);
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
@@ -206,6 +209,10 @@ function Step3() {
 
     const websiteRef = useRef(null);
     const contactRef = useRef(null);
+
+    useEffect(() => {
+        socket.current = io(BackendHost);
+    }, [])
 
     const post = () => {
         const website = websiteRef.current.value;
@@ -238,6 +245,15 @@ function Step3() {
         }
     }
     
+    const dispatch  = useDispatch();
+    const updaterState = useSelector(store => store.updaterState);
+    
+    useEffect(() => {
+        socket.current.on('event-uploaded', () => {
+            dispatch(setUpdater(!updaterState))
+        })
+    })
+
     return (
         <div className="form-content">
             <div className="input-area">

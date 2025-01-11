@@ -2,7 +2,7 @@ import Axios from "axios"
 import CommunityCard from "../../modules/CommunityCard";
 
 import { useSelector } from "react-redux";
-import { BackendHost } from "../../routes/routes";
+import { BackendHost, postRoute } from "../../routes/routes";
 import { communityRoute } from "../../routes/routes";
 import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -37,13 +37,17 @@ export function CommunityProfile() {
     useEffect(() => {
 
         Axios({
-            method: "GET",
-            url: `${BackendHost}/api/posts/`
+            method: "POST",
+            url: `${BackendHost}/api/posts/`,
+            data: {
+                id: community_id
+            }
         }).then((response) => {
             setPosts(response.data)
         })
 
-    }, [postCreatorState])
+    }, [postCreatorState, community_id])
+
 
     const join = () => {
         Axios({
@@ -102,7 +106,8 @@ export function CommunityProfile() {
                                 })
                             : <div className="placeholder">
                                 <h1>This community doesn't have any posts yet</h1>
-                                { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState(true)}>Create Post</button> }
+                                { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState({id: response._id, state: true})}>Create Post</button> }
+                                {/* { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState(true)}>Create Post</button> } */}
                             </div>
                         }
                     </div>
@@ -134,8 +139,7 @@ export function CommunityProfile() {
                         })
                         : <div className="placeholder">
                             <h1>This community doesn't have any posts yet</h1>
-                            { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState({id: response.community_id, state: true})}>Create Post</button> }
-                            { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState(true)}>Create Post</button> }
+                            { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState({id: response._id, state: true})}>Create Post</button> }
                         </div>
                     }
                 </div>
@@ -168,13 +172,17 @@ export function CommunityProfile() {
 // COMMUNITY POST
 
 function Post(props) {
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
     return (
-        <div className="post">
+        <div className="post" onClick={() => navigate(`${location.pathname}/${props.data._id}`) }>
             <div className="post-header">
                 <div className="post-header-image"></div>
                 <div>
-                    <h1>John Doe</h1>
-                    <p>Posted 2 hours ago</p>
+                    <h1>sy/{props.data.admin_name}</h1>
+                    <p>{timeAgo(props.data.post_date)}</p>
                 </div>
             </div>
             <div className="post-content">
@@ -331,3 +339,118 @@ export function CommunityTopicPage() {
         </div>
     )
 }
+
+
+
+// COMMUNITY POST PAGE 
+
+export function CommunityPostPage() {
+
+    const location = useLocation();
+    const [response, setResponse] = useState({})
+    const tmp = decodeURIComponent(location.pathname).split("/");
+    const url = tmp[tmp.length - 1]
+
+    useEffect(() => {
+
+        Axios({
+            method: "GET",
+            url: `${BackendHost}/api/post/${url}`,
+        }).then((response) => {
+            setResponse(response.data)
+        })
+
+    })
+
+    return (
+        <div className="community-post-page">
+            <div className="community-post-content">
+                <div className="post-header">
+
+                    <div className="top-bar">
+                        <div className="profile"></div>
+                        <div>
+                            <h1>sy/ulkstudents</h1>
+                            <p>@johndoe</p>
+                        </div>
+                    </div>
+
+                    <div className="content">
+                        <h1>As a chef people are unnecessarily intimidated of cooking for me</h1>
+                        <div className="body">
+                            <p>As someone who cooks for a living I believe the time and energy someone puts into a meal for me is something I'll always be grateful of. I feel like I'm always explaining a home cooked meal is something that is always a treatNow, yes, deep in the bowels of my subconscious I am judging the salt in the meal but I'm always appreciative of it.I think back to one of my very first family meals and the upset looks from FOH and how devastating it was for me.</p>
+                        </div>
+                        <div className="image"></div>
+                    </div>
+
+                    <div className="post-footer">
+                        <button> <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Arrow / Arrow_Up_SM"> <path id="Vector" d="M12 17V7M12 7L8 11M12 7L16 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg> <p>2k</p> <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Arrow / Arrow_Down_SM"> <path id="Vector" d="M12 7V17M12 17L16 13M12 17L8 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg> </button>
+                        <button> <svg width="1.5rem" height="1.5rem" fill="currentColor" viewBox="0 0 1024 1024" t="1569682881658" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8185" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style type="text/css"></style></defs><path d="M573 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40zM293 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8186"></path><path d="M894 345c-48.1-66-115.3-110.1-189-130v0.1c-17.1-19-36.4-36.5-58-52.1-163.7-119-393.5-82.7-513 81-96.3 133-92.2 311.9 6 439l0.8 132.6c0 3.2 0.5 6.4 1.5 9.4 5.3 16.9 23.3 26.2 40.1 20.9L309 806c33.5 11.9 68.1 18.7 102.5 20.6l-0.5 0.4c89.1 64.9 205.9 84.4 313 49l127.1 41.4c3.2 1 6.5 1.6 9.9 1.6 17.7 0 32-14.3 32-32V753c88.1-119.6 90.4-284.9 1-408zM323 735l-12-5-99 31-1-104-8-9c-84.6-103.2-90.2-251.9-11-361 96.4-132.2 281.2-161.4 413-66 132.2 96.1 161.5 280.6 66 412-80.1 109.9-223.5 150.5-348 102z m505-17l-8 10 1 104-98-33-12 5c-56 20.8-115.7 22.5-171 7l-0.2-0.1C613.7 788.2 680.7 742.2 729 676c76.4-105.3 88.8-237.6 44.4-350.4l0.6 0.4c23 16.5 44.1 37.1 62 62 72.6 99.6 68.5 235.2-8 330z" p-id="8187"></path><path d="M433 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8188"></path></g></svg> <p>24k</p> </button>
+                        <button> <svg width="2rem" height="2rem" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg> <p>Share</p> </button>
+                    </div>
+                </div>
+
+
+                <div className="post-comments">
+
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
+
+
+function timeAgo(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Convert timestamp to Date object if needed
+    }
+  
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+  
+    let interval = Math.floor(seconds / 31536000); // Years
+  
+    if (interval > 1) {
+      return interval + " years ago";
+    }
+    interval = Math.floor(seconds / 2592000); // Months
+    if (interval > 1) {
+      return interval + " months ago";
+    }
+    interval = Math.floor(seconds / 86400); // Days
+    if (interval > 1) {
+      return interval + " days ago";
+    }
+    interval = Math.floor(seconds / 3600); // Hours
+    if (interval > 1) {
+      return interval + " hours ago";
+    }
+    interval = Math.floor(seconds / 60); // Minutes
+    if (interval > 1) {
+      return interval + " minutes ago";
+    }
+    if (seconds < 5) {
+        return "just now"
+    }
+    return Math.floor(seconds) + " seconds ago";
+  }
+  
+//   // Example usage:
+//   const pastDate = new Date();
+//   pastDate.setMinutes(pastDate.getMinutes() - 2); // 2 minutes ago
+//   console.log(timeAgo(pastDate)); // Output: 2 minutes ago
+  
+//   const pastDate2 = new Date();
+//   pastDate2.setHours(pastDate2.getHours()-1)
+//   console.log(timeAgo(pastDate2)) // Output: 1 hour ago
+  
+//   const pastDate3 = new Date("2024-01-01T10:00:00Z")
+//   console.log(timeAgo(pastDate3))
+  
+//   const timestamp = 1700000000000; // Example timestamp
+//   console.log(timeAgo(timestamp));
+  
+//   const justNow = new Date();
+//   console.log(timeAgo(justNow))

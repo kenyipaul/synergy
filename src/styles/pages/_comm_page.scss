@@ -382,6 +382,7 @@
 
     .view {
         margin: auto;
+        width: 100%;
         padding: 1rem;
         max-width: 1280px;
 
@@ -389,13 +390,38 @@
             gap: .5rem;
             width: 100%;
             display: grid;
-            place-content: center;
+
+            .placeholder {
+                gap: 1rem;
+                display: flex;
+                margin: 2rem 0;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+
+                h1 {
+                    color: #555;
+                    font-size: 1.5em;
+                    text-align: center;
+                }
+
+                button {
+                    all: unset;
+                    color: #fff;
+                    font-size: .9em;
+                    cursor: pointer;
+                    padding: 1rem 1.5rem;
+                    border-radius: 50rem;
+                    background: $primary-theme;
+                }
+            }
 
             .post {
-                gap: .5rem;
+                gap: 1rem;
+                width: 100%;
                 display: grid;
                 padding: 1rem;
-                // border: 1px solid #eee;
+                border-bottom: 1px solid #ddd;
 
                 .post-header {
                     gap: .5rem;
@@ -425,6 +451,9 @@
                 }
 
                 .post-content {
+                    gap: .5rem;
+                    display: grid;
+
                     h1 {
                         font-size: 1.1em;
                         font-family: $secondary-font;
@@ -432,6 +461,12 @@
                     p {
                         color: #555;
                         font-size: 1em;
+                    }
+                    .poster {
+                        aspect-ratio: 16/9;
+                        border-radius: 1rem;
+                        background-size: cover;
+                        background-position: center;
                     }
                 }
 
@@ -535,6 +570,19 @@
 
 
 #app.dark .community-profile {
+    .feed-view {
+        .placeholder {
+            h1 { color: #fff; }
+        }
+
+        .post {
+            border-bottom: 1px solid #ffffff30;
+
+            .poster {
+                outline: 1px solid #ffffff30;
+            }
+        }
+    }
     .about-view {
 
         .top-bar {
@@ -603,6 +651,47 @@
 
 
 
+// COMMUNITY TOPIC PAGE 
+
+.community-topic-page {
+
+    .community-container {
+        margin: auto;
+        padding: 1rem;
+        max-width: 1280px;
+
+        .top-bar {
+            gap: 1rem;
+            display: flex;
+            margin-bottom: 2rem;
+            align-items: center;
+
+            svg {
+                width: 2rem;
+                height: 2rem;
+                cursor: pointer;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+            
+        }
+    }
+
+    .community-grid {
+        gap: .5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+}
+
+
+
+
+
+
 #app.dark .community-profile {
 
     .community-profile-banner {
@@ -652,4 +741,16 @@
         }
     }
 
+
+}
+
+
+#app.dark .community-topic-page .community-container .top-bar {
+    h1 {
+        color: #fff;
+    }
+
+    svg {
+        color: #fff;
+    }
 }

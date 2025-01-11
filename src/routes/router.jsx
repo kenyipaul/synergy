@@ -11,7 +11,7 @@ import ProfilePage from "../pages/ProfilePage";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
 
-import { CommunityPage, CommunityProfile, CommunityTopicPage } from "../pages/components/comm_components";
+import { CommunityPage, CommunityPostPage, CommunityProfile, CommunityTopicPage } from "../pages/components/comm_components";
 
 // import CommunityView from "../views/community_views/CommunityView";
 // import CommunityViewContent from "../views/community_views/CommunitViewContent";
@@ -50,6 +50,10 @@ export const router = createHashRouter([
                     {
                         path: "/communities/community/:id",
                         element: <CommunityProfile />
+                    },
+                    {
+                        path: "/communities/community/:id/:id/",
+                        element: <CommunityPostPage />
                     }
                 ]
             },

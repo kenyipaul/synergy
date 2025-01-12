@@ -23,21 +23,21 @@ export default function CommunityCard(props) {
     }
 
     return (
-        <div className="community-card" onClick={() => navigate(`/communities/community/${props.data._id}`)}>
+        <div className="community-card">
             <section>
                 <div className="header" style={{
                     backgroundImage: `url(${BackendHost}/${props.data.community_banner})`
-                }}>
+                }} onClick={() => navigate(`/communities/community/${props.data._id}`)}>
                     <div className="profile" style={{
                         backgroundImage: `url(${BackendHost}/${props.data.community_icon})`
-                    }}></div>
+                    }} onClick={() => navigate(`/communities/community/${props.data._id}`)}></div>
                 </div>
                 <div className="topBar">
                     { props.data.community_members && !props.data.community_members.includes(authorizedState.user.id) ? <button onClick={join}>Join</button> : <button className="joined">Joined</button> }
                 </div>
             </section>
             <section>
-                <div className="main">
+                <div className="main" onClick={() => navigate(`/communities/community/${props.data._id}`)}>
                     <h1>{props.data.community_name}</h1>
                     {/* <div className="tags">
                         <p>#programming</p>

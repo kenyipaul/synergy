@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const authorizedState = createSlice({
     name: "authorized",
     initialState: {
-        "authorized": false,
-        "user": {}
+        authorized: false,
+        user: {}
     },
     reducers: {
         setAuthorized: (state, action) => {

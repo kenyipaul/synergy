@@ -2,27 +2,32 @@
 
 .event-card {
     width: 100%;
-    max-width: 350px;
+    height: 380px;
+    width: 320px;
+    min-width: 320px;
     overflow: hidden;
     position: relative;
     border-radius: 1.5rem;
     border: 1px solid #00000020;
-    // box-shadow: 0 .5rem .5rem .2rem #00000010;
     z-index: 0;
 
+    display: grid;
+    grid-template-rows: [col-start] 1fr [col-end] 1fr;
+
     .poster {
-        height: 200px;
         background: #10132C url(/assets/images/color-festival.jpg);
         background-size: cover;
         background-position: center;
     }
 
     .content {
+        gap: .5rem;
+        display: flex;
         padding: 1.5rem;
+        flex-direction: column;
 
         .date {
             color: #ff0053;
-            margin-bottom: .5rem;
         }
 
         h1 {
@@ -33,16 +38,17 @@
         .tags {
             gap: 1rem;
             display: flex;
-            margin: .5rem 0;
             align-items: center;
 
             p {
+                hyphens: auto;
                 color: $primary-theme;
             }
         }
-
+        
         .description {
             color: #555;
+            height: 38px;
             hyphens: auto;
             display: -webkit-box;
             line-clamp: 3;
@@ -54,8 +60,8 @@
 
         .footer {
             display: flex;
-            margin-top: 1.5rem;
             align-items: center;
+            padding: .5rem 0 0 0;
             justify-content: space-between;
 
             button {
@@ -92,9 +98,9 @@
 
 #app.dark .event-card {
     box-shadow: none;
-    background: #0A0F20;
-    border: 1px solid #ffffff10;
-    background: #000 linear-gradient(315deg, #0A0F20, #10132C);
+    background: $dark;
+    outline: 1px solid #ffffff25;
+    // background: #000 linear-gradient(315deg, #0A0F20, #10132C);
 
 
     &::before {
@@ -106,7 +112,7 @@
         filter: blur(5.5rem);
         position: absolute;
         border-radius: 50%;
-        background: $primary-theme linear-gradient(315deg, #ff0053, $primary-theme);
+        // background: $primary-theme linear-gradient(315deg, #ff0053, $primary-theme);
         z-index: -1;
     }
 

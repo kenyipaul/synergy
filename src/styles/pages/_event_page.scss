@@ -184,11 +184,8 @@
                 width: 100%;
                 
                 .event-card {
-                    min-width: 340px;
-                    min-height: 430px;
-                    background: #fff;
-    
                     &:first-child { margin-left: 1rem; }
+                    &:last-child { margin-right: 7rem; }
                 }
             }
 
@@ -334,7 +331,7 @@
                         font-size: 1.3em;
                     }
                     p {
-                        color: #0f0;
+                        color: $primary-theme;
                     }
                 }
 
@@ -342,11 +339,10 @@
                     all: unset;
                     font-size: .85em;
                     text-align: center;
-                    color: $primary-theme;
+                    color: #fff;
                     cursor: pointer;
                     padding: 1rem 1.5rem;
                     background: $primary-theme;
-                    border: 1px solid $primary-theme;
                     border-radius: 50rem;
                 }
             }

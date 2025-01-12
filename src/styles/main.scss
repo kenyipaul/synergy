@@ -7,10 +7,6 @@
 @use "./pages/event_page";
 @use "./pages/profile_page";
 
-@use "./creators/commCreator";
-@use "./creators/eventCreator";
-
-
 #app {
     display: flex;
     align-items: center;

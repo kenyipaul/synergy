@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom"
 import { setNavbarState } from "../store/states/navbarState";
 import { setTheme } from "../store/states/themeState";
+import { setAuthorized, setUser  } from "../store/states/authorizedState"
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -32,6 +33,17 @@ export default function Navbar() {
     const open = (url) => {
         route(url);
         setMenuState(false)
+    }
+
+    const logout = () => {
+        if (confirm("Are you sure you want to logout?")) {
+            setMenuState(false)
+            sessionStorage.removeItem("user");
+            sessionStorage.removeItem("token");
+            dispatch(setAuthorized(false))
+            dispatch(setUser({}))
+            // navigate("/")
+        }
     }
 
     return (
@@ -63,9 +75,7 @@ export default function Navbar() {
                         <div className={menuState ? "auth-menu active" : "auth-menu"}>
                             <ul>
                                 <li onClick={() => open("/profile")}>View Profile</li>
-                                {/* <li onClick={() => open("/profile")}>My Community</li> */}
-                                {/* <li></li> */}
-                                <li>Log Out</li>
+                                <li onClick={logout}>Log Out</li>
                             </ul>
                         </div>
                     </div> 

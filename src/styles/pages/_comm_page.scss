@@ -127,13 +127,31 @@
             .title {
                 font-size: clamp(1.5em, 5vw, 2em);
             }
+        }
 
-            // button {
-            //     color: #fff;
-            //     padding: 1rem;
-            //     border-radius: 50rem;
-                // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);;
-            // }
+        .community-placeholder {
+            gap: 1rem;
+            display: flex;
+            padding: 3rem 0;
+            align-items: start;
+            flex-direction: column;
+            justify-content: center;
+
+            h1 {
+                color: #555;
+                font-size: clamp(1.3em, 5vw, 1.5em);
+            }
+
+            button {
+                all: unset;
+                color: #fff;
+                cursor: pointer;
+                font-size: .9em;
+                text-align: center;
+                padding: 1rem 1.5rem;
+                border-radius: 50rem;
+                background-color: $primary-theme;
+            }
         }
         
         .community-container {
@@ -168,77 +186,6 @@
                 gap: .7rem;
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            
-                // .community {
-                //     overflow: hidden;
-                //     background: #fff;
-                //     border-radius: 1rem;
-                //     border: 1px solid #00000025;
-
-                //     .banner {
-                //         height: 100px;
-                //         background: #ff0;
-                //         background-size: cover;
-                //         background-position: center;
-                //     }
-
-                //     .header {
-                //         display: flex;
-                //         padding: 1rem;
-                //         align-items: center;
-                //         justify-content: space-between;
-
-                //         .profile {
-                //             gap: .5rem;
-                //             display: flex;
-                //             align-items: center;
-
-                //             .image {
-                //                 width: 2.4rem;
-                //                 height: 2.4rem;
-                //                 background: #ff0053;
-                //                 border-radius: 50%;
-                //                 background-size: cover;
-                //                 background-position: center;
-                //             }
-
-                //             h1 {
-                //                 font-size: 1.1em;
-                //             }
-                //         }
-
-                //         button {
-                //             all: unset;
-                //             color: #fff;
-                //             font-size: .9em;
-                //             cursor: pointer;
-                //             border-radius: 50rem;
-                //             color: $primary-theme;
-                //             padding: .6rem 1.3rem;
-                //             background: $primary-theme20;
-                //             border: 1px solid $primary-theme;
-
-                //             &:hover {
-                //                 color: #fff;
-                //                 background: $primary-theme;
-                //             }
-                //         }
-                //     }
-
-                //     .main {
-                //         padding: 0 1rem 1rem 1rem;
-
-                //         p {
-                //             color: #555;
-                //             hyphens: auto;
-                //             font-size: .9em;
-                //         }
-                //     }
-
-                //     .footer {
-                //         padding: 0 1rem 1rem 1rem;
-                //     }
-                // }
             }
         }
     }
@@ -738,6 +685,8 @@
             aspect-ratio: 16/9;
             border-radius: 1rem;
             outline: 1px solid #ddd;
+            background-size: cover;
+            background-position: center;
         }
     }
 

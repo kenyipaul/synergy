@@ -1,3 +1,4 @@
+import "./styles/_eventCreator.scss";
 import Axios from "axios"
 import { TagInput } from "rsuite";
 import 'rsuite/TagInput/styles/index.css';

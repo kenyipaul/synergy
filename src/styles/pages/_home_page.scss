@@ -43,13 +43,18 @@
                 h1 {
                     text-align: center;
                     font-family: $secondary-font;
-                    font-size: clamp(2em, 5vw, 3em);
+                    font-size: clamp(2em, 5vw, 4em);
+                    
+                    span {
+                        color: $primary-theme;
+                    }
                 }
-
+                
                 p {
                     hyphens: auto;
                     margin: 1rem 0;
                     text-align: center;
+                    font-size: clamp(.9em, 5vw, 1.2em);
                 }
 
                 button {
@@ -86,16 +91,17 @@
                     gap: 1rem;
                     padding: 1rem;
                     display: grid;
-                    max-width: 300px;
+                    max-width: 270px;
 
                     h1 {
                         font-size: 1.4em;
+                        color: $primary-theme;
                     }
 
                     p {
                         color: #555;
                         hyphens: auto;
-                        font-size: .9em;
+                        font-size: clamp(.9em, 5vw, 1em);
                     }
                 }
             }
@@ -318,9 +324,8 @@
             
             .service {
                 width: 100%;
-                text-align: start;
                 text-align: center;
-                max-width: unset !important;
+                max-width: 300px !important;
             }
         }
     }
@@ -362,8 +367,8 @@
                 background: #ffffff40
             }
             .service {
-                h1 { color: #fff; }
-                p { color: #ccc; }
+                h1 { color: $primary-theme; }
+                p { color: #fff; }
             }
         }
     }
@@ -470,7 +475,6 @@
             background-position: center;
             position: relative;
             box-shadow: inset 0 -3rem 5rem $dark;
-            filter: saturate(40%);
             overflow: hidden;
 
             &::before {
@@ -509,7 +513,7 @@
         border-radius: 50rem;
         background: $primary-theme;
         // background: $primary-theme linear-gradient(-315deg, #a02de2, #5600e0);
-    }
+    } 
 }
 
 

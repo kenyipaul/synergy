@@ -1,3 +1,4 @@
+import "./styles/_commCreator.scss";
 import Axios from "axios"
 import React, { useState, useContext, useRef, useEffect } from "react"
 import { CommFormContext } from "../pages/CommPage";

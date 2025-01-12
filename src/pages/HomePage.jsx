@@ -40,9 +40,9 @@ function Header() {
         <div id="header">
             <main>
                 <div className="content">
-                    <h1>"Synergy: Learn, Share, Grow"</h1>
+                    <h1>"<span>Synergy</span>: Learn, Share, Grow"</h1>
                     <p>Beyond traditional learning, Synergy fosters a collaborative environment where knowledge is shared, skills are honed, and individuals grow together. Join the movement and unlock your full potential.</p>
-                    <button>Get Started</button>
+                    {/* <button>Get Started</button> */}
                 </div>
             </main>
 

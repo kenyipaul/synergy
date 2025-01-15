@@ -1,24 +1,34 @@
 import Axios from "axios"
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import Footer from "../layout/Footer";
 import { eventRoute } from "../routes/routes";
 import EventCard from "../modules/EventCard";
+import { BackendHost } from "../routes/routes";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser as updateUser } from "../store/states/authorizedState"
+import { setUpdater } from "../store/states/updaterState";
 
 export default function ProfilePage() {
 
     const [currentTab, setCurrentTag] = useState(0);
     const authorizedState = useSelector(store => store.authorizedState);
+    const [user, setUser] = useState(authorizedState.user)
+
+    useEffect(() => {
+        setUser(authorizedState.user)
+    }, [authorizedState])
 
     return (
         <div id="profile-page">
             <div className="header">
                 <section>
                     <div className="profile">
-                        <div className="image"></div>
+                        <div className="image" style={{
+                            backgroundImage: `url(${BackendHost}/${user.image})`
+                        }}></div>
                         <div>
-                            <h1>{authorizedState.user.firstName} {authorizedState.user.lastName}</h1>
-                            <p>@{authorizedState.user.username}</p>
+                            <h1>{user.firstName} {user.lastName}</h1>
+                            <p>@{user.username}</p>
                         </div>
                     </div>
                     {/* <button>See Public View</button> */}
@@ -48,6 +58,9 @@ export default function ProfilePage() {
 }
 
 function Overview() {
+
+    const authorizedState = useSelector(store => store.authorizedState)
+
     return (
         <div className="overview-tab tab">
             <div className="info-card">
@@ -56,7 +69,7 @@ function Overview() {
                     {/* <svg viewBox="0 0 24 24" width="2rem" height="2rem" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.9445 9.1875L14.9445 5.1875M18.9445 9.1875L13.946 14.1859C13.2873 14.8446 12.4878 15.3646 11.5699 15.5229C10.6431 15.6828 9.49294 15.736 8.94444 15.1875C8.39595 14.639 8.44915 13.4888 8.609 12.562C8.76731 11.6441 9.28735 10.8446 9.946 10.1859L14.9445 5.1875M18.9445 9.1875C18.9445 9.1875 21.9444 6.1875 19.9444 4.1875C17.9444 2.1875 14.9445 5.1875 14.9445 5.1875M20.5 12C20.5 18.5 18.5 20.5 12 20.5C5.5 20.5 3.5 18.5 3.5 12C3.5 5.5 5.5 3.5 12 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg> */}
                 </div>
                 <div className="body">
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos reiciendis exercitationem, labore odio qui sapiente molestias veritatis tenetur ea iusto.</p>
+                    <p>{authorizedState.user.bio ? authorizedState.user.bio : "Not set"}</p>
                 </div>
             </div>
 
@@ -75,7 +88,7 @@ function Overview() {
                 </div>
             </div>
 
-            <div className="info-card">
+            {/* <div className="info-card">
                 <div className="top-bar">
                     <h1>Skills</h1>
                     <svg viewBox="0 0 24 24" width="2rem" height="2rem" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.9445 9.1875L14.9445 5.1875M18.9445 9.1875L13.946 14.1859C13.2873 14.8446 12.4878 15.3646 11.5699 15.5229C10.6431 15.6828 9.49294 15.736 8.94444 15.1875C8.39595 14.639 8.44915 13.4888 8.609 12.562C8.76731 11.6441 9.28735 10.8446 9.946 10.1859L14.9445 5.1875M18.9445 9.1875C18.9445 9.1875 21.9444 6.1875 19.9444 4.1875C17.9444 2.1875 14.9445 5.1875 14.9445 5.1875M20.5 12C20.5 18.5 18.5 20.5 12 20.5C5.5 20.5 3.5 18.5 3.5 12C3.5 5.5 5.5 3.5 12 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
@@ -83,7 +96,7 @@ function Overview() {
                 <div className="body">
                     <p>Not Set</p>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
@@ -190,73 +203,14 @@ function Communities() {
 }
 
 function ProfileSettings() {
-
-    const authorizedState = useSelector(store => store.authorizedState)
-    const [user, setUser] = useState(authorizedState.user);
-    
-    const [email, setEmail] = useState(user.email);
-    const [username, setUsername] = useState(user.username);
-    const [lastName, setLastName] = useState(user.lastName);
-    const [firstName, setFirstName] = useState(user.firstName);
-
     return (
         <div className="edit-tab tab"> 
-            {/* <h1>EDIT PROFILE</h1> */}
 
-            <div className="form-container">
+            <div className="form-container">  
 
-                <div className="form bio-form">
-                    <h1>Biography</h1>
-                    <textarea name="bio" id="bio" placeholder="Write bio here..."></textarea>
-                    <button>Update Bio</button>
-                </div>
-                
-                <div className="form">
-                    <h1>Account Profile</h1>
-
-                    <div className="input-area">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                    </div>
-
-                    <div className="name-area">
-
-                        <div className="input-area">
-                            <label htmlFor="firstName">First Name</label>
-                            <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                        </div>
-
-                        <div className="input-area">
-                            <label htmlFor="lastName">Last Name</label>
-                            <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                        </div>
-
-                    </div>
-
-                    <div className="input-area">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </div>
-
-                    <button>Update Profile</button>
-
-                </div>
-
-                <div className="form password-form">
-                    <h1>Password</h1>
-                    <div className="password-area">
-                        <div className="input-area">
-                            <label htmlFor="currentPassword">Current Password</label>
-                            <input type="password" name="currentPassword" id="currentPassword" />
-                        </div>
-
-                        <div className="input-area">
-                            <label htmlFor="newPassword">New Password</label>
-                            <input type="password" name="password" id="passwrod" />
-                        </div>
-                    </div>
-                    <button>Change Password</button>
-                </div>
+                <BioArea />
+                <AccountDetails />
+                <PasswordArea />
 
                 <div className="form delete-form">
                     <h1>Delete account</h1>
@@ -272,22 +226,101 @@ function ProfileSettings() {
 
 
 
-function Community() {
+
+
+function BioArea() {
     return (
-        <div className="community">
-            <div className="header">
-                <div className="profile">
-                    <div className="image"></div>
-                    <h1>BurgerHeads</h1>
+        <div className="form bio-form">
+            <h1>Biography</h1>
+            <textarea name="bio" id="bio" placeholder="Write bio here..."></textarea>
+            <button>Update Bio</button>
+        </div>
+    )
+}
+
+
+function AccountDetails() {
+
+    const updaterState = useSelector(store => store.updaterState)
+    const authorizedState = useSelector(store => store.authorizedState)
+    const [user, setUser] = useState(authorizedState.user);
+    
+    const dispatch = useDispatch()
+    const [email, setEmail] = useState(user.email);
+    const [username, setUsername] = useState(user.username);
+    const [lastName, setLastName] = useState(user.lastName);
+    const [firstName, setFirstName] = useState(user.firstName);
+
+    useEffect(() => {
+        setUser(authorizedState.user)
+    }, [authorizedState])
+
+    const submit = () => {
+
+        Axios({
+            method: "POST",
+            url: `${BackendHost}/api/user/update/profile`,
+            data: { id: user.id, email, username, lastName, firstName }
+        }).then((response) => {
+            dispatch(updateUser(response.data));
+            sessionStorage.setItem("user", JSON.stringify(response.data))
+            dispatch(setUpdater(false))
+            alert("Profile updated successfully")
+        })
+
+    }
+
+    return (
+        <div className="form">
+            <h1>Account Profile</h1>
+
+            <div className="input-area">
+                <label htmlFor="username">Username</label>
+                <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            </div>
+
+            <div className="name-area">
+
+                <div className="input-area">
+                    <label htmlFor="firstName">First Name</label>
+                    <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                 </div>
-                <button>Join</button>
+
+                <div className="input-area">
+                    <label htmlFor="lastName">Last Name</label>
+                    <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                </div>
+
             </div>
-            <div className="main">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, soluta? Similique odio obcaecati maiores illo.</p>
+
+            <div className="input-area">
+                <label htmlFor="email">Email</label>
+                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
-            <div className="footer">
-                <p>12k members</p>
+
+            <button onClick={submit}>Update Profile</button>
+
+        </div>
+    )
+}
+
+
+function PasswordArea() {
+    return (
+        <div className="form password-form">
+            <h1>Password</h1>
+            <div className="password-area">
+                <div className="input-area">
+                    <label htmlFor="currentPassword">Current Password</label>
+                    <input type="password" name="currentPassword" id="currentPassword" />
+                </div>
+
+                <div className="input-area">
+                    <label htmlFor="newPassword">New Password</label>
+                    <input type="password" name="password" id="passwrod" />
+                </div>
             </div>
+            <button>Change Password</button>
         </div>
     )
 }

@@ -3,6 +3,18 @@
 
 .community-profile {
 
+    .community-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+
+        h1 {
+            font-size: 2em;
+        }
+    }
+
     .community-profile-header {
         margin: auto;
         max-width: 1280px;
@@ -140,7 +152,9 @@
                         width: 2.5rem;
                         height: 2.5rem;
                         border-radius: 50%;
-                        background: $primary-theme;
+                        background-color: $primary-theme;
+                        background-size: cover;
+                        background-position: center;
                     }
 
                     div {
@@ -353,6 +367,12 @@
 
 
 #app.dark .community-profile {
+
+    .community-loading {
+        h1 {
+            color: #fff;
+        }
+    }
 
     .community-profile-banner {
         section {

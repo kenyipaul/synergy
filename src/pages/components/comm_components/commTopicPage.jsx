@@ -1,6 +1,7 @@
 import Axios from "axios"
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { BackendHost } from "../../../routes/routes";
 
 export default function CommunityTopicPage() {
 
@@ -14,7 +15,7 @@ export default function CommunityTopicPage() {
 
         Axios({
             method: "GET",
-            url: `${communityRoute}/fetch`,
+            url: `${BackendHost}/api/community/fetch`,
         }).then((response) => {
             const groupedData = groupTopics(response.data);
 

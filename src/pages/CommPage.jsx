@@ -12,7 +12,7 @@ export const PostCreatorContext = React.createContext(null);
 
 export default function CommPage() {
 
-    const [comFormState, setComFormState] = useState(false);
+    const [commFormState, setCommFormState] = useState(false);
     const [postCreatorState, setPostCreatorState] = useState({
         id: null,
         state: false,
@@ -20,11 +20,11 @@ export default function CommPage() {
 
     return (
         <PostCreatorContext.Provider value={[postCreatorState, setPostCreatorState]}>
-        <CommFormContext.Provider value={[comFormState, setComFormState]}>
+        <CommFormContext.Provider value={[commFormState, setCommFormState]}>
             <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ duration: .5 }} id="community-page">
                 <Outlet />
                 <Footer />
-                { comFormState ? <CommCreator /> : <></> }
+                { commFormState ? <CommCreator /> : <></> }
                 { postCreatorState.state ? <PostCreator /> : <></> }
             </motion.div>
         </CommFormContext.Provider>

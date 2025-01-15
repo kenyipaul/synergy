@@ -22,7 +22,9 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
-            background: $primary-theme;
+            background-color: $primary-theme;
+            background-size: cover;
+            background-position: center;
         }
 
         h1 {
@@ -37,13 +39,15 @@
         border: 1px solid #ddd;
         border-radius: 1rem;
         margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 3rem;
 
         .ql-snow {
             border: none;
             overflow-y: scroll;
             scrollbar-width: none;
             
-            p {
+            p, li {
                 font-size: 1.2em;
                 line-height: 1.3rem;
             }
@@ -80,20 +84,23 @@
             
         }
 
-        .button {
-            display: flex;
-            justify-content: flex-end;
-            padding: 0 1rem 1rem 1rem;
+        // .button {
+        //     display: flex;
+        //     justify-content: flex-end;
+        //     padding: 0 1rem 1rem 1rem;
 
-            button {
+            .postBtn {
+                right: .5rem;
+                bottom: .5rem;
                 color: #fff;
                 border: none;
                 cursor: pointer;
                 padding: .8rem 1.2rem;
                 border-radius: 50rem;
+                position: absolute;
                 background: $primary-theme;
             }
-        }
+        // }
     }
 
     .content {
@@ -117,7 +124,6 @@
     }
 
     .comment-editor {
-        height: 200px;
         border-radius: 1rem;
         border: 1px solid #ddd;
         display: flex;
@@ -128,7 +134,7 @@
             gap: .5rem;
             display: flex;
             align-items: center;
-            padding: 0 1rem 1rem 0;
+            padding: 0 .5rem .5rem 0;
             justify-content: flex-end;
 
             button {
@@ -149,7 +155,7 @@
             overflow-y: scroll;
             scrollbar-width: none;
             
-            p {
+            p, li {
                 font-size: 1.2em;
                 line-height: 1.3rem;
             }
@@ -217,16 +223,41 @@
     .post-comments {
         margin: 2rem 0;
 
+        h1 {
+            gap: 1rem;
+            display: flex;
+            align-items: center;
+
+            span {
+                padding: .5rem;
+                font-size: .5em;
+                border-radius: 50rem;
+                background: $primary-theme;
+            }
+        }
+
         .comment-grid {
             gap: 2rem;
             display: grid;
+            margin: 2rem 0;
 
             .comment {
                 gap: .5rem;
                 display: grid;
-
+                
                 &.comment-reply {
-                    margin-left: 2.5rem;
+                    margin-left: 3rem;
+                    position: relative;
+
+                    &::before {
+                        content: "";
+                        bottom: 0;
+                        height: 2px;
+                        width: 30px;
+                        left: -3rem;
+                        background: #eee;
+                        position: absolute;
+                    }
                 }
 
                 .topBar {
@@ -238,11 +269,21 @@
                         width: 2rem;
                         height: 2rem;
                         border-radius: 50%;
-                        background: $primary-theme;
+                        background-color: $primary-theme;
+                        background-size: cover;
+                        background-position: center;
                     }
 
                     p {
                         color: #555;
+                    }
+                }
+
+                .body {
+                    
+                    li {
+                        margin: .3rem 0;
+                        margin-left: 1rem;
                     }
                 }
 
@@ -312,7 +353,7 @@
     .post-footer {
         button {
             color: #ccc;
-            border: 1px solid #ccc;
+            border: 1px solid #ffffff20;
             svg { color: #ccc; }
 
             &:hover {
@@ -322,11 +363,25 @@
 
                 svg { color: #000; }
             }
+
+            &.active {
+                color: #000;
+                background: #fff;
+
+                svg { color: #000; }
+            }
         }
     }
 
 
     .comment {
+
+        &.comment-reply {
+            &::before {
+                background: #ffffff30;
+            }
+        }
+
         .topBar {
             h4 {
                 color: #fff;
@@ -337,9 +392,10 @@
         }
 
         .body {
-            p {
+            p, li {
                 color: #fff;
             }
+            a { color: #0099ff; }
         }
 
         .footer {
@@ -361,8 +417,22 @@
 
     .comment-editor, .comment-writer {
         border: 1px solid #ffffff30;
-
+        
         .ql-editor { color: #fff; }
+        
+        .buttons button:nth-child(1) {
+            color: #ccc;
+            background: none;
+            border: 1px solid #ffffff50;
+
+            &:hover {
+                color: #000;
+                background: #fff;
+            }
+        }
     }
 
+    .post-comments {
+        h1 { color: #fff; }
+    }
 }

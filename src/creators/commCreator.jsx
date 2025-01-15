@@ -12,14 +12,14 @@ const CommDescContext = React.createContext(null);
 export default function CommCreator() {
 
     const [step, setStep] = useState(1);
-    const [comFromState, setComFormState] = useContext(CommFormContext);
+    const [commFromState, setCommFormState] = useContext(CommFormContext);
     const [communityName, setCommunityName] = useState("");
     const [communityDesc, setCommunityDesc] = useState("Your community description");
 
     return (
         <div id="community-creator">
 
-            <svg onClick={() => setComFormState(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+            <svg onClick={() => setCommFormState(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
             <CommDescContext.Provider value={[communityDesc, setCommunityDesc]}>
             <CommNameContext.Provider value={[communityName, setCommunityName]}>
@@ -41,7 +41,7 @@ export default function CommCreator() {
 function Step1() {
 
     const [step, setStep] = useContext(StepContext);
-    const [comFormState, setComFormState] = useContext(CommFormContext);
+    const [commFormState, setCommFormState] = useContext(CommFormContext);
     const [communityName, setCommunityName] = useContext(CommNameContext);
     const [communityDescription, setCommunityDescription] = useContext(CommDescContext)
 
@@ -179,7 +179,7 @@ function Step1() {
             </div>
 
             <div className="buttons">
-                <button onClick={() => setComFormState(false)}>Cancel</button>
+                <button onClick={() => setCommFormState(false)}>Cancel</button>
                 <button onClick={submit}>Next</button>
             </div>
         </div>
@@ -297,19 +297,22 @@ function Step3() {
 
     const navigate = useNavigate();
     const [step, setStep] = useContext(StepContext);
-    const [comFromState, setComFormState] = useContext(CommFormContext);
+    const [loading, setLoading] = useState(false)
+    const [commFromState, setCommFormState] = useContext(CommFormContext);
 
     const submit = () => {
         const communityAccess = document.querySelector("input[id='access_type']:checked");
         const communityMaturity = document.getElementById("mature").checked;
-
+        
         const community = JSON.parse(sessionStorage.getItem("community"))
         community.community_access= communityAccess.value;
         community.community_maturity = communityMaturity;
-
+        
         const token = sessionStorage.getItem("token")
-
+        
         if (token) {
+            setLoading(true)
+            
             Axios({
                 method: 'POST',
                 url: `${communityRoute}/create/`,
@@ -321,10 +324,11 @@ function Step3() {
             }).then((response) =>  {
                 alert(response.data.msg)
                 sessionStorage.removeItem("community")
-                setComFormState(false);
+                setCommFormState(false);
             }).catch((err) => {
                 alert(err.response.data.msg)
             })
+            setLoading(false)
         } else {
             alert("Session invalid or expired, please login")
         }
@@ -373,7 +377,11 @@ function Step3() {
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button onClick={submit}>Create Community</button>
+                {
+                    loading ?
+                    <button className="loading">Processing</button> :
+                    <button onClick={submit}>Create Community</button>
+                }
             </div>
 
         </div>

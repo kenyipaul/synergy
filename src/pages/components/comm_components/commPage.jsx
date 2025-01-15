@@ -27,7 +27,7 @@ export default function CommunityPage() {
 
     const navigate = useNavigate();
     const authorizedState = useSelector(store => store.authorizedState)
-    const [comFormState, setComFormState] = useContext(CommFormContext);
+    const [commFormState, setCommFormState] = useContext(CommFormContext);
     const [communities, setCommunities] = useState([]);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function CommunityPage() {
             setCommunities(groupedData);
         })
 
-    }, [comFormState])
+    }, [commFormState])
 
     return (
         <div className="community-view-content">
@@ -49,8 +49,8 @@ export default function CommunityPage() {
                 <div className="content">
                     <h1>The Community Hub: Learn, Share and Grow</h1>
                     <p>The Community Hub: Where learning, sharing, and growth are at the heart of everything we do.</p>
-                    <button onClick={() => {
-                        authorizedState.authorized ? setComFormState(true) : navigate("/login")
+                    <button onClick={() => {``
+                        authorizedState.authorized ? setCommFormState(true) : navigate("/login")
                     }}>Create Your Community</button>
                 </div>
             </div>
@@ -87,7 +87,7 @@ export default function CommunityPage() {
                 <div className="community-placeholder">
                     <h1>Huh, looks like there are no communities here.</h1>
                     <button onClick={() => {
-                        authorizedState.authorized ? setComFormState(true) : navigate("/login")
+                        authorizedState.authorized ? setCommFormState(true) : navigate("/login")
                     }}>Create Your Community</button>
                 </div>
             }

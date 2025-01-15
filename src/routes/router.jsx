@@ -73,5 +73,13 @@ export const router = createHashRouter([
     {
         path: "/signup",
         element: <SignupPage />
+    }, 
+    {
+        path: "*",
+        element: 
+            <div className="page-not-found">
+                <h1>404 PAGE NOT FOUND</h1>
+                <button onClick={() => history.back()}>Go Back</button>
+            </div>
     }
 ])

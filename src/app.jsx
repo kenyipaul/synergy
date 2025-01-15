@@ -13,6 +13,7 @@ export default function App() {
 
     const dispatch = useDispatch();
     const themeState = useSelector(store => store.themeState);
+    const updaterState = useSelector(store => store.updaterState)
 
     useEffect(() => {
         const token = sessionStorage.getItem("token")
@@ -47,7 +48,7 @@ export default function App() {
             dispatch(setTheme("light"));
         }
 
-    }, [])
+    }, [updaterState])
 
     return (
         <div id="app" className={themeState == "dark" ? "dark" : "light"}>

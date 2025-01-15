@@ -62,10 +62,11 @@
 
                 button {
                     all: unset;
+                    height: 40px;
                     cursor: pointer;
                     font-size: .9em;
                     text-align: center;
-                    padding: .8rem 1.5rem;
+                    padding: 0 1rem;
                     border-radius: 50rem;
 
                     &:nth-child(1) { 
@@ -75,7 +76,43 @@
                             background: #000;
                         }
                     }
-                    &:nth-child(2) { color: #fff; background: $primary-theme; border: 1px solid $primary-theme; }
+                    &.joinBtn { color: #fff; background: $primary-theme; border: 1px solid $primary-theme; }
+                    
+                    &.optionBtn {
+                        padding: 0;
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 1px solid #000;
+                        position: relative;
+
+                        // &:hover {
+                        //     color: #fff;
+                        //     background: #000;
+                        // }
+
+                        .option-menu {
+                            right: 0;
+                            top: 3rem;
+                            background: #fff;
+                            position: absolute;
+                            border: 1px solid #000;
+
+                            li {
+                                padding: 1rem;
+                                cursor: pointer;
+                                list-style: none;
+                                text-wrap: nowrap;
+
+                                &:hover {
+                                    color: #fff;
+                                    background: $primary-theme;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -380,10 +417,31 @@
             p { color: #ccc; }
         
             button:nth-child(1) { 
-                color: #fff; border: 1px solid #ddd; 
+                color: #fff; 
+                border: 1px solid $primary-theme; 
+                
                 &:hover {
                     color: #000;
                     background: #fff;
+                }
+
+            }
+            .optionBtn {
+                color: #fff;
+                border: 1px solid #fff;
+
+                .option-menu {
+                    background: $dark;
+                    border: 1px solid #fff;
+
+                    li {
+                        color: #fff;
+
+                        &:hover {
+                            color: #fff;
+                            background: $primary-theme;
+                        }
+                    }
                 }
             }
         }

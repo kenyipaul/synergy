@@ -1,7 +1,7 @@
 import Axios from "axios"
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { signupRoute } from "../routes/routes";
+import { BackendHost } from "../routes/routes";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const StageContext = createContext(null);
@@ -201,7 +201,7 @@ function Stage3() {
 
                 Axios({
                     method: 'POST',
-                    url: signupRoute,
+                    url: `${BackendHost}/api/signup/`,
                     data: user
                 }).then((response) => {
                     if (response.data.accepted) {

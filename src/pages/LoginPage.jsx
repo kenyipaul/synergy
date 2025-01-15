@@ -2,7 +2,7 @@ import Axios from "axios"
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginRoute } from "../routes/routes";
+import { BackendHost } from "../routes/routes";
 import { useNavigate } from "react-router-dom";
 import { setAuthorized, setUser } from "../store/states/authorizedState";
 
@@ -28,7 +28,7 @@ export default function LoginPage() {
 
             Axios({
                 method: 'POST',
-                url: loginRoute,
+                url: `${BackendHost}/api/login/`,
                 data: { 
                     email,
                     password

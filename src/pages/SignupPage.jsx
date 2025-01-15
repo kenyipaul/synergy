@@ -2,7 +2,7 @@ import Axios from "axios"
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { signupRoute } from "../routes/routes";
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const StageContext = createContext(null);
 
@@ -21,7 +21,7 @@ export default function SignupPage() {
             <svg onClick={() => navigate("/")} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
             <motion.div initial={{ scale: 1.5, opacity: 0, }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5, ease: "backInOut" }} className="form">            
-                { stage == 1 ? <Stage1 /> : stage == 2 ? <Stage3 /> : null }
+                { stage == 1 ? <Stage1 /> : stage == 2 ? <Stage2 /> : <Stage3 /> }
             </motion.div>
         </div>
         </StageContext.Provider>
@@ -32,30 +32,37 @@ export default function SignupPage() {
 
 function Stage1() {
 
-    const emailRef = useRef();
-    const usernameRef = useRef();
-    const lastNameRef = useRef();
-    const firstNameRef = useRef();
+    const [username, setUsername] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [email, setEmail] = useState('')
 
     const navigate = useNavigate();
     const [stage, setStage] = useContext(StageContext);
 
-    const proceed = () => {
-        const email = emailRef.current.value;
-        const lastName = lastNameRef.current.value;
-        const username = usernameRef.current.value;
-        const firstName = firstNameRef.current.value;
+    useEffect(() => {
 
-        const user = {
-            email,
-            username,
-            firstName,
-            lastName
+        let storedUser = sessionStorage.getItem("tmp_user")
+
+        if (storedUser) {
+            storedUser = JSON.parse(storedUser)
+
+            setUsername(storedUser.username)
+            setFirstName(storedUser.firstName)
+            setLastName(storedUser.lastName)
+            setEmail(storedUser.email)
         }
 
-        sessionStorage.setItem("user", JSON.stringify(user))
+    }, [])
 
-        setStage(stage + 1)
+    const proceed = () => {
+        if (email && username && firstName && lastName) {
+            const user = { email, username, firstName, lastName }
+            sessionStorage.setItem("tmp_user", JSON.stringify(user))   
+            setStage(stage + 1)
+        } else {
+            alert("Please fill in the form")
+        }
     }
 
     return (
@@ -67,23 +74,23 @@ function Stage1() {
 
             <div className="input-area">
                 <label htmlFor="name">Username</label>
-                <input type="text" name="name" id="name" ref={usernameRef} />
+                <input type="text" name="name" id="name" value={username} onChange={(e) => setUsername(e.target.value)} />
             </div>
 
             <div className="name-area">
                 <div className="input-area">
                     <label htmlFor="firstName">First Name</label>
-                    <input type="text" name="firstName" id="firstName" ref={firstNameRef} />
+                    <input type="text" name="firstName" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                 </div>
                 <div className="input-area">
                     <label htmlFor="lastName">Last Name</label>
-                    <input type="text" name="lastName" id="lastName" ref={lastNameRef} />
+                    <input type="text" name="lastName" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                 </div>
             </div>
 
             <div className="input-area">
                 <label htmlFor="email">Email</label>
-                <input type="email" name="email" id="email" ref={emailRef} />
+                <input type="email" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
 
             <p>By signup you agree to our terms of service and privacy policy </p>
@@ -98,84 +105,89 @@ function Stage1() {
 }
 
 
-// function Stage2() {
+function Stage2() {
 
-//     const navigate = useNavigate();
-//     const [stage, setStage] = useContext(StageContext);
+    const navigate = useNavigate();
+    const [stage, setStage] = useContext(StageContext);
+    const [selectedImage, setSelectedImage] = useState("No image selected")
 
-//     const imageRef = useRef();
-//     const genderRef = useRef();
+    const [image, setImage] = useState('')
+    const [dob, setDob] = useState('')
 
-//     const proceed = () => {
-//         const image = imageRef.current.files[0];
-//         const gender = genderRef.current.value;
+    const proceed = () => {
+        if (dob) {
+            const fileReader = new FileReader();
+            const user = JSON.parse(sessionStorage.getItem("tmp_user"))
 
-//         const fileReader = new FileReader();
-//         const user = JSON.parse(sessionStorage.getItem("user"))
+            if (image) {
+                fileReader.onload = (e) => {
+                    const bufferImage = fileReader.result
 
-//         if (image) {
-//             fileReader.onload = (e) => {
-//                 const bufferImage = fileReader.result
+                    user.dob = dob;
+                    user.image = bufferImage;
+                    sessionStorage.setItem("tmp_user", JSON.stringify(user))
+                    
+                    setStage(stage + 1)
+                }
+                fileReader.readAsDataURL(image);
+            } else {
+                user.dob = dob;
+                sessionStorage.setItem("tmp_user", JSON.stringify(user))
+                setStage(stage + 1)
+            }
+        } else {
+            alert("Please fill in the form")
+        }
+    }
 
-//                 user.gender = gender;
-//                 user.image = bufferImage;
-//                 sessionStorage.setItem("user", JSON.stringify(user))
-                
-//                 setStage(stage + 1)
-//             }
-//             fileReader.readAsDataURL(image);
-//         } else {
-//             user.gender = gender;
-//             sessionStorage.setItem("user", JSON.stringify(user))
-//             setStage(stage + 1)
-//         }
+    return (
+        <>
 
-//     }
+            <div className="top-bar">
+                <h1>Account Details</h1>
+                <h2>All this can be changed later in your profile settings</h2>
+            </div>
 
-//     return (
-//         <>
+            <div className="input-area">
+                <p className="label">Profile Picture</p>
+                <label htmlFor="file">{selectedImage}</label>
+                <input type="file" id="file" onChange={(e) => {
+                    setSelectedImage(e.target.files[0].name) 
+                    setImage(e.target.files[0])
+                }} />
+            </div>
 
-//             <div className="top-bar">
-//                 <h1>Account Details</h1>
-//                 <h2>All this can be changed later in your profile settings</h2>
-//             </div>
+            <div className="input-area">
+                <label htmlFor="date">Date of Birth</label>
+                <input value={dob} onChange={e => setDob(e.target.value)} type="date" name="date" id="date" />
+                <p className="link">Why are you asking me this?</p>
+            </div>
 
-//             <div className="input-area">
-//                 <label htmlFor="file">Profile Picture</label>
-//                 <input type="file" id="profile_image" ref={imageRef} />
-//             </div>
+            {/* <p>I don't have time for this? <span onClick={() => setStage(stage + 1)}>skip this step</span></p> */}
 
-//             <div className="input-area">
-//                 <label htmlFor="gender">Gender</label>
-//                 <select id="gender" ref={genderRef}>
-//                     <option value="MALE">Male</option>
-//                     <option value="FEMALE">Female</option>
-//                 </select>
-//             </div>
+            <div className="buttons">
+                <button onClick={() => setStage(stage - 1)}><svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
+                <button onClick={proceed}>Proceed<svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
+            </div>
 
-//             <p>I don't have time for this? <span onClick={() => setStage(stage + 1)}>skip this step</span></p>
-
-//             <div className="buttons">
-//                 <button onClick={() => setStage(stage - 1)}><svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
-//                 <button onClick={proceed}>Proceed<svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
-//             </div>
-
-//         </>
-//     )
-// }
+        </>
+    )
+}
 
 
 function Stage3() {
 
     const navigate = useNavigate();
     const [stage, setStage] = useContext(StageContext);
+    const [loading, setLoading] = useState(false)
 
     const passwordRef = useRef();
     const password2Ref = useRef();
 
     const register = () => {
 
-        const user = JSON.parse(sessionStorage.getItem("user"))
+        setLoading(true)
+        const user = JSON.parse(sessionStorage.getItem("tmp_user"))
         if (!user) {
             return setStage(1)
         }
@@ -192,12 +204,13 @@ function Stage3() {
                     url: signupRoute,
                     data: user
                 }).then((response) => {
-                    if (response.data.acknowledged) {
-                        sessionStorage.removeItem("user")
+                    if (response.data.accepted) {
+                        sessionStorage.removeItem("tmp_user")
                         if (confirm("Signup was successful, would you like to login?")) {
                             navigate("/login")
                         }
                     }
+                    setLoading(false)
                 }).catch((error) => {
                     if (error.response.data.msg)
                         alert(error.response.data.msg)
@@ -230,9 +243,15 @@ function Stage3() {
                 <input ref={password2Ref} type="password" id="password2" />
             </div>
 
+            <p>By creating an account, you agree to our terms and conditions</p>
+
             <div className="buttons">
                 <button onClick={() => setStage(stage - 1)}><svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
-                <button onClick={register}>Register<svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
+                {
+                    loading ?
+                    <button className="processing">Processing...</button> :
+                    <button onClick={register}>Register<svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
+                }
             </div>
 
         </>

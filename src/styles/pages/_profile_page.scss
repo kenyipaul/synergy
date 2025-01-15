@@ -34,7 +34,9 @@
                         width: 5rem;
                         height: 5rem;
                         border-radius: 50%;
-                        background: $primary-theme;
+                        background-color: $primary-theme;
+                        background-size: cover;
+                        background-position: center;
                     }
                 }
 
@@ -270,22 +272,22 @@
 
             button {
                 all: unset;
-                color: #999;
+                color: #fff;
                 font-size: .9em;
                 margin-top: 1rem;
                 max-width: 130px;
                 text-align: center;
                 padding: 1rem;
                 border-radius: .6rem;
-                background: #eeee;
-                border: 1px solid #ddd;
-                pointer-events: none;
+                // background: #eeee;
+                // border: 1px solid #ddd;
+                // pointer-events: none;
                 
-                &.active {
-                    cursor: pointer;
-                    pointer-events: all;
-                    background: $primary-theme;
-                }
+                // &.active {
+                cursor: pointer;
+                // pointer-events: all;
+                background: $primary-theme;
+                // }
             }
 
         }
@@ -403,8 +405,8 @@
         }
 
         button {
-            background: #ffffff15;
-            border: 1px solid #ffffff20;
+            // background: #ffffff15;
+            // border: 1px solid #ffffff20;
         }
 
         .input-area {

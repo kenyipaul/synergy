@@ -14,12 +14,15 @@ export default function LoginPage() {
         return localStorage.getItem("theme") || "light"
     })
 
+    const [loading, setLoading] = useState(false);
+
     const emailRef = useRef();
     const passwordRef = useRef();
 
     const login = () => {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
+        setLoading(true)
 
         if (email && password) {
 
@@ -85,7 +88,12 @@ export default function LoginPage() {
 
                 <a href="#">I forgot my password?</a>
 
-                <button onClick={login}>Log In</button>
+                {
+                    loading ?
+                    <button className="processing">Processing...</button>
+                    : 
+                    <button onClick={login}>Log In</button>
+                }
 
                 <div className="option">
                     <p>Don't have an account?</p>

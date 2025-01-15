@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { BackendHost, eventsRoute } from "../routes/routes";
-import { io } from "socket.io-client"
 
 import { EventView } from "./components/event_components/event-view";
 import { EventPlaceHolder, LoadingEvent } from "./components/event_components/event-components";
@@ -35,7 +34,7 @@ export default function EventPage() {
 
         Axios({
             method: "GET",
-            url: eventsRoute,
+            url: `${BackendHost}/api/events`,
             headers: {
                 "Content-Type": "application/json",
             }

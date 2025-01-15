@@ -11,12 +11,11 @@ import ProfilePage from "../pages/ProfilePage";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
 
-import { CommunityPage, CommunityPostPage, CommunityProfile, CommunityTopicPage } from "../pages/components/comm_components";
+import CommunityPage from "../pages/components/comm_components/commPage";
+import CommunityPostPage from "../pages/components/comm_components/commPostPage";
+import CommunityTopicPage from "../pages/components/comm_components/commTopicPage";
+import CommunityProfile from "../pages/components/comm_components/commProfile";
 
-// import CommunityView from "../views/community_views/CommunityView";
-// import CommunityViewContent from "../views/community_views/CommunitViewContent";
-// import CommunityProfile from "../views/community_views/CommunityProfile";
-// import ProfileView from "../views/account_views/ProfileView";
 
 export const router = createHashRouter([
     {
@@ -74,5 +73,13 @@ export const router = createHashRouter([
     {
         path: "/signup",
         element: <SignupPage />
+    }, 
+    {
+        path: "*",
+        element: 
+            <div className="page-not-found">
+                <h1>404 PAGE NOT FOUND</h1>
+                <button onClick={() => history.back()}>Go Back</button>
+            </div>
     }
 ])

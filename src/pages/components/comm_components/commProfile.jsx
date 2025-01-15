@@ -1,21 +1,21 @@
+import "./styles/commProfile.scss"
 import Axios from "axios"
-import CommunityCard from "../../modules/CommunityCard";
-
 import { useSelector } from "react-redux";
-import { BackendHost, postRoute } from "../../routes/routes";
-import { communityRoute } from "../../routes/routes";
+import { BackendHost, communityRoute } from "../../../routes/routes";
 import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommFormContext, PostCreatorContext } from "../CommPage";
+import { PostCreatorContext } from "../../CommPage";
 
-// COMMUNITY PROFILE 
 
-export function CommunityProfile() {
+export default function CommunityProfile() {
 
     const location = useLocation();
     const [posts, setPosts] = useState([])
     const [response, setResponse] = useState([])
+    const [updater, setUpdater] = useState(false)
     const [currentTab, setCurrentTab] = useState(1);
+    const [pageLoading, setPageLoading] = useState(true)
+    const [optionMenuState, setOptionMenuState] = useState(false)
     const [postCreatorState, setPostCreatorState] = useContext(PostCreatorContext)
 
     const tmp = location.pathname.split("/")
@@ -29,9 +29,10 @@ export function CommunityProfile() {
             url: `${communityRoute}/fetch/${community_id}`,
         }).then((response) => {
             setResponse(response.data)
+            setPageLoading(false)
         })
 
-    }, [community_id])
+    }, [community_id, updater])
 
 
     useEffect(() => {
@@ -54,17 +55,38 @@ export function CommunityProfile() {
             method: "POST",
             url: `${communityRoute}/join`,
             data: {
-                community_id: props.data._id,
+                community_id,
                 user_id: authorizedState.user.id
             }
         }).then((response) => {
             alert(response.data.msg)
+            setUpdater(!updater)
         })
+    }
+    
+    const exitComm = () => {
+        if (confirm("Are you sure you want to leave this community?")) {
+            Axios({
+                method: "POST",
+                url: `${BackendHost}/api/community/leave`,
+                data: {
+                    community_id,
+                    user_id: authorizedState.user.id
+                }
+            }).then((response) => {
+                alert(response.data.msg)
+                setUpdater(!updater)
+            })
+        }
     }
 
     return (
         <div className="community-profile">
 
+            { pageLoading ? <div className="community-loading">
+                <h1>Loading...</h1>
+            </div> :
+            <>
             <div className="community-profile-header">
                 <div className="community-profile-banner">
                     <div className="cover" style={{
@@ -78,14 +100,21 @@ export function CommunityProfile() {
                         }}></div>
                             <div>
                                 <h1>{response.community_name}</h1>
-                                {/* <p>{response.community_members && response.community_members.length} members</p> */}
                             </div>
                         </div>
 
                         <div className="buttons">
                             {/* <button>Create Post</button> */}
-                            { response.community_members && !response.community_members.includes(authorizedState.user.id) && <button onClick={join}>Join</button> }
+                            { response.community_members && !response.community_members.includes(authorizedState.user.id) && <button className="joinBtn" onClick={join}>Join</button> }
                             { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState({id: response._id, state: true})}>Create Post</button> }
+                                <button className="optionBtn" onClick={() => setOptionMenuState(!optionMenuState)}>
+                                <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z" fill="currentColor"></path> <path d="M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor"></path> <path d="M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z" fill="currentColor"></path> </g></svg>
+                                { optionMenuState ?
+                                <div className="option-menu">
+                                    <li onClick={exitComm}>Leave Community</li>
+                                </div>
+                                : <></> }
+                            </button> 
                         </div>
                     </section>
                 </div>
@@ -163,8 +192,8 @@ export function CommunityProfile() {
                 </div>
 
             </div>
-
-        </div>
+            </>}
+        </div> 
     )
 }
 
@@ -175,296 +204,103 @@ function Post(props) {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const tmp = location.pathname.split("/")
+    const [response, setResponse] = useState({})
+    const authorizedState = useSelector(store => store.authorizedState)
+
+    useEffect(() => {
+        setResponse(props.data)
+    }, [props.data])
+    
+    const like = () => {
+        const postId = props.data._id;
+        const community_id = tmp[tmp.length - 1]
+
+        Axios({
+            method: "POST",
+            url: `${BackendHost}/api/post/like`,
+            data: { postId, community_id, user_id: authorizedState.user.id }
+        }).then((response) => {
+            setResponse(response.data)
+        })
+    }
+    
+    const dislike = () => {
+        const postId = props.data._id;
+        const community_id = tmp[tmp.length - 1]
+
+        Axios({
+            method: "POST",
+            url: `${BackendHost}/api/post/dislike`,
+            data: { postId, community_id, user_id: authorizedState.user.id }
+        }).then((response) => {
+            setResponse(response.data)
+        })
+    }
 
     return (
-        <div className="post" onClick={() => navigate(`${location.pathname}/${props.data._id}`) }>
-            <div className="post-header">
-                <div className="post-header-image"></div>
+        <div className="post">
+            <div className="post-header" onClick={() => navigate(`${location.pathname}/${response._id}`) } >
+                <div className="post-header-image" style={{
+                    backgroundImage: `url(${BackendHost}/${response.admin_image})`
+                }}></div>
                 <div>
-                    <h1>sy/{props.data.admin_name}</h1>
-                    <p>{timeAgo(props.data.post_date)}</p>
+                    <h1>sy/{response.admin_name}</h1>
+                    <p>{timeAgo(response.post_date)}</p>
                 </div>
             </div>
-            <div className="post-content">
+            <div className="post-content" onClick={() => navigate(`${location.pathname}/${response._id}`) }>
                 <h1>{props.data.post_title}</h1>
                 <p>{props.data.post_body}</p>
                 {
                     props.data.post_image && 
                     <div className="poster" style={{
-                        backgroundImage: `url(${BackendHost}/${props.data.post_image})`
+                        backgroundImage: `url(${BackendHost}/${response.post_image})`
                     }}></div>
                 }
             </div>
             <div className="post-footer">
-                <button> <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Arrow / Arrow_Up_SM"> <path id="Vector" d="M12 17V7M12 7L8 11M12 7L16 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg> <p>2k</p> <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Arrow / Arrow_Down_SM"> <path id="Vector" d="M12 7V17M12 17L16 13M12 17L8 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg> </button>
-                <button> <svg width="1.5rem" height="1.5rem" fill="currentColor" viewBox="0 0 1024 1024" t="1569682881658" className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8185" xmlnsXlink="http://www.w3.org/1999/xlink"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style type="text/css"></style></defs><path d="M573 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40zM293 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8186"></path><path d="M894 345c-48.1-66-115.3-110.1-189-130v0.1c-17.1-19-36.4-36.5-58-52.1-163.7-119-393.5-82.7-513 81-96.3 133-92.2 311.9 6 439l0.8 132.6c0 3.2 0.5 6.4 1.5 9.4 5.3 16.9 23.3 26.2 40.1 20.9L309 806c33.5 11.9 68.1 18.7 102.5 20.6l-0.5 0.4c89.1 64.9 205.9 84.4 313 49l127.1 41.4c3.2 1 6.5 1.6 9.9 1.6 17.7 0 32-14.3 32-32V753c88.1-119.6 90.4-284.9 1-408zM323 735l-12-5-99 31-1-104-8-9c-84.6-103.2-90.2-251.9-11-361 96.4-132.2 281.2-161.4 413-66 132.2 96.1 161.5 280.6 66 412-80.1 109.9-223.5 150.5-348 102z m505-17l-8 10 1 104-98-33-12 5c-56 20.8-115.7 22.5-171 7l-0.2-0.1C613.7 788.2 680.7 742.2 729 676c76.4-105.3 88.8-237.6 44.4-350.4l0.6 0.4c23 16.5 44.1 37.1 62 62 72.6 99.6 68.5 235.2-8 330z" p-id="8187"></path><path d="M433 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8188"></path></g></svg> <p>24k</p> </button>
-                {/* <button> <svg width="2rem" height="2rem" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg> <p>Share</p> </button> */}
+                <button onClick={response.post_likes && response.post_likes.includes(authorizedState.user.id) ? dislike : like} className={response.post_likes && response.post_likes.includes(authorizedState.user.id) ? "active" : ""}> <svg width="1.2rem" height="1.2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M12.4382 2.77841C12.2931 2.73181 12.1345 2.74311 11.9998 2.80804C11.8523 2.87913 11.7548 3.0032 11.7197 3.13821L11.244 4.97206C11.0777 5.61339 10.8354 6.23198 10.5235 6.81599C10.0392 7.72267 9.30632 8.42 8.62647 9.00585L7.18773 10.2456C6.96475 10.4378 6.8474 10.7258 6.87282 11.0198L7.68498 20.4125C7.72601 20.887 8.12244 21.25 8.59635 21.25H13.245C16.3813 21.25 19.0238 19.0677 19.5306 16.1371L20.2361 12.0574C20.3332 11.4959 19.9014 10.9842 19.3348 10.9842H14.1537C13.1766 10.9842 12.4344 10.1076 12.5921 9.14471L13.2548 5.10015C13.3456 4.54613 13.3197 3.97923 13.1787 3.43584C13.1072 3.16009 12.8896 2.92342 12.5832 2.82498L12.4382 2.77841L12.6676 2.06435L12.4382 2.77841ZM11.3486 1.45674C11.8312 1.2242 12.3873 1.18654 12.897 1.35029L13.042 1.39686L12.8126 2.11092L13.042 1.39686C13.819 1.64648 14.4252 2.26719 14.6307 3.0592C14.8241 3.80477 14.8596 4.58256 14.7351 5.34268L14.0724 9.38724C14.0639 9.439 14.1038 9.4842 14.1537 9.4842H19.3348C20.8341 9.4842 21.9695 10.8365 21.7142 12.313L21.0087 16.3928C20.3708 20.081 17.0712 22.75 13.245 22.75H8.59635C7.3427 22.75 6.29852 21.7902 6.19056 20.5417L5.3784 11.149C5.31149 10.3753 5.62022 9.61631 6.20855 9.10933L7.64729 7.86954C8.3025 7.30492 8.85404 6.75767 9.20042 6.10924C9.45699 5.62892 9.65573 5.12107 9.79208 4.59542L10.2678 2.76157C10.417 2.18627 10.8166 1.71309 11.3486 1.45674ZM2.96767 9.4849C3.36893 9.46758 3.71261 9.76945 3.74721 10.1696L4.71881 21.4061C4.78122 22.1279 4.21268 22.75 3.48671 22.75C2.80289 22.75 2.25 22.1953 2.25 21.5127V10.2342C2.25 9.83256 2.5664 9.50221 2.96767 9.4849Z" fill="currentColor"></path> </g></svg> <p>{response.post_likes && response.post_likes.length} like(s)</p> </button>
+                <button onClick={() => navigate(`${location.pathname}/${props.data._id}`) }> <svg width="1.4rem" height="1.4rem" fill="currentColor" viewBox="0 0 1024 1024" t="1569682881658" className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8185" xmlnsXlink="http://www.w3.org/1999/xlink"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style type="text/css"></style></defs><path d="M573 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40zM293 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8186"></path><path d="M894 345c-48.1-66-115.3-110.1-189-130v0.1c-17.1-19-36.4-36.5-58-52.1-163.7-119-393.5-82.7-513 81-96.3 133-92.2 311.9 6 439l0.8 132.6c0 3.2 0.5 6.4 1.5 9.4 5.3 16.9 23.3 26.2 40.1 20.9L309 806c33.5 11.9 68.1 18.7 102.5 20.6l-0.5 0.4c89.1 64.9 205.9 84.4 313 49l127.1 41.4c3.2 1 6.5 1.6 9.9 1.6 17.7 0 32-14.3 32-32V753c88.1-119.6 90.4-284.9 1-408zM323 735l-12-5-99 31-1-104-8-9c-84.6-103.2-90.2-251.9-11-361 96.4-132.2 281.2-161.4 413-66 132.2 96.1 161.5 280.6 66 412-80.1 109.9-223.5 150.5-348 102z m505-17l-8 10 1 104-98-33-12 5c-56 20.8-115.7 22.5-171 7l-0.2-0.1C613.7 788.2 680.7 742.2 729 676c76.4-105.3 88.8-237.6 44.4-350.4l0.6 0.4c23 16.5 44.1 37.1 62 62 72.6 99.6 68.5 235.2-8 330z" p-id="8187"></path><path d="M433 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8188"></path></g></svg> <p>{response.post_comments && response.post_comments.length} Comment(s)</p> </button>
             </div>
         </div>
     )
 }
 
-
-// COMMUNITY PAGE 
-
-function groupTopics(data) {
-    const grouped = {};
-  
-    for (const item of data) {
-        const topic = item.community_topic;
-        if (!grouped[topic]) {
-            grouped[topic] = [];
-        }
-        grouped[topic].push(item);
-    }
-  
-    return Object.entries(grouped).map(([topic, items]) => ({
-        [topic]: items
-    }));
-}
-
-
-// COMMUNITY PAGE 
-
-export function CommunityPage() {
-
-    const navigate = useNavigate();
-    const authorizedState = useSelector(store => store.authorizedState)
-    const [comFormState, setComFormState] = useContext(CommFormContext);
-    const [communities, setCommunities] = useState([]);
-
-    useEffect(() => {
-
-        Axios({
-            method: "GET",
-            url: `${communityRoute}/fetch`,
-        }).then((response) => {
-            const groupedData = groupTopics(response.data);
-            setCommunities(groupedData);
-        })
-
-    }, [comFormState])
-
-    return (
-        <div className="community-view-content">
-        <div className="community-banner">
-            <div className="container">
-                <div className="content">
-                    <h1>The Community Hub: Learn, Share and Grow</h1>
-                    <p>The Community Hub: Where learning, sharing, and growth are at the heart of everything we do.</p>
-                    <button onClick={() => {
-                        authorizedState.authorized ? setComFormState(true) : navigate("/login")
-                    }}>Create Your Community</button>
-                </div>
-            </div>
-        </div>
-
-        <div className="search-area">
-            <div className="input-area">
-                <svg width="2rem" height="2rem" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M5.5 11.1455C5.49956 8.21437 7.56975 5.69108 10.4445 5.11883C13.3193 4.54659 16.198 6.08477 17.32 8.79267C18.4421 11.5006 17.495 14.624 15.058 16.2528C12.621 17.8815 9.37287 17.562 7.3 15.4895C6.14763 14.3376 5.50014 12.775 5.5 11.1455Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M15.989 15.4905L19.5 19.0015" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
-                <input type="text" name="search" id="search" placeholder="Search for communities" />
-            </div>
-        </div>
-
-        <div className="main">
-            <div className="title-bar">
-                <h1 className="title">Explore communities</h1>
-            </div>
-
-            {
-                communities.length > 0 ? communities.map((data, key) => {
-                    return <div key={key} className="community-container">
-                        <div className="top-bar">
-                            <h1>{Object.keys(data)}</h1>
-                            <button onClick={() => navigate(`/communities/${Object.keys(data)}`)}>View All</button>
-                        </div>
-                        <div className="community-list">
-                            {
-                                Object.values(data)[0].slice(0, 8).map((data, key) => {
-                                    return <CommunityCard data={data} key={key} />
-                                })
-                            }
-                        </div>
-                    </div>
-                }) :
-                <div className="community-placeholder">
-                    <h1>Huh, looks like there are no communities here.</h1>
-                    <button onClick={() => {
-                        authorizedState.authorized ? setComFormState(true) : navigate("/login")
-                    }}>Create Your Community</button>
-                </div>
-            }
-
-        </div>
-    </div>
-    )
-}
-
-
-export function CommunityTopicPage() {
-
-    const location = useLocation();
-    const tmp = decodeURIComponent(location.pathname).split("/");
-    const url = tmp[tmp.length - 1]
-
-    const [communities, setCommunities] = useState([]);
-
-    useEffect(() => {
-
-        Axios({
-            method: "GET",
-            url: `${communityRoute}/fetch`,
-        }).then((response) => {
-            const groupedData = groupTopics(response.data);
-
-            let filteredData = groupedData.filter((data, key) => {
-                if (Object.keys(data) == url) {
-                    return data
-                } 
-            })
-
-            setCommunities(Object.values(filteredData[0])[0])
-
-        })
-
-    }, [])
-
-    return (
-        <div className="community-topic-page">
-            <div className="community-container">
-                <div className="top-bar">
-                    <svg onClick={() => window.history.back()} viewBox="0 0 1024 1024" width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path><path fill="currentColor" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path></g></svg>
-                    <h1>{url}</h1>
-                </div>
-                <div className="community-grid">
-                {
-                    communities.map((data, key) => {
-                        return <CommunityCard data={data} key={key} />
-                    })        
-                }
-                </div>
-            </div>
-        </div>
-    )
-}
-
-
-
-// COMMUNITY POST PAGE 
-
-export function CommunityPostPage() {
-
-    const location = useLocation();
-    const [response, setResponse] = useState({})
-    const tmp = decodeURIComponent(location.pathname).split("/");
-    const url = tmp[tmp.length - 1]
-
-    useEffect(() => {
-
-        Axios({
-            method: "GET",
-            url: `${BackendHost}/api/post/${url}`,
-        }).then((response) => {
-            setResponse(response.data)
-        })
-
-    }, [])
-
-    return (
-        <div className="community-post-page">
-            <div className="community-post-content">
-                <div className="post-header">
-
-                    <div className="top-bar">
-                        <div className="profile"></div>
-                        <div>
-                            <h1>sy/ulkstudents</h1>
-                            <p>{response.admin_name}</p>
-                        </div>
-                    </div>
-
-                    <div className="content">
-                        <h1>{response.post_title}</h1>
-                        {response.post_body &&
-                            <div className="body">
-                                <p>{response.body_body}</p>
-                            </div>
-                        }
-                        {response.post_image &&
-                            <div className="image" style={{
-                                backgroundImage: `url(${BackendHost}/${response.post_image})`
-                            }}></div>
-                        }
-                    </div>
-
-                    <div className="post-footer">
-                        <button> <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Arrow / Arrow_Up_SM"> <path id="Vector" d="M12 17V7M12 7L8 11M12 7L16 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg> <p>2k</p> <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Arrow / Arrow_Down_SM"> <path id="Vector" d="M12 7V17M12 17L16 13M12 17L8 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg> </button>
-                        <button> <svg width="1.5rem" height="1.5rem" fill="currentColor" viewBox="0 0 1024 1024" t="1569682881658" className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8185" xmlnsXlink="http://www.w3.org/1999/xlink"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style type="text/css"></style></defs><path d="M573 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40zM293 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8186"></path><path d="M894 345c-48.1-66-115.3-110.1-189-130v0.1c-17.1-19-36.4-36.5-58-52.1-163.7-119-393.5-82.7-513 81-96.3 133-92.2 311.9 6 439l0.8 132.6c0 3.2 0.5 6.4 1.5 9.4 5.3 16.9 23.3 26.2 40.1 20.9L309 806c33.5 11.9 68.1 18.7 102.5 20.6l-0.5 0.4c89.1 64.9 205.9 84.4 313 49l127.1 41.4c3.2 1 6.5 1.6 9.9 1.6 17.7 0 32-14.3 32-32V753c88.1-119.6 90.4-284.9 1-408zM323 735l-12-5-99 31-1-104-8-9c-84.6-103.2-90.2-251.9-11-361 96.4-132.2 281.2-161.4 413-66 132.2 96.1 161.5 280.6 66 412-80.1 109.9-223.5 150.5-348 102z m505-17l-8 10 1 104-98-33-12 5c-56 20.8-115.7 22.5-171 7l-0.2-0.1C613.7 788.2 680.7 742.2 729 676c76.4-105.3 88.8-237.6 44.4-350.4l0.6 0.4c23 16.5 44.1 37.1 62 62 72.6 99.6 68.5 235.2-8 330z" p-id="8187"></path><path d="M433 421c-23.1 0-41 17.9-41 40s17.9 40 41 40c21.1 0 39-17.9 39-40s-17.9-40-39-40z" p-id="8188"></path></g></svg> <p>24k</p> </button>
-                        {/* <button> <svg width="2rem" height="2rem" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg> <p>Share</p> </button> */}
-                    </div>
-                </div>
-
-
-                <div className="post-comments">
-
-                </div>
-            </div>
-        </div>
-    )
-}
 
 
 
 
 function timeAgo(date) {
     if (!(date instanceof Date)) {
-      date = new Date(date); // Convert timestamp to Date object if needed
+      date = new Date(date);
     }
   
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
   
-    let interval = Math.floor(seconds / 31536000); // Years
-  
-    if (interval > 1) {
-      return interval + " years ago";
+    if (seconds < 0) {
+      return "in the future"; // Or handle future dates more specifically
     }
-    interval = Math.floor(seconds / 2592000); // Months
-    if (interval > 1) {
-      return interval + " months ago";
-    }
-    interval = Math.floor(seconds / 86400); // Days
-    if (interval > 1) {
-      return interval + " days ago";
-    }
-    interval = Math.floor(seconds / 3600); // Hours
-    if (interval > 1) {
-      return interval + " hours ago";
-    }
-    interval = Math.floor(seconds / 60); // Minutes
-    if (interval > 1) {
-      return interval + " minutes ago";
-    }
-    if (seconds < 5) {
-        return "just now"
-    }
-    return Math.floor(seconds) + " seconds ago";
-  }
   
-//   // Example usage:
-//   const pastDate = new Date();
-//   pastDate.setMinutes(pastDate.getMinutes() - 2); // 2 minutes ago
-//   console.log(timeAgo(pastDate)); // Output: 2 minutes ago
+    const intervals = {
+      year: 31536000,
+      month: 2592000,
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+    };
   
-//   const pastDate2 = new Date();
-//   pastDate2.setHours(pastDate2.getHours()-1)
-//   console.log(timeAgo(pastDate2)) // Output: 1 hour ago
+    for (const unit in intervals) {
+      const interval = Math.floor(seconds / intervals[unit]);
+      if (interval >= 1) {
+        return `${interval} ${unit}${interval > 1 ? 's' : ''} ago`;
+      }
+    }
   
-//   const pastDate3 = new Date("2024-01-01T10:00:00Z")
-//   console.log(timeAgo(pastDate3))
+    if (seconds < 30) { // "Just now" for up to 30 seconds
+      return "just now";
+    }
   
-//   const timestamp = 1700000000000; // Example timestamp
-//   console.log(timeAgo(timestamp));
-  
-//   const justNow = new Date();
-//   console.log(timeAgo(justNow))
+    return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+}

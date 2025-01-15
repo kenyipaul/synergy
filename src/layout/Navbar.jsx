@@ -1,5 +1,6 @@
 import "./styles/_navbar.scss"
 import { motion } from "framer-motion"
+import { BackendHost } from "../routes/routes"
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom"
 import { setNavbarState } from "../store/states/navbarState";
@@ -42,7 +43,7 @@ export default function Navbar() {
             sessionStorage.removeItem("token");
             dispatch(setAuthorized(false))
             dispatch(setUser({}))
-            // navigate("/")
+            navigate("/")
         }
     }
 
@@ -56,7 +57,7 @@ export default function Navbar() {
                     <li className={location.pathname == "/" ? "active" : ""} onClick={() => open("/") }>Home</li>
                     <li className={location.pathname == "/events" ? "active" : ""} onClick={() => open("/events") }>Events</li>
                     <li className={location.pathname == "/communities" ? "active" : ""} onClick={() => open("/communities") }>Community</li>
-                    <li className={location.pathname == "/about" ? "active" : ""} onClick={() => open("/about") }>About Us</li>
+                    <li className={location.pathname == "/about" ? "active" : ""} onClick={() => open("/about") }>About</li>
 
                     <svg onClick={() => dispatch(setNavbarState(false))} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>                
                 </ul>
@@ -69,7 +70,9 @@ export default function Navbar() {
 
                     <div className="auth-user">
                         <div className="user-info" onClick={() => setMenuState(!menuState)}>
-                            <div className="profile-image"></div>
+                            <div className="profile-image" style={{
+                                backgroundImage: `url(${BackendHost}/${authorizedState.user.image})`
+                            }}></div>
                             <h1>{`${authorizedState.user.firstName} ${authorizedState.user.lastName}`}</h1>
                         </div>
                         <div className={menuState ? "auth-menu active" : "auth-menu"}>

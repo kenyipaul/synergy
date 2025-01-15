@@ -5,6 +5,7 @@
 @use "./pages/form_page";
 @use "./pages/home_page";
 @use "./pages/event_page";
+@use "./pages/about_page";
 @use "./pages/profile_page";
 
 #app {
@@ -43,6 +44,24 @@
         #main .dimmer {
             background: #0a0f20ce;
         }
+    }
+}
+
+.page-not-found {
+    gap: 1.5rem;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    button {
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        padding: 1rem 2rem;
+        border-radius: .5rem;
+        background: $primary-theme;
     }
 }
 

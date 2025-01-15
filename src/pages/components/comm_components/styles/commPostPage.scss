@@ -1,0 +1,438 @@
+@use "../../../../styles/global" as *;
+
+.community-post-page {
+    .community-post-content {
+        width: 100%;
+        margin: auto;
+        padding: 1rem;
+        max-width: 800px;
+    }
+
+    .post-header {
+        gap: 1rem;
+        display: grid;
+    }
+
+    .top-bar {
+        gap: 1rem;
+        display: flex;
+        align-items: center;
+
+        .profile {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: $primary-theme;
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1 {
+            font-size: 1.2em;
+        }
+        p {
+            color: #555;
+        }
+    }
+
+    .comment-writer {
+        border: 1px solid #ddd;
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 3rem;
+
+        .ql-snow {
+            border: none;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            
+            p, li {
+                font-size: 1.2em;
+                line-height: 1.3rem;
+            }
+        }
+
+        #editor {
+            color: #fff;
+            border-radius: 1rem;
+            background: #ff0053 !important;
+            border: none !important;
+
+            .ql-editor {
+                font-size: 1.15em !important;
+                background: #0f0 !important;
+            }
+        }    
+
+        .ql-toolbar {
+            // display: none;
+            height: 45px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border: none !important;
+
+            .ql-active {
+                .ql-stroke { stroke: #000 !important; }
+                .ql-fill { fill: #000 !important; }
+            }
+
+            .ql-stroke { stroke: #999 !important; }
+            .ql-fill { fill: #999 !important; }
+            .ql-picker-label { color: #999 !important;}
+            
+        }
+
+        // .button {
+        //     display: flex;
+        //     justify-content: flex-end;
+        //     padding: 0 1rem 1rem 1rem;
+
+            .postBtn {
+                right: .5rem;
+                bottom: .5rem;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                padding: .8rem 1.2rem;
+                border-radius: 50rem;
+                position: absolute;
+                background: $primary-theme;
+            }
+        // }
+    }
+
+    .content {
+        gap: .5rem;
+        display: grid;
+
+        h1 {
+            font-size: clamp(1.1em, 5vw, 1.3em);
+        }
+        p {
+            hyphens: auto;
+        }
+
+        .image {
+            aspect-ratio: 16/9;
+            border-radius: 1rem;
+            outline: 1px solid #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+    .comment-editor {
+        border-radius: 1rem;
+        border: 1px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        .buttons {
+            gap: .5rem;
+            display: flex;
+            align-items: center;
+            padding: 0 .5rem .5rem 0;
+            justify-content: flex-end;
+
+            button {
+                border: none;
+                cursor: pointer;
+                padding: .7rem 1rem;
+                border-radius: 50rem;
+
+                &:nth-child(2) {
+                    color: #fff;
+                    background: $primary-theme;
+                }
+            }
+        }
+
+        .ql-snow {
+            border: none;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            
+            p, li {
+                font-size: 1.2em;
+                line-height: 1.3rem;
+            }
+        }
+
+        #editor {
+            height: 100px;
+            color: #fff;
+            border-radius: 1rem;
+            background: #ff0053 !important;
+            border: none !important;
+
+            .ql-editor {
+                font-size: 1.15em !important;
+                background: #0f0 !important;
+            }
+        }    
+
+        .ql-toolbar {
+            // display: none;
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border: none !important;
+
+            .ql-active {
+                .ql-stroke { stroke: #000 !important; }
+                .ql-fill { fill: #000 !important; }
+            }
+
+            .ql-stroke { stroke: #999 !important; }
+            .ql-fill { fill: #999 !important; }
+            .ql-picker-label { color: #999 !important;}
+            
+        }
+    }
+
+    .post-footer {
+        gap: 1rem;
+        display: flex;
+        align-items: center;
+
+        button {
+            all: unset;
+            gap: .5rem;
+            height: 40px;
+            width: 80px;
+            display: flex;
+            cursor: pointer;
+            padding: 0 .5rem;
+            border-radius: 50rem;
+            align-items: center;
+            border: 1px solid #999;
+            justify-content: center;
+
+            &:hover, &.active {
+                color: #fff;
+                background: #000;
+            }
+        }
+    }
+
+
+    .post-comments {
+        margin: 2rem 0;
+
+        h1 {
+            gap: 1rem;
+            display: flex;
+            align-items: center;
+
+            span {
+                padding: .5rem;
+                font-size: .5em;
+                border-radius: 50rem;
+                background: $primary-theme;
+            }
+        }
+
+        .comment-grid {
+            gap: 2rem;
+            display: grid;
+            margin: 2rem 0;
+
+            .comment {
+                gap: .5rem;
+                display: grid;
+                
+                &.comment-reply {
+                    margin-left: 3rem;
+                    position: relative;
+
+                    &::before {
+                        content: "";
+                        bottom: 0;
+                        height: 2px;
+                        width: 30px;
+                        left: -3rem;
+                        background: #eee;
+                        position: absolute;
+                    }
+                }
+
+                .topBar {
+                    gap: 1rem;
+                    display: flex;
+                    align-items: center;
+
+                    .profile {
+                        width: 2rem;
+                        height: 2rem;
+                        border-radius: 50%;
+                        background-color: $primary-theme;
+                        background-size: cover;
+                        background-position: center;
+                    }
+
+                    p {
+                        color: #555;
+                    }
+                }
+
+                .body {
+                    
+                    li {
+                        margin: .3rem 0;
+                        margin-left: 1rem;
+                    }
+                }
+
+                .footer {
+                    gap: 1rem;
+                    display: flex;
+                    align-items: center;
+
+                    button {
+                        all: unset;
+                        gap: .2rem;
+                        display: flex;
+                        font-size: .9em;
+                        cursor: pointer;
+                        align-items: center;
+                        padding: .5rem .8rem;
+                        border-radius: 50rem;
+                        
+                        &:hover {
+                            background: #eee;
+                        }
+                    }
+                }
+
+                .replies {
+                    gap: 1rem;
+                    display: grid;
+                    border-left: 1px solid #ddd;
+                }
+            }
+
+        }
+    }
+
+}
+
+
+
+
+
+
+#app.dark .community-post-page {
+    .top-bar {
+        h1 {
+            color: #fff;
+        }
+        p {
+            color: #ccc;
+        }
+    }
+
+    .content {
+        h1 {
+            color: #fff;
+        }
+        p {
+            color: #ccc;
+        }
+
+        .image {
+            aspect-ratio: 16/9;
+            border-radius: 1rem;
+            outline: 1px solid #ffffff30;
+        }
+    }
+
+    .post-footer {
+        button {
+            color: #ccc;
+            border: 1px solid #ffffff20;
+            svg { color: #ccc; }
+
+            &:hover {
+                color: #000;
+                background: #fff;
+                border: 1px solid #000;
+
+                svg { color: #000; }
+            }
+
+            &.active {
+                color: #000;
+                background: #fff;
+
+                svg { color: #000; }
+            }
+        }
+    }
+
+
+    .comment {
+
+        &.comment-reply {
+            &::before {
+                background: #ffffff30;
+            }
+        }
+
+        .topBar {
+            h4 {
+                color: #fff;
+            }
+            p {
+                color: #ccc;
+            }
+        }
+
+        .body {
+            p, li {
+                color: #fff;
+            }
+            a { color: #0099ff; }
+        }
+
+        .footer {
+            button {
+                color: #ccc;
+                
+                &:hover {
+                    color: #000;
+                    background: #eee;
+                }
+            }
+        }
+
+        .replies {
+            border-left: 1px solid #ffffff40;
+        }
+    }
+
+
+    .comment-editor, .comment-writer {
+        border: 1px solid #ffffff30;
+        
+        .ql-editor { color: #fff; }
+        
+        .buttons button:nth-child(1) {
+            color: #ccc;
+            background: none;
+            border: 1px solid #ffffff50;
+
+            &:hover {
+                color: #000;
+                background: #fff;
+            }
+        }
+    }
+
+    .post-comments {
+        h1 { color: #fff; }
+    }
+}

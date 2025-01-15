@@ -5,7 +5,7 @@ const updaterState = createSlice({
     initialState: true,
     reducers: {
         setUpdater: (state, action) => {
-            state = action.payload
+            return state = action.payload
         }
     }
 })

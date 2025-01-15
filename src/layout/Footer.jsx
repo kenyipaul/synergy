@@ -15,7 +15,6 @@ export default function Footer() {
                 <div className="links">
                     <a href="#">Terms and Conditions</a>
                     <a href="#">Privacy Policy</a>
-                    <a href="#">Contact</a>
                 </div>
             </div>
         </div>

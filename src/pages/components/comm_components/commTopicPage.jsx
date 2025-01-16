@@ -2,6 +2,7 @@ import Axios from "axios"
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { BackendHost } from "../../../routes/routes";
+import CommunityCard from "../../../modules/CommunityCard"
 
 export default function CommunityTopicPage() {
 
@@ -10,6 +11,23 @@ export default function CommunityTopicPage() {
     const url = tmp[tmp.length - 1]
 
     const [communities, setCommunities] = useState([]);
+
+
+    function groupTopics(data) {
+        const grouped = {};
+      
+        for (const item of data) {
+            const topic = item.community_topic;
+            if (!grouped[topic]) {
+                grouped[topic] = [];
+            }
+            grouped[topic].push(item);
+        }
+      
+        return Object.entries(grouped).map(([topic, items]) => ({
+            [topic]: items
+        }));
+    }
 
     useEffect(() => {
 

@@ -205,6 +205,7 @@ function Step3() {
     const socket = useRef();
     const [tags, setTags] = useState([])
     const [step, setStep] = useContext(StepContext);
+    const [loading, setLoading] = useState(false)
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
     const authorizedState = useSelector(store => store.authorizedState)
 
@@ -216,6 +217,7 @@ function Step3() {
     }, [])
 
     const post = () => {
+        setLoading(true)
         const website = websiteRef.current.value;
         const contact = contactRef.current.value;
 
@@ -228,32 +230,23 @@ function Step3() {
         let token = sessionStorage.getItem("token");
 
         if (token) {
-            Axios({
-                method: "POST",
-                url: eventRoute,
-                data: event,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            }).then((response) => {
-                if (response.data.acknowledged) {
-                    alert("Event posted successfully")
+            socket.current.emit("/create/event", event)
+            socket.current.on("/create/event/response", response => {
+                if (response.error) {
+                    alert(response.msg)
+                } else {
+                    alert(response.msg)
                     sessionStorage.removeItem("event");
-                    setEventCreator(false)                    
+                    setEventCreator(false)
                 }
-            })
+                setLoading(false)
+            });
         }
     }
     
     const dispatch  = useDispatch();
     const updaterState = useSelector(store => store.updaterState);
     
-    useEffect(() => {
-        socket.current.on('event-uploaded', () => {
-            dispatch(setUpdater(!updaterState))
-        })
-    })
 
     return (
         <div className="form-content">
@@ -274,7 +267,7 @@ function Step3() {
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button onClick={post}>Post Event</button>
+                { loading ? <button>Uploading...</button> : <button onClick={post}>Post Event</button> }
             </div>
         </div>
     )

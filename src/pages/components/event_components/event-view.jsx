@@ -41,10 +41,10 @@ export function EventView() {
                     <ul>
                         <li><b>Contact: </b>{selectedEvent.contact || "Unavailable"}</li>
                         <li><b>Venue/Location: </b>{selectedEvent.location || "Unavailable"}</li>
-                        <li><b>Date: </b>{selectedEvent.date || "Unavailable"}</li>
+                        <li><b>Date: </b>{new Date(selectedEvent.createdAt).toLocaleString("us", { dateStyle: "long", timeStyle: "short" }) || "Unavailable"}</li>
                     </ul>
                     <ul>
-                        <li><b>Date Posted: </b>{selectedEvent.createdAt}</li>
+                        <li><b>Date Posted: </b>{new Date(selectedEvent.createdAt).toLocaleString("us", { dateStyle: "long", timeStyle: "short" })}</li>
                     </ul>
                 </div>
 

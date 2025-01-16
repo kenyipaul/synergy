@@ -1,9 +1,10 @@
 import Axios from "axios"
+import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CommFormContext } from "../../CommPage";
-import { communityRoute } from "../../../routes/routes";
-import { useState, useEffect, useContext } from "react";
+import { BackendHost, communityRoute } from "../../../routes/routes";
+import { useState, useEffect, useContext, useRef } from "react";
 import CommunityCard from "../../../modules/CommunityCard";
 
 
@@ -25,19 +26,27 @@ function groupTopics(data) {
 
 export default function CommunityPage() {
 
+    const socket = useRef();
     const navigate = useNavigate();
     const authorizedState = useSelector(store => store.authorizedState)
     const [commFormState, setCommFormState] = useContext(CommFormContext);
     const [communities, setCommunities] = useState([]);
 
+
+    useEffect(() => {
+        socket.current = io(BackendHost)
+    }, [])
+
     useEffect(() => {
 
-        Axios({
-            method: "GET",
-            url: `${communityRoute}/fetch`,
-        }).then((response) => {
-            const groupedData = groupTopics(response.data);
-            setCommunities(groupedData);
+        socket.current.emit("/fetch/communities")
+        socket.current.on("/fetch/communities/response", (response) => {
+            if (response.error) {
+                alert(response.msg)
+            } else {
+                const groupedData = groupTopics(response.data);
+                setCommunities(groupedData)
+            }
         })
 
     }, [commFormState])

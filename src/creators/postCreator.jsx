@@ -1,10 +1,11 @@
 import "./styles/postCreator.scss";
 import Axios from "axios";
 import { useSelector } from "react-redux";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { PostCreatorContext } from "../pages/CommPage";
-import { postRoute } from "../routes/routes";
+import { BackendHost, postRoute } from "../routes/routes";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 export default function PostCreator() {
 
@@ -36,34 +37,39 @@ export default function PostCreator() {
 
 function Tab1() {
 
-    const titleRef = useRef();
     const bodyRef = useRef();
+    const titleRef = useRef();
+    const socket = useRef();
+    const [loading, setLoading] = useState(false);
     const authorizedState = useSelector(store => store.authorizedState)
     const [postCreatorState, setPostCreatorState] = useContext(PostCreatorContext)
 
+    useEffect(() => {
+        socket.current = io(BackendHost);
+    }, [])
+
     const post = () => {
+        setLoading(true)
         const title = titleRef.current.value;
         const body = bodyRef.current.value;
         const id = postCreatorState.id;
         const admin = authorizedState.user.id;
         const image = ""
 
-        Axios({
-            method: "POST",
-            url: postRoute,
-            data: {
-                admin_id: admin,
-                community_id: id,
-                post_body: body,
-                post_image: image,
-                post_title: title
-            }
-        }).then((response) => {
-            if (response.data.accepted) {
-                alert(response.data.msg)
-                setPostCreatorState(false)
-            }
+        socket.current.emit("/create/post", {
+            admin_id: admin,
+            community_id: id,
+            post_body: body,
+            post_image: image,
+            post_title: title
         })
+
+        socket.current.on("/create/post/response", response => {
+            alert(response.msg)
+            setPostCreatorState(false)
+            setLoading(false)
+        })
+
     }
 
     return (
@@ -79,8 +85,7 @@ function Tab1() {
                     <label htmlFor="body">Body</label>
                     <textarea ref={bodyRef} name="body" id="body" placeholder="Write here"></textarea>
                 </div>
-
-                <button onClick={post}>Post</button>
+                { loading ? <button>Uploading...</button> : <button onClick={post}>Post</button> }
             </div>
         </div>
     )
@@ -91,11 +96,18 @@ function Tab2() {
 
     const fileRef = useRef();
     const titleRef = useRef();
+    const socket = useRef();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const authorizedState = useSelector(store => store.authorizedState)
     const [postCreatorState, setPostCreatorState] = useContext(PostCreatorContext)
 
+    useEffect(() => {
+        socket.current = io(BackendHost);
+    }, [])
+
     const post = () => {
+        setLoading(true)
         const body = "";
         const id = postCreatorState.id;
         const title = titleRef.current.value;
@@ -107,24 +119,24 @@ function Tab2() {
             fileReader.readAsDataURL(image)
 
             fileReader.onload = () => {
-                Axios({
-                    method: "POST",
-                    url: postRoute,
-                    data: {
-                        admin_id: admin,
-                        community_id: id,
-                        post_body: body,
-                        post_image: fileReader.result,
-                        post_title: title
-                    }
-                }).then((response) => {
-                    alert(response.data.msg)
+                socket.current.emit("/create/post", {
+                    admin_id: admin,
+                    community_id: id,
+                    post_body: body,
+                    post_image: fileReader.result,
+                    post_title: title
+                })
+
+                socket.current.on("/create/post/response", response => {
+                    alert(response.msg)
                     setPostCreatorState(false)
+                    setLoading(false)
                 })
             }
         } else {
             alert("Image is too large")
         }
+
 
     }
 

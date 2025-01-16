@@ -2,13 +2,15 @@ import "./styles/commProfile.scss"
 import Axios from "axios"
 import { useSelector } from "react-redux";
 import { BackendHost, communityRoute } from "../../../routes/routes";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PostCreatorContext } from "../../CommPage";
-
+import { io } from "socket.io-client";
 
 export default function CommunityProfile() {
 
+    const socket = useRef()
+    const navigate = useNavigate();
     const location = useLocation();
     const [posts, setPosts] = useState([])
     const [response, setResponse] = useState([])
@@ -23,13 +25,19 @@ export default function CommunityProfile() {
     const authorizedState = useSelector(store => store.authorizedState);
 
     useEffect(() => {
+        socket.current = io(BackendHost)
+    }, [])
 
-        Axios({
-            method: "GET",
-            url: `${communityRoute}/fetch/${community_id}`,
-        }).then((response) => {
-            setResponse(response.data)
-            setPageLoading(false)
+    useEffect(() => {
+        
+        socket.current.emit("/fetch/community", community_id)
+        socket.current.on("/fetch/community/response", response => {
+            if (response.error) {
+                alert(response.msg)
+            } else {
+                setResponse(response.data)
+                setPageLoading(false)
+            }
         })
 
     }, [community_id, updater])
@@ -37,45 +45,45 @@ export default function CommunityProfile() {
 
     useEffect(() => {
 
-        Axios({
-            method: "POST",
-            url: `${BackendHost}/api/posts/`,
-            data: {
-                id: community_id
+        socket.current.emit("/fetch/posts", community_id)
+        socket.current.on("/fetch/posts/response", response => {
+            console.log(response)
+            if (response.error) {
+                alert(response.msg)
+            } else {
+                setPosts(response.data.reverse())
             }
-        }).then((response) => {
-            setPosts(response.data)
         })
 
     }, [postCreatorState, community_id])
 
 
-    const join = () => {
-        Axios({
-            method: "POST",
-            url: `${communityRoute}/join`,
-            data: {
-                community_id,
-                user_id: authorizedState.user.id
-            }
-        }).then((response) => {
-            alert(response.data.msg)
-            setUpdater(!updater)
-        })
+    const join = () => {      
+        if (authorizedState.authorized) {  
+            socket.current.emit("/join/community", { community_id, user_id: authorizedState.user.id });
+            socket.current.on("/join/community/response", response => {
+                if (response.error) {
+                    alert(response.msg)
+                } else {
+                    setResponse(response.data)
+                    setUpdater(!updater) 
+                }
+            })
+        } else {
+            navigate("/login")
+        }
     }
     
     const exitComm = () => {
         if (confirm("Are you sure you want to leave this community?")) {
-            Axios({
-                method: "POST",
-                url: `${BackendHost}/api/community/leave`,
-                data: {
-                    community_id,
-                    user_id: authorizedState.user.id
+
+            socket.current.emit("/leave/community", { community_id, user_id: authorizedState.user.id })
+            socket.current.on("/leave/community/response", response => {
+                if (response.error) {
+                    alert(response.msg)
+                } else {
+                    setUpdater(!updater)
                 }
-            }).then((response) => {
-                alert(response.data.msg)
-                setUpdater(!updater)
             })
         }
     }
@@ -130,7 +138,7 @@ export default function CommunityProfile() {
                     <div className="view feed-view feed-view-mobile">    
                         {
                             posts && posts.length > 0 ?
-                                posts.reverse().map((data, key) => {
+                                posts.map((data, key) => {
                                     return <Post data={data} key={key} />
                                 })
                             : <div className="placeholder">

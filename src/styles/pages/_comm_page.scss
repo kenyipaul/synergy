@@ -8,9 +8,6 @@
     flex-direction: column;
     justify-content: space-between;
 
-    &::-webkit-scrollbar { width: 2px }
-        &::-webkit-scrollbar-thumb { background: $primary-theme linear-gradient($primary-theme, #0099ff); }
-
     .community-banner {
         display: flex;
         padding: 0 1rem;
@@ -87,6 +84,21 @@
             padding: 1rem;
             max-width: 1280px;
             position: relative;
+
+            &.active {
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 999;
+                position: absolute;
+                background: #fff;
+                transition: 1s ease;
+    
+                .search-results {
+                    height: 100%;
+                    padding: 1rem;
+                }
+            }
 
             svg {
                 top: 50%;
@@ -229,6 +241,13 @@
 
                 }
             }
+        }
+    }
+
+
+    .community-placeholder {
+        h1 {
+            color: #fff;
         }
     }
 

@@ -18,7 +18,7 @@ export default function EventCard(props) {
             <div className="poster" style={{ backgroundImage: props.data && `url(${BackendHost}/${props.data.poster})` }}></div>
 
             <div className="content">
-                <p className="date">{props.data && new Date(props.data.date).toLocaleString()}</p>
+                <p className="date">{props.data && new Date(props.data.date).toLocaleString("us", { dateStyle: "long", timeStyle: "short" })}</p>
                 <h1>{props.data && props.data.title}</h1>
                 <div className="tags">
                     {

@@ -2,13 +2,15 @@ import "./styles/commProfile.scss"
 import Axios from "axios"
 import { useSelector } from "react-redux";
 import { BackendHost, communityRoute } from "../../../routes/routes";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PostCreatorContext } from "../../CommPage";
-
+import { io } from "socket.io-client";
 
 export default function CommunityProfile() {
 
+    const socket = useRef()
+    const navigate = useNavigate();
     const location = useLocation();
     const [posts, setPosts] = useState([])
     const [response, setResponse] = useState([])
@@ -23,13 +25,19 @@ export default function CommunityProfile() {
     const authorizedState = useSelector(store => store.authorizedState);
 
     useEffect(() => {
+        socket.current = io(BackendHost)
+    }, [])
 
-        Axios({
-            method: "GET",
-            url: `${communityRoute}/fetch/${community_id}`,
-        }).then((response) => {
-            setResponse(response.data)
-            setPageLoading(false)
+    useEffect(() => {
+        
+        socket.current.emit("/fetch/community", community_id)
+        socket.current.on("/fetch/community/response", response => {
+            if (response.error) {
+                alert(response.msg)
+            } else {
+                setResponse(response.data)
+                setPageLoading(false)
+            }
         })
 
     }, [community_id, updater])
@@ -37,45 +45,44 @@ export default function CommunityProfile() {
 
     useEffect(() => {
 
-        Axios({
-            method: "POST",
-            url: `${BackendHost}/api/posts/`,
-            data: {
-                id: community_id
+        socket.current.emit("/fetch/posts", community_id)
+        socket.current.on("/fetch/posts/response", response => {
+            if (response.error) {
+                alert(response.msg)
+            } else {
+                setPosts(response.data.reverse())
             }
-        }).then((response) => {
-            setPosts(response.data)
         })
 
     }, [postCreatorState, community_id])
 
 
-    const join = () => {
-        Axios({
-            method: "POST",
-            url: `${communityRoute}/join`,
-            data: {
-                community_id,
-                user_id: authorizedState.user.id
-            }
-        }).then((response) => {
-            alert(response.data.msg)
-            setUpdater(!updater)
-        })
+    const join = () => {      
+        if (authorizedState.authorized) {  
+            socket.current.emit("/join/community", { community_id, user_id: authorizedState.user.id });
+            socket.current.on("/join/community/response", response => {
+                if (response.error) {
+                    alert(response.msg)
+                } else {
+                    setResponse(response.data)
+                    setUpdater(!updater) 
+                }
+            })
+        } else {
+            navigate("/login")
+        }
     }
     
     const exitComm = () => {
         if (confirm("Are you sure you want to leave this community?")) {
-            Axios({
-                method: "POST",
-                url: `${BackendHost}/api/community/leave`,
-                data: {
-                    community_id,
-                    user_id: authorizedState.user.id
+
+            socket.current.emit("/leave/community", { community_id, user_id: authorizedState.user.id })
+            socket.current.on("/leave/community/response", response => {
+                if (response.error) {
+                    alert(response.msg)
+                } else {
+                    setUpdater(!updater)
                 }
-            }).then((response) => {
-                alert(response.data.msg)
-                setUpdater(!updater)
             })
         }
     }
@@ -107,14 +114,14 @@ export default function CommunityProfile() {
                             {/* <button>Create Post</button> */}
                             { response.community_members && !response.community_members.includes(authorizedState.user.id) && <button className="joinBtn" onClick={join}>Join</button> }
                             { response.community_members && response.community_members.includes(authorizedState.user.id) && <button onClick={() => setPostCreatorState({id: response._id, state: true})}>Create Post</button> }
-                                <button className="optionBtn" onClick={() => setOptionMenuState(!optionMenuState)}>
-                                <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z" fill="currentColor"></path> <path d="M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor"></path> <path d="M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z" fill="currentColor"></path> </g></svg>
+                            {  response.community_members && response.community_members.includes(authorizedState.user.id) && <button className="optionBtn" onClick={() => setOptionMenuState(!optionMenuState)}>
+                                <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z" fill="currentColor"></path> <path d="M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor"></path> <path d="M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z" fill="currentColor"></path> </g></svg>
                                 { optionMenuState ?
                                 <div className="option-menu">
                                     <li onClick={exitComm}>Leave Community</li>
                                 </div>
                                 : <></> }
-                            </button> 
+                            </button> }
                         </div>
                     </section>
                 </div>
@@ -130,7 +137,7 @@ export default function CommunityProfile() {
                     <div className="view feed-view feed-view-mobile">    
                         {
                             posts && posts.length > 0 ?
-                                posts.reverse().map((data, key) => {
+                                posts.map((data, key) => {
                                     return <Post data={data} key={key} />
                                 })
                             : <div className="placeholder">

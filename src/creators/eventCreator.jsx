@@ -1,13 +1,14 @@
 import "./styles/_eventCreator.scss";
-import Axios from "axios"
 import { TagInput } from "rsuite";
 import 'rsuite/TagInput/styles/index.css';
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useState , useContext, useRef, useEffect} from "react";
 import { EventCreatorContext } from "../pages/EventPage";
 import { BackendHost, eventRoute } from "../routes/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client"
 import { setUpdater } from "../store/states/updaterState";
+import { useSocket } from "../providers/socketProvider";
 
 const StepContext = React.createContext(null);
 
@@ -17,7 +18,23 @@ export default function EventCreator() {
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
 
     return (
-        <div id="event-creator">
+        <motion.div 
+            initial={{
+                scale: 0,
+                opacity: 0
+            }}
+            whileInView={{
+                scale: 1,
+                opacity: 1
+            }}
+            transition={{
+                duration: .5
+            }}
+            exit={{
+                scale: 0,
+                opacity: 0
+            }}
+        id="event-creator">
 
             <svg onClick={() => setEventCreator(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
@@ -28,18 +45,18 @@ export default function EventCreator() {
                         <h1>Post an Event</h1>
                         <p>Bring your community together! Post your event and let everyone know about the exciting things happening around them.</p>
                     </div>
-
-                    
                 </div>
 
                 <StepContext.Provider value={[step, setStep]}>
                 <div className="form">
-                    { step === 1 ? <Step1 /> : step === 2 ? <Step2 /> : <Step3 /> }
+                    <AnimatePresence>{ step == 1 ? <Step1 /> : null }</AnimatePresence>
+                    <AnimatePresence>{ step == 2 ? <Step2 /> : null }</AnimatePresence>
+                    <AnimatePresence>{ step == 3 ? <Step3 /> : null }</AnimatePresence>
                 </div>
                 </StepContext.Provider>
 
             </div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -69,7 +86,25 @@ function Step1() {
     }
 
     return (
-        <div className="form-content">
+        <motion.div 
+        initial={{
+            scale: 0,
+            opacity: 0
+        }}
+        whileInView={{
+            scale: 1,
+            opacity: 1
+        }}
+        transition={{
+            duration: .5,
+            delay: .2
+        }}
+        exit={{
+            position: "absolute",
+            scale: 0,
+            opacity: 0,
+        }}
+        className="form-content">
             <div className="input-area">
                 <label htmlFor="title">Event Title</label>
                 <input ref={titleRef} type="text" id="title" />
@@ -89,7 +124,7 @@ function Step1() {
                 <button onClick={() => setEventCreator(false)}>Cancel</button>
                 <button onClick={next}>Next</button>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -138,7 +173,7 @@ function Step2() {
         const category = categoryRef.current.value;
         const image = imageRef.current.files[0];
 
-        if (image.size < 3000000) {
+        if (image.size < 1500000) {
 
             if (image) {
                 const reader = new FileReader();
@@ -165,13 +200,30 @@ function Step2() {
             }
             
         } else {
-            alert("Selected image is too large, try an image less than 3MB")
+            alert("Selected image is too large, try a smaller image")
         }
 
     }
 
     return (
-        <div className="form-content">
+        <motion.div 
+        initial={{
+            scale: 0,
+            opacity: 0
+        }}
+        whileInView={{
+            scale: 1,
+            opacity: 1
+        }}
+        transition={{
+            duration: .5,
+        }}
+        exit={{
+            position: "absolute",
+            scale: 0,
+            opacity: 0,
+        }}
+        className="form-content">
              <div className="image-area">
                 <p>Event Poster</p>
                 <label htmlFor="image">{selectedImage}</label>
@@ -196,67 +248,76 @@ function Step2() {
                 <button onClick={() => setStep(step - 1)}>Back</button>
                 <button onClick={next}>Next</button>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
 function Step3() {
 
-    const socket = useRef();
     const [tags, setTags] = useState([])
     const [step, setStep] = useContext(StepContext);
+    const [loading, setLoading] = useState(false)
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
     const authorizedState = useSelector(store => store.authorizedState)
+    const {socket, isConnected} = useSocket();
 
     const websiteRef = useRef(null);
     const contactRef = useRef(null);
 
-    useEffect(() => {
-        socket.current = io(BackendHost);
-    }, [])
-
     const post = () => {
-        const website = websiteRef.current.value;
-        const contact = contactRef.current.value;
+        if (isConnected) {
+            setLoading(true)
+            const website = websiteRef.current.value;
+            const contact = contactRef.current.value;
 
-        const event = JSON.parse(sessionStorage.getItem("event"));
-        event.tags = tags;
-        event.website = website;
-        event.contact = contact;
-        event.admin = authorizedState.user.id
+            const event = JSON.parse(sessionStorage.getItem("event"));
+            event.tags = tags;
+            event.website = website;
+            event.contact = contact;
+            event.admin = authorizedState.user.id
 
-        let token = sessionStorage.getItem("token");
+            let token = sessionStorage.getItem("token");
 
-        if (token) {
-            Axios({
-                method: "POST",
-                url: eventRoute,
-                data: event,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            }).then((response) => {
-                if (response.data.acknowledged) {
-                    alert("Event posted successfully")
-                    sessionStorage.removeItem("event");
-                    setEventCreator(false)                    
-                }
-            })
+            if (token) {
+                console.log(event)
+                socket.emit("/create/event", event)
+                socket.on("/create/event/response", response => {
+                    if (response.error) {
+                        alert(response.msg)
+                    } else {
+                        alert(response.msg)
+                        sessionStorage.removeItem("event");
+                        setEventCreator(false)
+                    }
+                    setLoading(false)
+                });
+            }
         }
     }
     
     const dispatch  = useDispatch();
     const updaterState = useSelector(store => store.updaterState);
     
-    useEffect(() => {
-        socket.current.on('event-uploaded', () => {
-            dispatch(setUpdater(!updaterState))
-        })
-    })
 
     return (
-        <div className="form-content">
+        <motion.div 
+        initial={{
+            scale: 0,
+            opacity: 0
+        }}
+        whileInView={{
+            scale: 1,
+            opacity: 1
+        }}
+        transition={{
+            duration: .5
+        }}
+        exit={{
+            position: "absolute",
+            scale: 0,
+            opacity: 0,
+        }}
+        className="form-content">
             <div className="input-area">
                 <label htmlFor="tags">Tags (optional)</label>
                 <TagInput block onChange={(e) => setTags(e)} />
@@ -274,8 +335,8 @@ function Step3() {
 
             <div className="buttons">
                 <button onClick={() => setStep(step - 1)}>Back</button>
-                <button onClick={post}>Post Event</button>
+                { loading ? <button>Uploading...</button> : <button onClick={post}>Post Event</button> }
             </div>
-        </div>
+        </motion.div>
     )
 }

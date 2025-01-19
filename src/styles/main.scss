@@ -7,6 +7,8 @@
 @use "./pages/event_page";
 @use "./pages/about_page";
 @use "./pages/profile_page";
+@use "./pages/privacy_page";
+@use "./pages/terms_page";
 
 #app {
     display: flex;
@@ -21,7 +23,7 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        overflow-y: auto;
+        // overflow-y: auto;
         position: relative;
 
         &::-webkit-scrollbar { width: 2px }

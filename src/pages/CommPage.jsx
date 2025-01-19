@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Outlet } from "react-router-dom";
 
 import Footer from "../layout/Footer";
@@ -24,7 +24,9 @@ export default function CommPage() {
             <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ duration: .5 }} id="community-page">
                 <Outlet />
                 <Footer />
-                { commFormState ? <CommCreator /> : <></> }
+                <AnimatePresence>
+                    { commFormState ? <CommCreator /> : null }
+                </AnimatePresence>
                 { postCreatorState.state ? <PostCreator /> : <></> }
             </motion.div>
         </CommFormContext.Provider>

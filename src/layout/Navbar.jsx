@@ -73,7 +73,7 @@ export default function Navbar() {
                             <div className="profile-image" style={{
                                 backgroundImage: `url(${BackendHost}/${authorizedState.user.image})`
                             }}></div>
-                            <h1>{`${authorizedState.user.firstName} ${authorizedState.user.lastName}`}</h1>
+                            <h1>Hi {`${authorizedState.user.firstName}`}!</h1>
                         </div>
                         <div className={menuState ? "auth-menu active" : "auth-menu"}>
                             <ul>

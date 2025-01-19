@@ -1,0 +1,42 @@
+// @use "";
+
+.terms-and-conditions {
+    height: 100%;
+    overflow-y: scroll;
+
+    .content {
+        gap: 1rem;
+        padding: 2rem;
+        display: grid;
+        max-width: 1280px;
+        margin: auto;
+        width: 100%;
+
+        .container {
+            margin: .5rem 0;
+        }
+
+        ol, ul {
+            li {
+                font-size: 1em;
+                margin: .5rem 1rem;
+            }
+        }
+    }
+
+}
+
+
+#app.dark .terms-and-conditions {
+
+    .content {
+        h1 { color: #fff; }
+        p { color: #ccc; }
+
+        .container {
+            h2 { color: #fff; }
+            ul, ol li { color: #ccc; }
+        }
+    }
+
+}

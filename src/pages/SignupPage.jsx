@@ -93,7 +93,7 @@ function Stage1() {
                 <input type="email" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
 
-            <p>By signup you agree to our terms of service and privacy policy </p>
+            <p>By creating an account, you agree to our <a href="/#/terms">terms and conditions</a> and <a href="/#/privacy">privacy policy</a></p>
             <button onClick={proceed}>Proceed</button>
 
             <div className="option">
@@ -160,7 +160,7 @@ function Stage2() {
             <div className="input-area">
                 <label htmlFor="date">Date of Birth</label>
                 <input value={dob} onChange={e => setDob(e.target.value)} type="date" name="date" id="date" />
-                <p className="link">Why are you asking me this?</p>
+                {/* <p className="link">Why are you asking me this?</p> */}
             </div>
 
             {/* <p>I don't have time for this? <span onClick={() => setStage(stage + 1)}>skip this step</span></p> */}
@@ -243,7 +243,7 @@ function Stage3() {
                 <input ref={password2Ref} type="password" id="password2" />
             </div>
 
-            <p>By creating an account, you agree to our terms and conditions</p>
+            <p>By creating an account, you agree to our <a href="/#/terms">terms and conditions</a> and <a href="/#/privacy">privacy policy</a></p>
 
             <div className="buttons">
                 <button onClick={() => setStage(stage - 1)}><svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>

@@ -31,6 +31,17 @@
         padding: 1.5rem;
         max-width: 450px;
 
+        .topBar {
+            gap: 1rem;
+            display: flex;
+            margin-bottom: 1rem;
+            align-items: center;
+
+            svg {
+                cursor: pointer;
+            }
+        }
+
         .top-bar {
             margin-bottom: 1rem;
 
@@ -71,7 +82,9 @@
             }
         }
 
-        a {
+        .link, a {
+            cursor: pointer;
+            font-weight: 900;
             color: $primary-theme;
             text-decoration: none;
         }
@@ -151,9 +164,13 @@
     .form {
         h1 { color: #fff; }
         h2 { color: #ccc; }
+
+        .topBar {
+            color: #fff;
+        }
     
         .input-area {
-            label { color: #ccc; }
+            label, p { color: #ccc; }
             input {
                 color: #fff;
                 background: $dark;
@@ -162,6 +179,12 @@
         }
 
         p { color: #ccc; }
-        .link { color: $primary-theme; }
+        .link, a { color: $primary-theme; }
+
+        .buttons button:nth-child(1) {
+            color: #fff;
+            background: $dark;
+            border: 1px solid #ffffff50;
+        }
     }
 }

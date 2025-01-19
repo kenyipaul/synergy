@@ -1,5 +1,6 @@
 import "./styles/_comm_card.scss"
 import Axios from "axios"
+import { motion } from "framer-motion"
 import { useSelector } from "react-redux"
 import { BackendHost } from "../routes/routes"
 import { communityRoute } from "../routes/routes"
@@ -34,7 +35,7 @@ export default function CommunityCard(props) {
     }
 
     return (
-        <div className="community-card">
+        <motion.div initial={{ scale: 0, }} whileInView={{ scale: 1 }} transition={{ duration: .5 }} className="community-card">
             <section>
                 <div className="header" style={{
                     backgroundImage: `url(${BackendHost}/${response.community_banner})`
@@ -44,7 +45,7 @@ export default function CommunityCard(props) {
                     }} onClick={() => navigate(`/communities/community/${response._id}`)}></div>
                 </div>
                 <div className="topBar">
-                    { response.community_members && !response.community_members.includes(authorizedState.user.id) ? <button onClick={join}>Join</button> : <button className="joined">Joined</button> }
+                    { authorizedState.authorized ? response.community_members && !response.community_members.includes(authorizedState.user.id) ? <button onClick={join}>Join</button> : <button className="joined">Joined</button> : <button onClick={() => navigate("/login") }>Join</button> }
                 </div>
             </section>
             <section>
@@ -63,6 +64,6 @@ export default function CommunityCard(props) {
                     </div>
                 </div>
             </section>
-        </div>
+        </motion.div>
     )
 }

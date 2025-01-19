@@ -15,7 +15,7 @@
     grid-template-rows: [col-start] 1fr [col-end] 1fr;
 
     .poster {
-        background: #10132C url(/assets/images/color-festival.jpg);
+        background: $primary-theme url(/assets/images/color-festival.jpg);
         background-size: cover;
         background-position: center;
     }
@@ -27,12 +27,18 @@
         flex-direction: column;
 
         .date {
-            color: #ff0053;
+            color: $primary-theme;
         }
 
         h1 {
             hyphens: auto;
-            font-size: clamp(1.3em, 5vw, 1.5em);
+            line-clamp: 2;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            font-size: clamp(1.2em, 5vw, 1.3em);
         }
 
         .tags {
@@ -42,7 +48,7 @@
 
             p {
                 hyphens: auto;
-                color: $primary-theme;
+                color: #999;
             }
         }
         

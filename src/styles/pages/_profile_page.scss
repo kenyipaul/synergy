@@ -93,16 +93,19 @@
         height: 100%;
         width: 100%;
         max-width: 1280px;
-
+        
         .tab {
             gap: 2rem;
-            width: 100%;
-            display: grid;
-            align-content: start;
+            height: 100%;
+            display: flex;
+            overflow: hidden;
+            flex-direction: column;
 
             .container {
                 gap: 1rem;
-                display: grid;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
                 
                 .top-bar {
                     display: flex;
@@ -133,18 +136,6 @@
                     }
                 }
 
-                .content {
-                    gap: 1rem;
-                    display: flex;
-
-                    .community {
-                        width: 300px;
-                        height: 200px;
-                        border-radius: 1rem;
-                        border: 1px solid #ddd;
-                    }
-
-                }
             }
         }
 

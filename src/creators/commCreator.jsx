@@ -1,5 +1,6 @@
 import "./styles/_commCreator.scss";
 import Axios from "axios"
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, useContext, useRef, useEffect } from "react"
 import { CommFormContext } from "../pages/CommPage";
 import { communityRoute } from "../routes/routes";
@@ -17,23 +18,24 @@ export default function CommCreator() {
     const [communityDesc, setCommunityDesc] = useState("Your community description");
 
     return (
-        <div id="community-creator">
-
-            <svg onClick={() => setCommFormState(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+        <motion.div id="community-creator" initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ scale: 5, opacity: 0, rotate: 180 }}>
 
             <CommDescContext.Provider value={[communityDesc, setCommunityDesc]}>
-            <CommNameContext.Provider value={[communityName, setCommunityName]}>
-            <StepContext.Provider value={[step, setStep]}>
+                <CommNameContext.Provider value={[communityName, setCommunityName]}>
+                    <StepContext.Provider value={[step, setStep]}>
 
-                <div className="container">
-                    {step === 1 ? <Step1 /> : step === 2 ? <Step2 /> : <Step3 />}
-                </div>
+                            <svg onClick={() => setCommFormState(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+                            <div className="container">
+                                <AnimatePresence> { step == 1 ? <Step1 /> : null} </AnimatePresence>
+                                <AnimatePresence> { step == 2 ? <Step2 /> : null} </AnimatePresence>
+                                <AnimatePresence> { step == 3 ? <Step3 /> : null} </AnimatePresence>
+                            </div>
 
-            </StepContext.Provider>
-            </CommNameContext.Provider>
+                    </StepContext.Provider>
+                </CommNameContext.Provider>
             </CommDescContext.Provider>
 
-        </div>
+        </motion.div>
     )
 }
 
@@ -135,7 +137,7 @@ function Step1() {
     }
 
     return (
-        <div className="form">
+        <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ scale: 0, opacity: 0, position: "absolute" }} className="form">
             <div className="top-bar">
                 <h1>Create a community</h1>
                 <h2>Tell us about your Community</h2>
@@ -182,7 +184,7 @@ function Step1() {
                 <button onClick={() => setCommFormState(false)}>Cancel</button>
                 <button onClick={submit}>Next</button>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -243,7 +245,7 @@ function Step2() {
     }, [selectedCommIcon])
 
     return (
-        <div className="form">
+        <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ scale: 0, opacity: 0, position: "absolute" }} className="form">
 
             <div className="top-bar">
                 <h1>Style your community</h1>
@@ -288,7 +290,7 @@ function Step2() {
                 <button onClick={submit}>Next</button>
             </div>
 
-        </div>
+        </motion.div>
     )
 }
 
@@ -336,7 +338,7 @@ function Step3() {
     }
 
     return (
-        <div className="form">
+        <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ scale: 0, opacity: 0, position: "absolute" }} className="form">
 
             <div className="top-bar">
                 <h1>What kind of community is this?</h1>
@@ -384,6 +386,6 @@ function Step3() {
                 }
             </div>
 
-        </div>
+        </motion.div>
     )
 }

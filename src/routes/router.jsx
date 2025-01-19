@@ -15,6 +15,8 @@ import CommunityPage from "../pages/components/comm_components/commPage";
 import CommunityPostPage from "../pages/components/comm_components/commPostPage";
 import CommunityTopicPage from "../pages/components/comm_components/commTopicPage";
 import CommunityProfile from "../pages/components/comm_components/commProfile";
+import TermsAndConditions from "../pages/terms";
+import PrivacyPage from "../pages/PrivacyPage";
 
 
 export const router = createHashRouter([
@@ -63,6 +65,14 @@ export const router = createHashRouter([
             {
                 path: "/profile",
                 element: <ProfilePage />
+            },
+            {
+                path: "/terms",
+                element: <TermsAndConditions />
+            },
+            {
+                path: "/privacy",
+                element: <PrivacyPage />
             }
         ]
     },

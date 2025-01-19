@@ -1,0 +1,144 @@
+@use "../../../../styles/global" as *;
+
+.post-tab {
+
+    .community {
+        height: 200px;
+        width: 300px;
+        min-width: 300px;
+        overflow: hidden;
+        border-radius: 1rem;
+        border: 1px solid #00000020;
+    }
+
+
+    .container .content {
+        gap: 1rem;
+        width: 100%;
+        display: flex;
+        padding: 1rem 0;
+        max-width: 1280px;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scroll-snap-align: start;
+        scrollbar-width: none;
+        overflow-x: auto;
+
+        .profileEventCard {
+            width: 300px;
+            min-width: 300px;
+            overflow: hidden;
+            height: fit-content;
+            border-radius: 1rem;
+            border: 1px solid #00000020;
+
+            .banner {
+                height: 150px;
+                background-color: $primary-theme;
+                background-size: cover;
+                background-position: center;
+            }
+
+            .body {
+                gap: .5rem;
+                padding: 1rem;
+                display: grid;
+
+                .date {
+                    color: $primary-theme;
+                }
+
+                .tags {
+                    gap: 1rem;
+                    display: flex;
+                    align-items: center;
+
+                    p {
+                        color: #999;
+                    }
+                }
+
+                h1 {
+                    font-size: clamp(1.3em, 5vw, 1.5em);
+                }
+
+                .description {
+                    color: #555;
+                    height: 38px;
+                    hyphens: auto;
+                    display: -webkit-box;
+                    line-clamp: 3;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            .footer {
+                display: flex;
+                padding: 0 1rem 1rem 1rem;
+
+                button {
+                    all: unset;
+                    width: 100%;
+                    cursor: pointer;
+                    text-align: center;
+                    padding: .8rem 1rem;
+                    border-radius: .5rem;
+                    color: $primary-theme;
+                    border: 1px solid $primary-theme;
+                
+                    &:hover {
+                        color: #fff;
+                        background: $primary-theme;
+                    }
+                }
+            }
+        }
+
+
+        .event-placeholder {
+            @extend .profileEventCard;
+            height: 100%;
+            width: 300px;
+            display: flex;
+            gap: .5rem;
+            padding: 1.5rem;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #ffffff10;
+            text-align: center;
+
+            p {
+                color: #555;
+            }
+        }
+
+    }
+}
+
+
+#app.dark .post-tab {
+
+    .container .content {
+
+        .profileEventCard {
+            background: $dark;
+            border: 1px solid #ffffff15;
+            
+            .body {
+                h1 { color: #fff; }
+                .description { color: #ccc; }
+            }
+        }
+
+        .event-placeholder {
+            h1 { color: #fff; }
+            p { color: #ccc; }
+        }
+
+    }
+
+}

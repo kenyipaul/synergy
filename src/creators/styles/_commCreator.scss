@@ -10,9 +10,8 @@
     padding: 1rem;
     display: flex;
     align-items: center;
-    background: #ffffffaa;
+    background: #ffffff;
     justify-content: center;
-    backdrop-filter: blur(14rem);
     overflow-y: auto;
 
     .closeBtn {
@@ -243,7 +242,7 @@
 
 
 #app.dark #community-creator {
-    background: #0A0F2090;
+    background: $darker;
 
     .closeBtn {
         color: #fff;

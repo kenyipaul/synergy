@@ -86,25 +86,7 @@ function Step1() {
     }
 
     return (
-        <motion.div 
-        initial={{
-            scale: 0,
-            opacity: 0
-        }}
-        whileInView={{
-            scale: 1,
-            opacity: 1
-        }}
-        transition={{
-            duration: .5,
-            delay: .2
-        }}
-        exit={{
-            position: "absolute",
-            scale: 0,
-            opacity: 0,
-        }}
-        className="form-content">
+        <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ position: "absolute", scale: 0, opacity: 0, }} className="form-content">
             <div className="input-area">
                 <label htmlFor="title">Event Title</label>
                 <input ref={titleRef} type="text" id="title" />
@@ -173,57 +155,45 @@ function Step2() {
         const category = categoryRef.current.value;
         const image = imageRef.current.files[0];
 
-        if (image.size < 1500000) {
-
-            if (image) {
-                const reader = new FileReader();
-                reader.readAsDataURL(image);
-                reader.onload = () => {
-                    const event = JSON.parse(sessionStorage.getItem("event"));
-                    event.location = location;
-                    event.category = category;
-                    event.image = reader.result;
-                    sessionStorage.setItem("event", JSON.stringify(event));
-                    setStep(step + 1);
-                }
-            } else {
-                if (location && category) {
-                    const event = JSON.parse(sessionStorage.getItem("event"));
-                    event.location = location;
-                    event.category = category;
-                    event.image = "";
-                    sessionStorage.setItem("event", JSON.stringify(event));
-                    setStep(step + 1);
+        if (location && category && image) {
+            if (image.size < 1500000) {
+    
+                if (image) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(image);
+                    reader.onload = () => {
+                        const event = JSON.parse(sessionStorage.getItem("event"));
+                        event.location = location;
+                        event.category = category;
+                        event.image = reader.result;
+                        sessionStorage.setItem("event", JSON.stringify(event));
+                        setStep(step + 1);
+                    }
                 } else {
-                    alert("Please fill out the fields.")
+                    if (location && category) {
+                        const event = JSON.parse(sessionStorage.getItem("event"));
+                        event.location = location;
+                        event.category = category;
+                        event.image = "";
+                        sessionStorage.setItem("event", JSON.stringify(event));
+                        setStep(step + 1);
+                    } else {
+                        alert("Please fill out the fields.")
+                    }
                 }
-            }
-            
+                
+            } else {
+                alert("Selected image is too large, try a smaller image")
+            } 
         } else {
-            alert("Selected image is too large, try a smaller image")
+            alert("Please fill in the form")
         }
+
 
     }
 
     return (
-        <motion.div 
-        initial={{
-            scale: 0,
-            opacity: 0
-        }}
-        whileInView={{
-            scale: 1,
-            opacity: 1
-        }}
-        transition={{
-            duration: .5,
-        }}
-        exit={{
-            position: "absolute",
-            scale: 0,
-            opacity: 0,
-        }}
-        className="form-content">
+        <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ position: "absolute", scale: 0, opacity: 0, }} className="form-content">
              <div className="image-area">
                 <p>Event Poster</p>
                 <label htmlFor="image">{selectedImage}</label>
@@ -252,6 +222,8 @@ function Step2() {
     )
 }
 
+
+
 function Step3() {
 
     const [tags, setTags] = useState([])
@@ -279,7 +251,6 @@ function Step3() {
             let token = sessionStorage.getItem("token");
 
             if (token) {
-                console.log(event)
                 socket.emit("/create/event", event)
                 socket.on("/create/event/response", response => {
                     if (response.error) {
@@ -295,31 +266,11 @@ function Step3() {
         }
     }
     
-    const dispatch  = useDispatch();
-    const updaterState = useSelector(store => store.updaterState);
-    
 
-    return (
-        <motion.div 
-        initial={{
-            scale: 0,
-            opacity: 0
-        }}
-        whileInView={{
-            scale: 1,
-            opacity: 1
-        }}
-        transition={{
-            duration: .5
-        }}
-        exit={{
-            position: "absolute",
-            scale: 0,
-            opacity: 0,
-        }}
-        className="form-content">
+    return ( <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ position: "absolute", scale: 0, opacity: 0, }} className="form-content">
             <div className="input-area">
                 <label htmlFor="tags">Tags (optional)</label>
+                <p>Click enter after input to save tag</p>
                 <TagInput block onChange={(e) => setTags(e)} />
             </div>
 

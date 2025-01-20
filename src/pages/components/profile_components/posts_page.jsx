@@ -1,11 +1,13 @@
 import Axios from "axios"
 import "./styles/postPage.scss"
 // import EventCard from "../../../modules/EventCard";
-import { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSocket } from "../../../providers/socketProvider";
 import { BackendHost } from "../../../routes/routes";
 import { motion } from "framer-motion";
+
+const EventContext = React.createContext(null)
 
 export default function PostsPage() {
 
@@ -49,6 +51,7 @@ export default function PostsPage() {
 
     return (
         <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ duration: .3 }} className="post-tab tab">
+            <EventContext.Provider value={[events, setEvents]}>
             <div className="container">
                 <div className="top-bar">
                     <h1>Posted Events</h1>
@@ -85,11 +88,38 @@ export default function PostsPage() {
                     }
                 </div>
             </div>
+            </EventContext.Provider>
         </motion.div>
     )
 }
 
 function EventCard(props) {
+
+    const {socket, isConnected} = useSocket();
+    const [loading, setLoading] = useState(false)
+    const [events, setEvents] = useContext(EventContext)
+
+    const deleteEvent = () => {
+        if (confirm("Are you sure you want to delete this event?")) {
+            setLoading(true)
+            const id = props.data._id
+
+            if (isConnected) {
+                socket.emit("/delete/event", id)
+                socket.on("/delete/event/response", response => {
+                    if (response.error) {
+                        alert(response.msg)
+                    } else {
+                        alert(response.msg)
+                        setEvents(response.data)
+                    }
+                })
+            } else {
+                alert("Something went wrong when connecting to server")
+            }
+        }
+    }
+
     return ( <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ duration: .3 }} className="profileEventCard">
             <div className="banner" style={{
                 backgroundImage: `url(${BackendHost}/${props.data.poster})`
@@ -107,7 +137,7 @@ function EventCard(props) {
                 <p className="description">{props.data.description}</p>
             </div>
             <div className="footer">
-                <button>Delete Event</button>
+                { loading ? <button>Deleting...</button> : <button onClick={deleteEvent}>Delete Event</button> }
             </div>
         </motion.div>
     )

@@ -36,8 +36,9 @@ function LoginForm() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [stage, setStage] = useContext(StageContext)
     const [loading, setLoading] = useState(false);
+    const [stage, setStage] = useContext(StageContext)
+    const { socket, isConnected } = useSocket()
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -48,32 +49,23 @@ function LoginForm() {
         setLoading(true)
 
         if (email && password) {
-
-            Axios({
-                method: 'POST',
-                url: `${BackendHost}/api/login/`,
-                data: { 
-                    email,
-                    password
-                },
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then((response) => {
-                dispatch(setAuthorized(true));
-                dispatch(setUser(response.data.user));
-                sessionStorage.setItem("token", response.data.token)
-                sessionStorage.setItem("user", JSON.stringify(response.data.user))
-
-                if (document.referrer == "") {
-                    window.history.back()
-                } else {
-                    navigate("/")
-                }
-            }).catch((err) => {
-                if (err.response.status == 401)
-                    alert("Incorrect username or password")
-            })
+            if (isConnected) {
+                socket.emit("user/login", {email, password})
+                socket.on("user/login/response", response => {
+                    dispatch(setAuthorized(true));
+                    dispatch(setUser(response.user));
+                    sessionStorage.setItem("token", response.token)
+                    sessionStorage.setItem("user", JSON.stringify(response.user))
+    
+                    if (document.referrer == "") {
+                        window.history.back()
+                    } else {
+                        navigate("/")
+                    }
+                })
+            } else {
+                alert("Something went wrong when connecting to server")
+            }
 
         } else {
             alert("Please fill in the form")
@@ -81,20 +73,7 @@ function LoginForm() {
     }
 
     return (
-        <motion.div 
-            initial={{
-                scale: 1.5,
-                opacity: 0
-            }}
-            whileInView={{
-                scale: 1,
-                opacity: 1
-            }}
-            transition={{
-                duration: .5,
-                ease: "backInOut"
-            }}
-        className="form">
+        <motion.div initial={{ scale: 1.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5, ease: "backInOut" }} className="form">
             <div className="top-bar">
                 <h1>Welcome back</h1>
                 <h2>Log into your account</h2>

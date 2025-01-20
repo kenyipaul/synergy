@@ -4,11 +4,11 @@ import Footer from "../layout/Footer";
 import EventCard from "../modules/EventCard";
 import { BackendHost } from "../routes/routes";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser, setUser as updateUser } from "../store/states/authorizedState"
-import { setUpdater } from "../store/states/updaterState";
+import { setUser, setUser as updateUser, setAuthorized } from "../store/states/authorizedState"
 import { motion } from "framer-motion";
 import { io } from "socket.io-client";
 import PostsPage from "./components/profile_components/posts_page";
+import { useSocket } from "../providers/socketProvider";
 
 export default function ProfilePage() {
 
@@ -21,19 +21,7 @@ export default function ProfilePage() {
     }, [authorizedState])
 
     return (
-        <motion.div 
-            initial={{
-                scale: 0,
-                opacity: 0,
-            }} 
-            whileInView={{
-                scale: 1,
-                opacity: 1,
-            }}
-            transition={{
-                duration: .5
-            }}
-        id="profile-page">
+        <motion.div initial={{ scale: 0, opacity: 0, }} whileInView={{ scale: 1, opacity: 1, }} transition={{ duration: .5 }} id="profile-page">
             <div className="header">
                 <section>
                     <div className="profile">
@@ -45,14 +33,13 @@ export default function ProfilePage() {
                             <p>@{user.username}</p>
                         </div>
                     </div>
-                    {/* <button>See Public View</button> */}
                 </section>
 
                 <section>
                     <div className="buttons">
                         <button onClick={() => setCurrentTag(0) } className={currentTab == 0 ? "active" : ""} >Overview</button>
                         <button onClick={() => setCurrentTag(1) } className={currentTab == 1 ? "active" : ""} >Posts</button>
-                        <button onClick={() => setCurrentTag(2) } className={currentTab == 2 ? "active" : ""} >Communities</button>
+                        {/* <button onClick={() => setCurrentTag(2) } className={currentTab == 2 ? "active" : ""} >Communities</button> */}
                         <button onClick={() => setCurrentTag(3) } className={currentTab == 3 ? "active" : ""} >Edit Profile</button>
                     </div>
                 </section>
@@ -66,7 +53,7 @@ export default function ProfilePage() {
                 }
 
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </motion.div>
     )
 }
@@ -76,17 +63,7 @@ function Overview() {
     const authorizedState = useSelector(store => store.authorizedState)
 
     return (
-        <motion.div
-            initial={{
-                translateY: 300
-            }}
-            whileInView={{
-                translateY: 0
-            }}
-            transition={{
-                duration: .3
-            }}
-        className="overview-tab tab">
+        <motion.div initial={{ translateY: 100 }} whileInView={{ translateY: 0 }} transition={{ duration: .3 }} className="overview-tab tab">
             <div className="info-card">
                 <div className="top-bar">
                     <h1>Biography</h1>
@@ -139,17 +116,7 @@ function Communities() {
     const scrollLeft = () => { testimony_list_ref.current.scrollBy(-300, 0); }
 
     return (
-        <motion.div 
-            initial={{
-                translateY: 300
-            }}
-            whileInView={{
-                translateY: 0
-            }}
-            transition={{
-                duration: .3
-            }}
-        className="communities-tab tab">
+        <motion.div initial={{ translateY: 100 }} whileInView={{ translateY: 0 }} transition={{ duration: .3 }} className="communities-tab tab">
             <div className="container">
                 <div className="top-bar">
                     <h1>My Communities</h1>
@@ -182,19 +149,39 @@ function Communities() {
     )
 }
 
+
 function ProfileSettings() {
+
+    const {socket, isConnected} = useSocket();
+    const authorizedState = useSelector(store => store.authorizedState)
+    const user = authorizedState.user;
+    const dispatch = useDispatch();
+
+    const deleteAccount = () => {
+        if (confirm("Are you sure you want to delete your account?")) {
+            if (isConnected) {
+                socket.emit("user/delete/account", { id: user.id })
+                socket.on("user/delete/account/response", response => {
+                    if (response.error) {
+                        alert(response.msg)
+                    } else {
+                        alert(response.msg)
+                        sessionStorage.removeItem("user");
+                        sessionStorage.removeItem("token");
+                        dispatch(setAuthorized(false))
+                        dispatch(setUser({}))
+                        navigate("/")
+                    }
+                })
+
+            } else {
+                alert("Failed to connect to server, please try again later")
+            }
+        }
+    }
+
     return (
-        <motion.div 
-        initial={{
-            translateY: 300
-        }}
-        whileInView={{
-            translateY: 0
-        }}
-        transition={{
-            duration: .3
-        }}
-        className="edit-tab tab"> 
+        <motion.div initial={{ translateY: 100 }} whileInView={{ translateY: 0 }} transition={{ duration: .3 }} className="edit-tab tab"> 
 
             <div className="form-container">  
 
@@ -205,7 +192,7 @@ function ProfileSettings() {
                 <div className="form delete-form">
                     <h1>Delete account</h1>
                     <p>Deleting your account will remove all the content associated with it.</p>
-                    <a href="#">I want to delete my account</a>
+                    <p className="link" onClick={deleteAccount}>I want to delete my account</p>
                 </div>
 
             </div>
@@ -269,32 +256,46 @@ function AccountDetails() {
     const updaterState = useSelector(store => store.updaterState)
     const authorizedState = useSelector(store => store.authorizedState)
     const [user, setUser] = useState(authorizedState.user);
+    const {socket, isConnected} = useSocket()
     
-    const socket = useRef()
     const dispatch = useDispatch()
-    const [email, setEmail] = useState(user.email);
     const [loading, setLoading] = useState(false)
-    const [username, setUsername] = useState(user.username);
-    const [lastName, setLastName] = useState(user.lastName);
-    const [firstName, setFirstName] = useState(user.firstName);
+
+    const usernameRef = useRef(null);
+    const firstNameRef = useRef(null);
+    const lastNameRef = useRef(null);
+    const emailRef = useRef(null);
 
     useEffect(() => {
         setUser(authorizedState.user)
     }, [authorizedState])
 
-
     useEffect(() => {
-        socket.current = io(BackendHost);
-    }, [])
+        if (user) {
+            usernameRef.current.value = user.username
+            firstNameRef.current.value = user.firstName
+            lastNameRef.current.value = user.lastName
+            emailRef.current.value = user.email
+        }
+    }, [user])
+
 
     const submit = () => {
 
-        socket.current.emit("user/update/profile", { id: user._id, email, username, lastName, firstName })
-        socket.current.on("user/update/profile/response", response => {
+        const id = user.id;
+        const email = emailRef.current.value;
+        const lastName = lastNameRef.current.value;
+        const firstName = firstNameRef.current.value;
+        const username = usernameRef.current.value;
+
+        console.log(id, email, lastName, firstName, username)
+
+        socket.emit("user/update/profile", { id, email, username, lastName, firstName })
+        socket.on("user/update/profile/response", response => {
             if (response.error) {
                 alert(response.msg)
             } else {
-                dispatch(setUser(response.data))
+                // dispatch(setUser(response.data))
                 alert(response.msg)
             }
             setLoading(false)
@@ -308,26 +309,26 @@ function AccountDetails() {
 
             <div className="input-area">
                 <label htmlFor="username">Username</label>
-                <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input type="text" id="username" ref={usernameRef} />
             </div>
 
             <div className="name-area">
 
                 <div className="input-area">
                     <label htmlFor="firstName">First Name</label>
-                    <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <input type="text" id="firstName" ref={firstNameRef} />
                 </div>
 
                 <div className="input-area">
                     <label htmlFor="lastName">Last Name</label>
-                    <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <input type="text" id="lastName" ref={lastNameRef} />
                 </div>
 
             </div>
 
             <div className="input-area">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="email" id="email" ref={emailRef} />
             </div>
 
             {
@@ -340,21 +341,49 @@ function AccountDetails() {
 
 
 function PasswordArea() {
+
+    const newPassRef = useRef(null)
+    const currentPassRef = useRef(null)
+    const authorizedState = useSelector(store => store.authorizedState)
+    const user = authorizedState.user;
+    const {socket, isConnected} = useSocket();
+    const [loading, setLoading] = useState(false)
+
+    const changePassword = () => {
+        setLoading(true)
+        const newPassword = newPassRef.current.value;
+        const currentPassword = currentPassRef.current.value;
+
+        if (newPassword && currentPassword) {
+            if (isConnected) {
+                socket.emit("user/update/password", { newPassword, currentPassword, email: user.email })
+                socket.on("user/update/password/response", response => {
+                    alert(response.msg)
+                    setLoading(false)
+                })
+            } else {
+                alert("Something went wrong, try again later")
+            }
+        } else {
+            alert("Please fill out all fields")
+        }
+    }
+
     return (
         <div className="form password-form">
             <h1>Password</h1>
             <div className="password-area">
                 <div className="input-area">
                     <label htmlFor="currentPassword">Current Password</label>
-                    <input type="password" name="currentPassword" id="currentPassword" />
+                    <input ref={currentPassRef} type="password" name="currentPassword" id="currentPassword" />
                 </div>
 
                 <div className="input-area">
                     <label htmlFor="newPassword">New Password</label>
-                    <input type="password" name="password" id="passwrod" />
+                    <input ref={newPassRef} type="password" name="password" id="password" />
                 </div>
             </div>
-            <button>Change Password</button>
+            { loading ? <button>Processing...</button> : <button onClick={changePassword}>Change Password</button> }
         </div>
     )
 }

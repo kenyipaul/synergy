@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { BackendHost } from "../routes/routes";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useSocket } from "../providers/socketProvider";
 
 const StageContext = createContext(null);
 
@@ -57,9 +58,18 @@ function Stage1() {
 
     const proceed = () => {
         if (email && username && firstName && lastName) {
-            const user = { email, username, firstName, lastName }
-            sessionStorage.setItem("tmp_user", JSON.stringify(user))   
-            setStage(stage + 1)
+            if (firstName.length < 3) return alert("First Name should be at least 3 characters long")
+            if (lastName.length < 3) return alert("Last Name should be at least 3 characters long")
+            const pattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+
+            if(email.match(pattern)) {
+                const user = { email, username, firstName, lastName }
+                sessionStorage.setItem("tmp_user", JSON.stringify(user))   
+                setStage(stage + 1)
+            } else {
+                alert("Invalid email address")
+            }
+
         } else {
             alert("Please fill in the form")
         }
@@ -74,23 +84,23 @@ function Stage1() {
 
             <div className="input-area">
                 <label htmlFor="name">Username</label>
-                <input type="text" name="name" id="name" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input type="text" name="name" maxLength="20" id="name" value={username} onChange={(e) => setUsername(e.target.value.replace(" ", ""))} />
             </div>
 
             <div className="name-area">
                 <div className="input-area">
                     <label htmlFor="firstName">First Name</label>
-                    <input type="text" name="firstName" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <input type="text" name="firstName" maxLength="14" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value.replace(" ", ""))} />
                 </div>
                 <div className="input-area">
                     <label htmlFor="lastName">Last Name</label>
-                    <input type="text" name="lastName" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <input type="text" name="lastName" id="lastName" maxLength="14" value={lastName} onChange={(e) => setLastName(e.target.value.replace(" ", ""))} />
                 </div>
             </div>
 
             <div className="input-area">
                 <label htmlFor="email">Email</label>
-                <input type="email" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="email" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value.replace(" ", ""))} />
             </div>
 
             <p>By creating an account, you agree to our <a href="/#/terms">terms and conditions</a> and <a href="/#/privacy">privacy policy</a></p>
@@ -115,25 +125,35 @@ function Stage2() {
     const [dob, setDob] = useState('')
 
     const proceed = () => {
+        const now = new Date();
+        const birth = new Date(dob)
+        const ageInMilli = now - birth;
+        const ageInYears = ageInMilli / (365.25 * 24 * 60 * 60 * 1000);
+        const age = Math.floor(ageInYears)
+
         if (dob) {
-            const fileReader = new FileReader();
-            const user = JSON.parse(sessionStorage.getItem("tmp_user"))
+            if (age >= 13) {
+                const fileReader = new FileReader();
+                const user = JSON.parse(sessionStorage.getItem("tmp_user"))
 
-            if (image) {
-                fileReader.onload = (e) => {
-                    const bufferImage = fileReader.result
+                if (image) {
+                    fileReader.onload = (e) => {
+                        const bufferImage = fileReader.result
 
+                        user.dob = dob;
+                        user.image = bufferImage;
+                        sessionStorage.setItem("tmp_user", JSON.stringify(user))
+                        
+                        setStage(stage + 1)
+                    }
+                    fileReader.readAsDataURL(image);
+                } else {
                     user.dob = dob;
-                    user.image = bufferImage;
                     sessionStorage.setItem("tmp_user", JSON.stringify(user))
-                    
                     setStage(stage + 1)
                 }
-                fileReader.readAsDataURL(image);
             } else {
-                user.dob = dob;
-                sessionStorage.setItem("tmp_user", JSON.stringify(user))
-                setStage(stage + 1)
+                alert("You should be at least 13 years old to create an account.")
             }
         } else {
             alert("Please fill in the form")
@@ -145,7 +165,7 @@ function Stage2() {
 
             <div className="top-bar">
                 <h1>Account Details</h1>
-                <h2>All this can be changed later in your profile settings</h2>
+                <h2>This can be changed later in your profile settings except for the date of birth.</h2>
             </div>
 
             <div className="input-area">
@@ -159,8 +179,8 @@ function Stage2() {
 
             <div className="input-area">
                 <label htmlFor="date">Date of Birth</label>
-                <input value={dob} onChange={e => setDob(e.target.value)} type="date" name="date" id="date" />
-                {/* <p className="link">Why are you asking me this?</p> */}
+                <input value={dob} onChange={e => setDob(e.target.value)} type="date" name="date" id="date" max={new Date().toISOString().split("T")[0]} />
+                <p className="link">Why do I have to answer?</p>
             </div>
 
             {/* <p>I don't have time for this? <span onClick={() => setStage(stage + 1)}>skip this step</span></p> */}
@@ -180,6 +200,7 @@ function Stage3() {
     const navigate = useNavigate();
     const [stage, setStage] = useContext(StageContext);
     const [loading, setLoading] = useState(false)
+    const { socket, isConnected } = useSocket()
 
     const passwordRef = useRef();
     const password2Ref = useRef();
@@ -199,22 +220,41 @@ function Stage3() {
             if (password == password2) {
                 user.password = password;
 
-                Axios({
-                    method: 'POST',
-                    url: `${BackendHost}/api/signup/`,
-                    data: user
-                }).then((response) => {
-                    if (response.data.accepted) {
-                        sessionStorage.removeItem("tmp_user")
-                        if (confirm("Signup was successful, would you like to login?")) {
-                            navigate("/login")
+                if (isConnected) {
+                    socket.emit("user/create/account", user)
+                    socket.on("user/create/account/response", response => {
+                        if (response.error) {
+                            alert(response.msg)
+                        } else {
+                            if (response.accepted) {
+                                sessionStorage.removeItem("tmp_user")
+                                if (confirm("Signup was successful, would you like to login?")) {
+                                    navigate("/login")
+                                }
+                            }
+                            setLoading(false)
                         }
-                    }
-                    setLoading(false)
-                }).catch((error) => {
-                    if (error.response.data.msg)
-                        alert(error.response.data.msg)
-                })
+                    })
+                } else {
+                    alert("Something went wrong when connecting to server")
+                }
+
+                // Axios({
+                //     method: 'POST',
+                //     url: `${BackendHost}/api/signup/`,
+                //     data: user
+                // }).then((response) => {
+                    // if (response.data.accepted) {
+                    //     sessionStorage.removeItem("tmp_user")
+                    //     if (confirm("Signup was successful, would you like to login?")) {
+                    //         navigate("/login")
+                    //     }
+                    // }
+                    // setLoading(false)
+                // }).catch((error) => {
+                //     if (error.response.data.msg)
+                //         alert(error.response.data.msg)
+                // })
                 
             } else {
                 alert("Passwords do not match")

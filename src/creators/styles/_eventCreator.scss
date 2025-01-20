@@ -61,6 +61,8 @@
         .rs-picker {
             all: unset !important;
             display: flex;
+            width: 100% !important;
+            background: #ff0053;
             align-items: center;
             justify-content: center;
 
@@ -90,9 +92,13 @@
 
             .rs-picker-search-input {
                 padding: 0;
+                width: 100%;
+                display: grid;
+                overflow: hidden;
+
                 input { 
-                    max-width: unset;
-                    width: 100% !important;  
+                    max-width: 100% !important;
+                    // width: 100% !important;  
                 }
             }
         }

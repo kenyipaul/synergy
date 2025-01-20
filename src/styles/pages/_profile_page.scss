@@ -90,8 +90,8 @@
         margin: auto;
         padding: 1rem;
         display: grid;
-        height: 100%;
         width: 100%;
+        height: 100%;
         max-width: 1280px;
         
         .tab {
@@ -190,14 +190,14 @@
 
 
         .edit-tab {
+            display: grid;
+            height: fit-content;
 
             .form-container {
                 gap: 2rem;
-                display: flex;
-                // align-items: center;
-                justify-content: center;
-                flex-direction: column;
+                width: 100%;
                 padding: 1rem;
+                display: grid;
 
                 .bio-form {
                     textarea {
@@ -215,8 +215,13 @@
                 .password-form {
                     .password-area {
                         gap: 1rem;
-                        display: grid;
+                        display: flex;
+                        flex-wrap: wrap;
                         grid-template-columns: [col-start] 1fr [col-end] 1fr;
+
+                        .input-area {
+                            max-width: 310px;
+                        }
                     }
                 }
             }
@@ -225,6 +230,7 @@
                 gap: 1rem;
                 width: 100%;
                 display: grid;
+                overflow: hidden;
                 max-width: 650px;
                 padding-bottom: 2rem;
                 border-bottom: 1px solid #ddd;
@@ -236,9 +242,11 @@
 
             .input-area {
                 gap: .5rem;
+                width: 100%;
                 display: grid;
 
                 input {
+                    width: 100%;
                     padding: 1rem;
                     outline: none;
                     font-size: 1em;
@@ -250,14 +258,15 @@
 
             .name-area {
                 gap: 1rem;
-                display: grid;
+                display: flex;
                 grid-template-columns: [col-start] 1fr [col-end] 1fr;
             }
 
             .delete-form {
-                a {
+                .link {
                     font-weight: 600;
                     color: #ff0053;
+                    cursor: pointer;
                     text-decoration: none;
                 }
             }

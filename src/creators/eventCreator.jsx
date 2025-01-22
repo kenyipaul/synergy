@@ -72,11 +72,12 @@ function Step1() {
 
     const next = () => {
         const title = titleRef.current.value;
-        const date = dateRef.current.value;
+        const date = new Date(dateRef.current.value);
         const description = descriptionRef.current.value;
+        const dateCreated = new Date()
 
         if (title && date && description) {
-            const event = { title, date, description }
+            const event = { title, date, description, dateCreated }
             sessionStorage.setItem("event", JSON.stringify(event));
             setStep(step + 1);
         } else {
@@ -247,6 +248,7 @@ function Step3() {
             event.website = website;
             event.contact = contact;
             event.admin = authorizedState.user.id
+            event.dateCreated = new Date()
 
             let token = sessionStorage.getItem("token");
 

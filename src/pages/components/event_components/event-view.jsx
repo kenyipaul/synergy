@@ -26,7 +26,7 @@ export function EventView() {
                         <p>{selectedEvent.category}</p>
                     </div>
                     {
-                        selectedEvent.website && <button>Visit Website</button>
+                        selectedEvent.website && <button onClick={() => window.open(selectedEvent.website, "_blank")}>Visit Website</button>
                     }
                 </div>
                 <div className="tags">
@@ -40,21 +40,26 @@ export function EventView() {
                     <p>{selectedEvent.description}</p>
 
                     <table>
-                        <tr>
-                            <th>Contact</th>
-                            <th>Venue/Location</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                        </tr>
-                        <tr>
-                            <td>{selectedEvent.contact || "Unavailable"}</td>
-                            <td>{selectedEvent.location || "Unavailable"}</td>
-                            <td>{new Date(selectedEvent.createdAt).toLocaleDateString("us", { dateStyle: "long" }) || "Not set"}</td>
-                            <td>{new Date(selectedEvent.createdAt).toLocaleTimeString("us", { timeStyle: "short" }) || "Not set"}</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Contact</th>
+                                <th>Venue/Location</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{selectedEvent.contact || "Unavailable"}</td>
+                                <td>{selectedEvent.location || "Unavailable"}</td>
+                                <td>{new Date(selectedEvent.date).toLocaleDateString("us", { dateStyle: "long" }) || "Not set"}</td>
+                                <td>{new Date(selectedEvent.date).toLocaleTimeString("us", { timeStyle: "short" }) || "Not set"}</td>
+                            </tr>
+                        </tbody>
                     </table>
+                    { console.log(selectedEvent) }
                     <ul>
-                        <li><b>Date Posted: </b>{new Date(selectedEvent.createdAt).toLocaleString("us", { dateStyle: "long", timeStyle: "short" })}</li>
+                        <li><b>Date Posted: </b>{new Date(selectedEvent.dateCreated).toLocaleString("us", { dateStyle: "long", timeStyle: "short" })}</li>
                     </ul>
                 </div>
 

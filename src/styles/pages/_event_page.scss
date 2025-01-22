@@ -454,6 +454,8 @@
 
             table {
                 display: flex;
+
+                tbody, thead { width: 100%; }
                 
                 tr {
                     width: 100%;

@@ -34,6 +34,7 @@ export default function EventPage() {
     useEffect(() => {
 
         if (isConnected) {
+            setLoading(true)
             socket.emit("/fetch/events")
             socket.on("/fetch/events/response", response => {
                 if (response.error) {
@@ -152,21 +153,21 @@ function UpcomingEvents(props) {
     const [loading, setLoading] = useContext(LoadingContext);
 
     useEffect(() => {
-        let now = new Date().getTime();
-        let past =  []
+        if (props.data) {
+            let past =  []
+            let now = new Date().getTime();
 
-        props.data.map((data) => {
+            props.data.map((data) => {
+                let postedDate = new Date(data.date);
+                let difference = now - postedDate
 
-            let postedDate = new Date(data.date).getTime();
-            let difference = now - postedDate
+                if (difference < 0) {
+                    past.push(data)
+                }
+            })
 
-            if (difference < 0) {
-                past.push(data)
-            }
-
-        })
-
-        setResponse(past)
+            setResponse(past)
+        }
 
     }, [props.data])
 

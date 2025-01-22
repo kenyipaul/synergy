@@ -34,11 +34,7 @@ export default function CommunityPage() {
     const [commFormState, setCommFormState] = useContext(CommFormContext);
     const [communities, setCommunities] = useContext(CommunitiesContext)
 
-    useEffect(() => {
-        setLoading(true)
 
-        communities.length > 0 && setLoading(false)
-    }, [communities])
 
     return (
         <div className="community-view-content">

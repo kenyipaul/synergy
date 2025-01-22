@@ -253,9 +253,8 @@
                 width: 100%;
                 max-width: 340px;
                 min-width: 340px;
-                min-height: 430px;
+                min-height: 412px;
                 border-radius: 1.5rem;
-                border: 1px solid #ddd;
                 position: relative;
                 overflow: hidden;
                 display: flex;
@@ -496,6 +495,9 @@
 
     .search-area {
         background: $darker;
+
+        h1 { color: #fff; }
+
         .input-area {
 
             svg {
@@ -532,7 +534,8 @@
 
         .loading-event {
             background: $dark;
-            border: 1px solid #ffffff20;
+            border: none;
+            // border: 1px solid #ffffff20;
 
             h1 { color: #fff; }
 

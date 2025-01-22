@@ -303,6 +303,7 @@ function Step3() {
     const [commFromState, setCommFormState] = useContext(CommFormContext);
 
     const submit = () => {
+        setLoading(true)
         const communityAccess = document.querySelector("input[id='access_type']:checked");
         const communityMaturity = document.getElementById("mature").checked;
         
@@ -313,8 +314,6 @@ function Step3() {
         const token = sessionStorage.getItem("token")
         
         if (token) {
-            setLoading(true)
-            
             Axios({
                 method: 'POST',
                 url: `${communityRoute}/create/`,
@@ -327,10 +326,11 @@ function Step3() {
                 alert(response.data.msg)
                 sessionStorage.removeItem("community")
                 setCommFormState(false);
+            setLoading(false)
             }).catch((err) => {
                 alert(err.response.data.msg)
-            })
             setLoading(false)
+            })
         } else {
             alert("Session invalid or expired, please login")
         }
@@ -381,7 +381,8 @@ function Step3() {
                 <button onClick={() => setStep(step - 1)}>Back</button>
                 {
                     loading ?
-                    <button className="loading">Processing</button> :
+                    <button className="loading">Processing</button> 
+                    :
                     <button onClick={submit}>Create Community</button>
                 }
             </div>

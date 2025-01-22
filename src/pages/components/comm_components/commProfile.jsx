@@ -90,10 +90,10 @@ export default function CommunityProfile() {
     return (
         <div className="community-profile">
 
-            { pageLoading ? <div className="community-loading">
+            {/* { pageLoading ? <div className="community-loading">
                 <h1>Loading...</h1>
-            </div> :
-            <>
+            </div> : */}
+            {/* <> */}
             <div className="community-profile-header">
                 <div className="community-profile-banner">
                     <div className="cover" style={{
@@ -199,7 +199,7 @@ export default function CommunityProfile() {
                 </div>
 
             </div>
-            </>}
+            {/* </>} */}
         </div> 
     )
 }

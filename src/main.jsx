@@ -7,9 +7,9 @@ import { router } from "./routes/router";
 import SocketProvider from "./providers/socketProvider";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <Provider store={store}>
-        <SocketProvider>
-            <RouterProvider router={router} />
-        </SocketProvider>
-    </Provider>
+    <SocketProvider>
+        <Provider store={store}>
+                <RouterProvider router={router} />
+        </Provider>
+    </SocketProvider>
 );

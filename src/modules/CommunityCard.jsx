@@ -12,6 +12,7 @@ export default function CommunityCard(props) {
 
     const socket = useRef();
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
     const [response, setResponse] = useState([])
     const authorizedState = useSelector(store => store.authorizedState)
 
@@ -24,6 +25,7 @@ export default function CommunityCard(props) {
     }, [props])
 
     const join = () => {
+        setLoading(true)
         socket.current.emit("/join/community", { community_id: response._id, user_id: authorizedState.user.id });
         socket.current.on("/join/community/response", response => {
             if (response.error) {
@@ -31,6 +33,7 @@ export default function CommunityCard(props) {
             } else {
                 setResponse(response.data)
             }
+            setLoading(false)
         })
     }
 
@@ -45,7 +48,12 @@ export default function CommunityCard(props) {
                     }} onClick={() => navigate(`/communities/community/${response._id}`)}></div>
                 </div>
                 <div className="topBar">
-                    { authorizedState.authorized ? response.community_members && !response.community_members.includes(authorizedState.user.id) ? <button onClick={join}>Join</button> : <button className="joined">Joined</button> : <button onClick={() => navigate("/login") }>Join</button> }
+                    {
+                        loading ?
+                        <button className="joined">Joining</button>
+                        : 
+                        authorizedState.authorized ? response.community_members && !response.community_members.includes(authorizedState.user.id) ? <button onClick={join}>Join</button> : <button className="joined">Joined</button> : <button onClick={() => navigate("/login") }>Join</button>
+                    }
                 </div>
             </section>
             <section>

@@ -7,16 +7,8 @@ import { authRoute } from "./routes/routes"
 import { useSelector, useDispatch } from "react-redux"
 import { setAuthorized, setUser  } from "./store/states/authorizedState"
 import { setTheme } from "./store/states/themeState"
-import SocketProvider, { useSocket } from "./providers/socketProvider"
+import { useSocket } from "./providers/socketProvider"
 
-
-// export default function App() {
-//     return (
-//         <SocketProvider>
-//             <Root />
-//         </SocketProvider>
-//     )
-// }
 
 
 export default function App() {

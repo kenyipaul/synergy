@@ -192,10 +192,6 @@ function UpcomingEvents(props) {
                             }) : <EventPlaceHolder />
                             : <>
                             <LoadingEvent />
-                            <LoadingEvent />
-                            <LoadingEvent />
-                            <LoadingEvent />
-                            <LoadingEvent />
                         </>
                     }
                 </div>
@@ -250,10 +246,6 @@ function PastEvents(props) {
                                 return <EventCard data={data} key={key} />
                             }) : <EventPlaceHolder />
                             : <>
-                            <LoadingEvent />
-                            <LoadingEvent />
-                            <LoadingEvent />
-                            <LoadingEvent />
                             <LoadingEvent />
                         </>
                     }

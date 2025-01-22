@@ -108,12 +108,12 @@
                 flex-direction: column;
                 
                 .event-list {
-                    gap: 1rem;
+                    gap: .7rem;
+                    height: 100%;
                     padding: 1rem;
                     display: grid;
-                    height: 100%;
-                    place-content: start;
                     overflow-y: scroll;
+                    place-content: start;
                     scrollbar-width: none;
                     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
                 }
@@ -185,6 +185,20 @@
             }
         }
 
+        .loading-community {
+            display: flex;
+            height: 320px;
+            width: 300px;
+            color: #555;
+            font-size: 1.3em;
+            margin-top: 2rem;
+            font-weight: 900;
+            align-items: center;
+            border-radius: 1.5rem;
+            justify-content: center;
+            border: 1px solid #00000015;
+        }
+
         .community-placeholder {
             gap: 1rem;
             display: flex;
@@ -252,6 +266,10 @@
     background: $darker;
 
     .search-area {
+        background: $dark;
+
+        h1 { color: #fff; }
+
         .input-area {
             svg {
                 color: #999;
@@ -268,6 +286,12 @@
 
     .main {
         .title { color: #fff; }
+
+        .loading-community {
+            color: #fff;
+            background: $dark;
+            border: 1px solid #ffffff25;
+        }
 
         .community-container {
             .top-bar {

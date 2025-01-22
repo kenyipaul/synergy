@@ -234,6 +234,12 @@
                     background: $primary-theme;
                     border: 1px solid $primary-theme;
                 }
+
+            }
+
+            .loading {
+                background: none !important;
+                color: $primary-theme !important;
             }
         }
 

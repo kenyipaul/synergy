@@ -9,32 +9,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client"
 import { setUpdater } from "../store/states/updaterState";
 import { useSocket } from "../providers/socketProvider";
+import {Alert, Snackbar} from "@mui/material";
 
 const StepContext = React.createContext(null);
 
 export default function EventCreator() {
 
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
+
     const [step, setStep] = useState(1);
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
 
     return (
-        <motion.div 
-            initial={{
-                scale: 0,
-                opacity: 0
-            }}
-            whileInView={{
-                scale: 1,
-                opacity: 1
-            }}
-            transition={{
-                duration: .5
-            }}
-            exit={{
-                scale: 0,
-                opacity: 0
-            }}
-        id="event-creator">
+        <motion.div initial={{scale: 0, opacity: 0}} whileInView={{scale: 1, opacity: 1}} transition={{duration: .5}} exit={{scale: 0, opacity: 0}} id="event-creator">
 
             <svg onClick={() => setEventCreator(false)} className="closeBtn" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
@@ -49,9 +40,9 @@ export default function EventCreator() {
 
                 <StepContext.Provider value={[step, setStep]}>
                 <div className="form">
-                    <AnimatePresence>{ step == 1 ? <Step1 /> : null }</AnimatePresence>
-                    <AnimatePresence>{ step == 2 ? <Step2 /> : null }</AnimatePresence>
-                    <AnimatePresence>{ step == 3 ? <Step3 /> : null }</AnimatePresence>
+                    <AnimatePresence>{ step === 1 ? <Step1 /> : null }</AnimatePresence>
+                    <AnimatePresence>{ step === 2 ? <Step2 /> : null }</AnimatePresence>
+                    <AnimatePresence>{ step === 3 ? <Step3 /> : null }</AnimatePresence>
                 </div>
                 </StepContext.Provider>
 
@@ -65,6 +56,12 @@ function Step1() {
 
     const [step, setStep] = useContext(StepContext);
     const [eventCreator, setEventCreator] = useContext(EventCreatorContext)
+
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
 
     const titleRef = useRef(null);
     const dateRef = useRef(null);
@@ -81,13 +78,18 @@ function Step1() {
             sessionStorage.setItem("event", JSON.stringify(event));
             setStep(step + 1);
         } else {
-            alert("Please fill out all fields.")
+            setAlertState({ state: true, severity: "warning", msg: "Please fill out all fields."})
         }
 
     }
 
     return (
         <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ position: "absolute", scale: 0, opacity: 0, }} className="form-content">
+
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'top' }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
+
             <div className="input-area">
                 <label htmlFor="title">Event Title</label>
                 <input ref={titleRef} type="text" id="title" />
@@ -115,6 +117,12 @@ function Step2() {
 
     const [step, setStep] = useContext(StepContext);
     const [selectedImage, setSelectedImage] = useState("No image selected");
+
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
 
     const eventCategories = [
         "Concert/Live Music",
@@ -179,15 +187,15 @@ function Step2() {
                         sessionStorage.setItem("event", JSON.stringify(event));
                         setStep(step + 1);
                     } else {
-                        alert("Please fill out the fields.")
+                        setAlertState({ state: true, severity: "warning", msg: "Please fill out all fields."})
                     }
                 }
-                
+
             } else {
-                alert("Selected image is too large, try a smaller image")
-            } 
+                setAlertState({ state: true, severity: "error", msg: "Selected image is too large, try a smaller image"})
+            }
         } else {
-            alert("Please fill in the form")
+            setAlertState({ state: true, severity: "warning", msg: "Please fill out all fields."})
         }
 
 
@@ -195,7 +203,12 @@ function Step2() {
 
     return (
         <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ position: "absolute", scale: 0, opacity: 0, }} className="form-content">
-             <div className="image-area">
+
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'top' }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
+
+            <div className="image-area">
                 <p>Event Poster</p>
                 <label htmlFor="image">{selectedImage}</label>
                 <input ref={imageRef} type="file" id="image" onChange={(e) => setSelectedImage(e.target.files[0].name)} />
@@ -227,6 +240,12 @@ function Step2() {
 
 function Step3() {
 
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
+
     const [tags, setTags] = useState([])
     const [step, setStep] = useContext(StepContext);
     const [loading, setLoading] = useState(false)
@@ -239,13 +258,14 @@ function Step3() {
 
     const post = () => {
         if (isConnected) {
-            setLoading(true)
             const website = websiteRef.current.value;
             const contact = contactRef.current.value;
 
+            let modifiedWebsite = website.includes("http") ? website : `http://${website}`;
+
             const event = JSON.parse(sessionStorage.getItem("event"));
             event.tags = tags;
-            event.website = website;
+            event.website = modifiedWebsite;
             event.contact = contact;
             event.admin = authorizedState.user.id
             event.dateCreated = new Date()
@@ -253,23 +273,31 @@ function Step3() {
             let token = sessionStorage.getItem("token");
 
             if (token) {
+                setLoading(true)
                 socket.emit("/create/event", event)
                 socket.on("/create/event/response", response => {
                     if (response.error) {
-                        alert(response.msg)
+                        setAlertState({ state: true, severity: "error", msg: response.msg})
                     } else {
-                        alert(response.msg)
+                        setAlertState({ state: true, severity: "success", msg: response.msg})
                         sessionStorage.removeItem("event");
                         setEventCreator(false)
                     }
                     setLoading(false)
                 });
             }
+        } else {
+            setAlertState({ state: true, severity: "error", msg: "Something went wrong when connecting to server"})
         }
     }
     
 
     return ( <motion.div initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5 }} exit={{ position: "absolute", scale: 0, opacity: 0, }} className="form-content">
+
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'top' }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
+
             <div className="input-area">
                 <label htmlFor="tags">Tags (optional)</label>
                 <p>Click enter after input to save tag</p>

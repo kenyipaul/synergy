@@ -1,7 +1,13 @@
 @font-face {
+    font-family: aeonik;
+    src: url(/assets/fonts/Aeonik-Regular.ttf);
+}
+
+@font-face {
     font-family: roboto-condensed;
     src: url(/assets/fonts/RobotoCondensed-Regular.ttf);
 }
+
 
 @font-face {
     font-family: roboto-condensed-bold;
@@ -27,9 +33,9 @@ $ternary-font: titillium;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: $primary-font, roboto, sans-serif;
+    font-family: aeonik, $primary-font, roboto, sans-serif;
 }
 
 *::-webkit-scrollbar { width: 2px }
-*::-webkit-scrollbar-thumb { background-image: linear-gradient(transparent, $primary-theme); }
+*::-webkit-scrollbar-thumb { background: linear-gradient(transparent, $primary-theme); }
     

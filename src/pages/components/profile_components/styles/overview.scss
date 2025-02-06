@@ -1,0 +1,115 @@
+@use "../../../../styles/global" as *;
+
+.updater {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 1rem;
+    position: fixed;
+    min-height: 700px;
+    background: #ffffffaa;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(.3rem);
+    overflow-y: auto;
+
+    .closeBtn {
+        top: 2rem;
+        right: 2rem;
+        cursor: pointer;
+        position: absolute;
+    }
+
+    .content {
+        gap: 1rem;
+        width: 100%;
+        display: grid;
+        max-width: 450px;
+        position: relative;
+        background: #fff;
+        border-radius: 1rem;
+        padding: clamp(1rem, 5vw, 2rem);
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        textarea {
+            outline: none;
+            padding: 1rem;
+            resize: vertical;
+            max-height: 200px;
+            min-height: 100px;
+            border-radius: 1rem;
+            border: 1px solid #00000020;
+        }
+
+        button {
+            all: unset;
+            color: #fff;
+            padding: 1rem;
+            font-size: .9em;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 0.6rem;
+            background: $primary-theme;
+        }
+
+        .name-area {
+            gap: 1rem;
+            display: flex;
+            grid-template-columns: [col-start] 1fr [col-end] 1fr;
+        }
+
+        .input-area {
+            gap: .5rem;
+            width: 100%;
+            display: grid;
+
+            input {
+                width: 100%;
+                padding: 1rem;
+                outline: none;
+                font-size: 1em;
+                border-radius: .5rem;
+                background: #f3f3f3;
+                border: 1px solid #ddd;
+            }
+        }
+    }
+}
+
+#app.dark .updater {
+    background: #0a192090;
+
+    .content {
+        background: #0a1920;
+        border: 1px solid #ffffff20;
+
+        h1, svg {
+            color: #fff;
+        }
+
+        textarea {
+            color: #fff;
+            background: $dark;
+            border: 1px solid #ffffff20;
+        }
+
+
+        .input-area {
+            label {
+                color: #fff;
+            }
+
+            input {
+                color: #fff;
+                background: $dark;
+                border: 1px solid #ffffff15;
+            }
+        }
+    }
+}

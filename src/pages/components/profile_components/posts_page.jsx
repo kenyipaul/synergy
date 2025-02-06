@@ -71,7 +71,7 @@ export default function PostsPage() {
             </div>
 
 
-            <div className="container">
+            {/* <div className="container">
                 <div className="top-bar">
                     <h1>Community Posts</h1>
 
@@ -87,7 +87,7 @@ export default function PostsPage() {
                         })
                     }
                 </div>
-            </div>
+            </div> */}
             </EventContext.Provider>
         </motion.div>
     )
@@ -137,6 +137,7 @@ function EventCard(props) {
                 <p className="description">{props.data.description}</p>
             </div>
             <div className="footer">
+                <button>Edit</button>
                 { loading ? <button>Deleting...</button> : <button onClick={deleteEvent}>Delete Event</button> }
             </div>
         </motion.div>

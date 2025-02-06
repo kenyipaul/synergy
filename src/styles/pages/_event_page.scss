@@ -153,14 +153,12 @@
             
             input {
                 width: 100%;
-                border: none;
                 outline: none;
                 font-size: 1em;
-                padding: 1.1rem;
                 background: #fff;
-                padding-left: 3.5rem;
-                border-radius: .5rem;
+                border-radius: 50rem;
                 border: 1px solid #00000025;
+                padding: 1.1rem 1.1rem 1.1rem 3.5rem;
 
                 &:focus { border: 1px solid $primary-theme; }
             }
@@ -251,8 +249,8 @@
 
             .loading-event {
                 width: 100%;
-                max-width: 340px;
-                min-width: 340px;
+                max-width: 300px;
+                min-width: 300px;
                 min-height: 412px;
                 border-radius: 1.5rem;
                 position: relative;
@@ -293,8 +291,8 @@
                 gap: 1rem;
                 width: 100%;
                 padding: 1rem;
-                max-width: 340px;
-                min-height: 430px;
+                max-width: 318px;
+                min-height: 360px;
                 margin-left: 1rem;
                 display: flex;
                 align-items: center;
@@ -302,6 +300,10 @@
                 border-radius: 1.5rem;
                 justify-content: center;
                 border: 1px solid #ddd;
+
+                h1 {
+                    font-size: 1.5em;
+                }
 
                 p {
                     color: #555;
@@ -410,7 +412,7 @@
                     text-align: center;
                     color: #fff;
                     cursor: pointer;
-                    padding: 1rem 1.5rem;
+                    padding: .8rem 1rem;
                     background: $primary-theme;
                     border-radius: 50rem;
                 }
@@ -477,7 +479,8 @@
                     }
                 }
                 
-                td { 
+                td {
+                    white-space: nowrap;
                     border-left: 1px solid #00000030; 
                     border-right: 1px solid #00000030; 
                     

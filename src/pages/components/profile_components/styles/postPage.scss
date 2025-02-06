@@ -76,6 +76,7 @@
             }
 
             .footer {
+                gap: .5rem;
                 display: flex;
                 padding: 0 1rem 1rem 1rem;
 
@@ -85,10 +86,11 @@
                     cursor: pointer;
                     text-align: center;
                     padding: .8rem 1rem;
-                    border-radius: .5rem;
+                    border-radius: .6rem;
                     color: $primary-theme;
+                    background: #28B13210;
                     border: 1px solid $primary-theme;
-                
+
                     &:hover {
                         color: #fff;
                         background: $primary-theme;
@@ -100,16 +102,20 @@
 
         .event-placeholder {
             @extend .profileEventCard;
-            height: 100%;
             width: 300px;
             display: flex;
             gap: .5rem;
+            height: 300px;
             padding: 1.5rem;
             align-items: center;
             flex-direction: column;
             justify-content: center;
             border: 1px solid #ffffff10;
             text-align: center;
+
+            h1 {
+                font-size: clamp(1.3em, 5vw, 1.5em);
+            }
 
             p {
                 color: #555;

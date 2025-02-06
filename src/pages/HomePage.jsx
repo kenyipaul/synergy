@@ -79,7 +79,14 @@ function Banner() {
     return (
         <div className="home-banner">
             <div className="banner">
-                <h1>"Synergy is the magic that unlocks limitless innovation through the power of collaboration."</h1>
+                <video id={"video"} autoPlay={true} muted loop>
+                    <source src="/assets/videos/banner.mp4" type="video/mp4" />
+                    Your browser does not support the video tag
+                </video>
+                <div className="cover"></div>
+                <div className="caption">
+                    <h1>"Synergy is the magic that unlocks limitless innovation through the power of collaboration."</h1>
+                </div>
             </div>
         </div>
     )

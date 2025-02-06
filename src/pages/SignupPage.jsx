@@ -1,9 +1,9 @@
-import Axios from "axios"
+import { tailChase } from "ldrs";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BackendHost } from "../routes/routes";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useSocket } from "../providers/socketProvider";
+import {Alert, Backdrop, CircularProgress, Snackbar} from "@mui/material";
 
 const StageContext = createContext(null);
 
@@ -17,12 +17,12 @@ export default function SignupPage() {
     
     return (
         <StageContext.Provider value={[stage, setStage]}>
-        <div id="form-container" className={theme == "dark" && theme}>
+        <div id="form-container" className={theme === "dark" && theme}>
 
             <svg onClick={() => navigate("/")} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
 
             <motion.div initial={{ scale: 1.5, opacity: 0, }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5, ease: "backInOut" }} className="form">            
-                { stage == 1 ? <Stage1 /> : stage == 2 ? <Stage2 /> : <Stage3 /> }
+                { stage === 1 ? <Stage1 /> : stage === 2 ? <Stage2 /> : <Stage3 /> }
             </motion.div>
         </div>
         </StageContext.Provider>
@@ -37,6 +37,12 @@ function Stage1() {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
+
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
 
     const navigate = useNavigate();
     const [stage, setStage] = useContext(StageContext);
@@ -58,25 +64,47 @@ function Stage1() {
 
     const proceed = () => {
         if (email && username && firstName && lastName) {
-            if (firstName.length < 3) return alert("First Name should be at least 3 characters long")
-            if (lastName.length < 3) return alert("Last Name should be at least 3 characters long")
+            if (username.length < 3) return setAlertState({state: true, severity: "warning", msg: "Username should be at least 3 characters long"})
+            if (firstName.length < 3) return setAlertState({state: true, severity: "warning", msg: "First Name should be at least 3 characters long"})
+            if (lastName.length < 3) return setAlertState({state: true, severity: "warning", msg: "Last Name should be at least 3 characters long"})
+
             const pattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
             if(email.match(pattern)) {
                 const user = { email, username, firstName, lastName }
-                sessionStorage.setItem("tmp_user", JSON.stringify(user))   
+
+                let storedData = sessionStorage.getItem("tmp_user")
+
+                if (storedData) {
+                    storedData = JSON.parse(storedData)
+
+                    storedData.username = user.username
+                    storedData.firstName = user.firstName
+                    storedData.lastName = user.lastName
+                    storedData.email = user.email
+
+                    sessionStorage.setItem("tmp_user", JSON.stringify(storedData))
+                } else {
+                    sessionStorage.setItem("tmp_user", JSON.stringify(user))
+                }
+
                 setStage(stage + 1)
             } else {
-                alert("Invalid email address")
+                setAlertState({state: true, severity: "warning", msg: "Invalid email address"})
             }
 
         } else {
-            alert("Please fill in the form")
+            setAlertState({state: true, severity: "warning", msg: "Please fill in all fields"})
         }
     }
 
+
     return (
         <>
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'top' }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
+
             <div className="top-bar">
                 <h1>Welcome!</h1>
                 <h2>Let's create your account</h2>
@@ -104,6 +132,7 @@ function Stage1() {
             </div>
 
             <p>By creating an account, you agree to our <a href="/#/terms">terms and conditions</a> and <a href="/#/privacy">privacy policy</a></p>
+
             <button onClick={proceed}>Proceed</button>
 
             <div className="option">
@@ -123,6 +152,25 @@ function Stage2() {
 
     const [image, setImage] = useState('')
     const [dob, setDob] = useState('')
+
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
+
+    useEffect(() => {
+        let storedUser = sessionStorage.getItem("tmp_user")
+
+        if (storedUser) {
+            storedUser = JSON.parse(storedUser)
+
+            if (storedUser.dob) {
+                let dateO = storedUser.dob && storedUser.dob.split("-")
+                setDob(`${dateO[0]}-${dateO[1]}-${dateO[dateO.length - 2]}`)
+            }
+        }
+    }, []);
 
     const proceed = () => {
         const now = new Date();
@@ -153,15 +201,18 @@ function Stage2() {
                     setStage(stage + 1)
                 }
             } else {
-                alert("You should be at least 13 years old to create an account.")
+                setAlertState({ state: true, severity: "warning", msg: "You should be at least 13 years old to create an account." })
             }
         } else {
-            alert("Please fill in the form")
+            setAlertState({ state: true, severity: "warning", msg: "Please fill in all fields" })
         }
     }
 
     return (
         <>
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'top' }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
 
             <div className="top-bar">
                 <h1>Account Details</h1>
@@ -180,14 +231,14 @@ function Stage2() {
             <div className="input-area">
                 <label htmlFor="date">Date of Birth</label>
                 <input value={dob} onChange={e => setDob(e.target.value)} type="date" name="date" id="date" max={new Date().toISOString().split("T")[0]} />
-                <p className="link">Why do I have to answer?</p>
+                {/*<p className="link">Why do I have to answer?</p>*/}
             </div>
 
             {/* <p>I don't have time for this? <span onClick={() => setStage(stage + 1)}>skip this step</span></p> */}
 
             <div className="buttons">
-                <button onClick={() => setStage(stage - 1)}><svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
-                <button onClick={proceed}>Proceed<svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
+                <button onClick={() => setStage(stage - 1)}><svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
+                <button onClick={proceed}>Proceed<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
             </div>
 
         </>
@@ -197,80 +248,71 @@ function Stage2() {
 
 function Stage3() {
 
+    useEffect(() => {
+        tailChase.register()
+    }, []);
+
     const navigate = useNavigate();
     const [stage, setStage] = useContext(StageContext);
     const [loading, setLoading] = useState(false)
     const { socket, isConnected } = useSocket()
+
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
 
     const passwordRef = useRef();
     const password2Ref = useRef();
 
     const register = () => {
 
-        setLoading(true)
         const user = JSON.parse(sessionStorage.getItem("tmp_user"))
-        if (!user) {
-            return setStage(1)
-        }
+        if (!user) return setStage(1)
 
         const password = passwordRef.current.value;
         const password2 = password2Ref.current.value;
 
-        if (password && password2) {
-            if (password == password2) {
-                user.password = password;
+        if (password === "" || password2 === "") return setAlertState({ state: true, severity: "warning", msg: "Please fill in all fields" })
+        if (password.length < 8) return setAlertState({ state: true, severity: "warning", msg: "Password should be at least 8 characters long." })
+        if (password !== password2) return setAlertState({ state: true, severity: "warning", msg: "Passwords don't match." })
 
-                if (isConnected) {
-                    socket.emit("user/create/account", user)
-                    socket.on("user/create/account/response", response => {
-                        if (response.error) {
-                            alert(response.msg)
-                        } else {
-                            if (response.accepted) {
-                                sessionStorage.removeItem("tmp_user")
-                                if (confirm("Signup was successful, would you like to login?")) {
-                                    navigate("/login")
-                                }
-                            }
-                            setLoading(false)
-                        }
-                    })
+
+        user.password = password;
+
+        if (isConnected) {
+            setLoading(true)
+            socket.emit("user/create/account", user)
+            socket.on("user/create/account/response", response => {
+                if (response.error) {
+                    setAlertState({ state: true, severity: "error", msg: response.msg })
+                    setLoading(false)
                 } else {
-                    alert("Something went wrong when connecting to server")
+                    if (response.accepted) {
+                        sessionStorage.removeItem("tmp_user")
+                        if (confirm("Signup was successful, would you like to login?")) {
+                            navigate("/login")
+                        }
+                    }
+                    setLoading(false)
                 }
-
-                // Axios({
-                //     method: 'POST',
-                //     url: `${BackendHost}/api/signup/`,
-                //     data: user
-                // }).then((response) => {
-                    // if (response.data.accepted) {
-                    //     sessionStorage.removeItem("tmp_user")
-                    //     if (confirm("Signup was successful, would you like to login?")) {
-                    //         navigate("/login")
-                    //     }
-                    // }
-                    // setLoading(false)
-                // }).catch((error) => {
-                //     if (error.response.data.msg)
-                //         alert(error.response.data.msg)
-                // })
-                
-            } else {
-                alert("Passwords do not match")
-            }
+            })
         } else {
-            alert("Please fill in the form")
+            setAlertState({ state: true, severity: "error", msg: "Something went wrong when connecting to server"})
         }
 
     }
 
     return (
         <>
+
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'top' }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
         
             <div className="top-bar">
                 <h1>Set Password</h1>
-                {/* <p>Password should have at least one uppercase character, lowercase character, number, special character at should be at least 8 characters long</p> */}
             </div>
 
             <div className="input-area">
@@ -286,13 +328,21 @@ function Stage3() {
             <p>By creating an account, you agree to our <a href="/#/terms">terms and conditions</a> and <a href="/#/privacy">privacy policy</a></p>
 
             <div className="buttons">
-                <button onClick={() => setStage(stage - 1)}><svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
+                <button onClick={() => setStage(stage - 1)}><svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>Back</button>
                 {
                     loading ?
                     <button className="processing">Processing...</button> :
-                    <button onClick={register}>Register<svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
+                    <button onClick={register}>Register<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg></button>
                 }
             </div>
+
+            <Backdrop open={loading}>
+                <l-tail-chase
+                    size="40"
+                    speed="1.75"
+                    color="white"
+                ></l-tail-chase>
+            </Backdrop>
 
         </>
     )

@@ -17,8 +17,9 @@
 
             h1 {
                 cursor: pointer;
-                font-size: 1.6em;
-                font-family: $secondary-font;
+                font-size: 1.4em;
+                text-transform: uppercase;
+                //font-family: $secondary-font;
             }
 
             svg {
@@ -72,20 +73,21 @@
 
             .buttons {
                 gap: 1rem;
-                top: 4rem;
-                right: 0;
+                top: 4.5rem;
+                right: 1rem;
                 flex-direction: column;
                 align-items: center;
                 position: absolute;
                 // background: $dark;
                 background: #fff;
                 transition: 0.2s ease;
-                border: 1px solid $primary-theme;
                 display: flex;
                 padding: 0 2rem;
                 max-height: 0;
                 opacity: 0;
                 overflow: hidden;
+                border-radius: 1rem;
+                border: 1px solid #00000060;
                 
                 &.active {
                     opacity: 1;
@@ -121,7 +123,7 @@
                 padding: .5rem;
                 background: #eee;
                 border-radius: 1rem;
-                border: 1px solid $primary-theme;
+                border: 1px solid #00000050;
             }
 
             .auth-user {
@@ -197,7 +199,6 @@
                 all: unset;
                 gap: 1rem;
                 display: flex; 
-                display: flex;
                 align-items: center;
 
                 &.active { all: unset; }
@@ -242,6 +243,8 @@
 
             &:nth-child(2) {
                 .buttons {
+                    border: none !important;
+
                     button {
                         &:nth-child(2) {
                             padding: .7rem 1.5rem;
@@ -276,6 +279,8 @@
 
         .buttons {
             background: $darker;   
+            border: 1px solid #ffffff40;
+
             button { color: #fff; }
         }
 
@@ -283,7 +288,7 @@
 
         .profile {
             background: $dark;
-            border: 1px solid $primary-theme;
+            border: 1px solid #ffffff40;
         }
 
         .auth-user {

@@ -62,11 +62,11 @@
 
             label, .label {
                 color: #555;
+                cursor: pointer;
             }
             
             input, select {
                 width: 100%;
-                border: none;
                 outline: none;
                 padding: 1rem;
                 font-size: 1em;
@@ -105,30 +105,39 @@
             text-align: center;
             border-radius: .6rem;
             background: $primary-theme;
-            
-            &.processing {
-                color: #555;
-                background: #eee;
-            }
         }
 
 
         .buttons {
             gap: .5rem;
             display: grid;
+                width: 100%;
             grid-template-columns: [col-start] .5fr [col-end] 1fr;
 
             button {
+                all: unset;
                 display: flex;
+                font-size: .8rem;
                 font-weight: 900;
-                padding: .8rem 2rem;
+                color: #fff;
+                padding: 1rem 2rem;
                 align-items: center;
+                cursor: pointer;
+                border-radius: .5rem;
+                background: $primary-theme;
                 justify-content: space-between;
 
-                &:nth-child(1) { 
+                &:nth-child(1) {
                     color: #555;
                     background: #f9f9f9;
                     border: 1px solid #eee;
+                }
+
+
+                &.processing {
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
                 }
             }
         }
@@ -184,7 +193,7 @@
         .buttons button:nth-child(1) {
             color: #fff;
             background: $dark;
-            border: 1px solid #ffffff50;
+            border: 1px solid #ffffff10;
         }
     }
 }

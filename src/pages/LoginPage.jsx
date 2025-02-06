@@ -1,11 +1,13 @@
 import Axios from "axios"
 import { motion } from "framer-motion";
-import React, { useContext, useRef, useState } from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import { useDispatch } from "react-redux";
 import { BackendHost } from "../routes/routes";
 import { useNavigate } from "react-router-dom";
 import { setAuthorized, setUser } from "../store/states/authorizedState";
 import { useSocket } from "../providers/socketProvider";
+import {Alert, Backdrop, Snackbar} from "@mui/material";
+import {tailChase} from "ldrs";
 
 const StageContext = React.createContext(null)
 
@@ -23,9 +25,9 @@ export default function LoginPage() {
 
     return (
         <StageContext.Provider value={[stage, setStage]}>
-        <div id="form-container" className={theme == "dark" && theme}>
+        <div id="form-container" className={theme === "dark" && theme}>
             <svg onClick={goBack} className="closeBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_MD"> <path id="Vector" d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
-            { stage == 0 ? <LoginForm /> : <ForgotPassword /> }
+            { stage === 0 ? <LoginForm /> : <ForgotPassword /> }
         </div>
         </StageContext.Provider>
     )
@@ -35,6 +37,16 @@ function LoginForm() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const [alertState, setAlertState] = useState({
+        state: false,
+        severity: "info",
+        msg: ""
+    })
+
+    useEffect(() => {
+        tailChase.register()
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [stage, setStage] = useContext(StageContext)
@@ -46,34 +58,40 @@ function LoginForm() {
     const login = () => {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
-        setLoading(true)
 
         if (email && password) {
             if (isConnected) {
+                setLoading(true)
                 socket.emit("user/login", {email, password})
                 socket.on("user/login/response", response => {
-                    dispatch(setAuthorized(true));
-                    dispatch(setUser(response.user));
-                    sessionStorage.setItem("token", response.token)
-                    sessionStorage.setItem("user", JSON.stringify(response.user))
-    
-                    if (document.referrer == "") {
-                        window.history.back()
+
+                    if (response.error) {
+                        setAlertState({state: true, severity: "error", msg: response.msg })
+                        setLoading(false);
                     } else {
+                        dispatch(setAuthorized(true));
+                        dispatch(setUser(response.user));
+                        sessionStorage.setItem("token", response.token)
+                        sessionStorage.setItem("user", JSON.stringify(response.user))
                         navigate("/")
                     }
                 })
             } else {
-                alert("Something went wrong when connecting to server")
+                setAlertState({state: true, severity: "error", msg: "Something went wrong when connecting to server."})
             }
 
         } else {
-            alert("Please fill in the form")
+            setAlertState({state: true, severity: "warning", msg: "Please fill out all fields."})
         }
     }
 
     return (
         <motion.div initial={{ scale: 1.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: .5, ease: "backInOut" }} className="form">
+
+            <Snackbar open={alertState.state} onClose={() => setAlertState({state: false, severity: "info", msg: ""})} autoHideDuration={5000} anchorOrigin={{ horizontal: "center", vertical: "top" }}>
+                <Alert severity={alertState.severity}>{alertState.msg}</Alert>
+            </Snackbar>
+
             <div className="top-bar">
                 <h1>Welcome back</h1>
                 <h2>Log into your account</h2>
@@ -102,6 +120,14 @@ function LoginForm() {
                 <p>Don't have an account?</p>
                 <p onClick={() => navigate("/signup")} className="link">Register</p>
             </div>
+
+            <Backdrop open={loading}>
+                <l-tail-chase
+                    size="40"
+                    speed="1.75"
+                    color="white"
+                ></l-tail-chase>
+            </Backdrop>
 
         </motion.div>
     )

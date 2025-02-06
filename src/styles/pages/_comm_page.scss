@@ -154,14 +154,12 @@
             
             input {
                 width: 100%;
-                border: none;
                 outline: none;
                 font-size: 1em;
-                padding: 1.1rem;
                 background: #fff;
-                padding-left: 3.5rem;
-                border-radius: .5rem;
-                border: 1px solid #00000025;
+                border-radius: 50rem;
+                border: 1px solid #00000030;
+                padding: 1.1rem 1.1rem 1.1rem 3.5rem;
 
                 &:focus { border: 1px solid $primary-theme; }
             }
@@ -266,7 +264,7 @@
     background: $darker;
 
     .search-area {
-        background: $dark;
+        background: $darker;
 
         h1 { color: #fff; }
 

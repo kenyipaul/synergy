@@ -1,9 +1,6 @@
 import "./styles/_comm_card.scss"
-import Axios from "axios"
-import { motion } from "framer-motion"
 import { useSelector } from "react-redux"
 import { BackendHost } from "../routes/routes"
-import { communityRoute } from "../routes/routes"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 import { io } from "socket.io-client"
@@ -38,7 +35,7 @@ export default function CommunityCard(props) {
     }
 
     return (
-        <motion.div initial={{ scale: 0, }} whileInView={{ scale: 1 }} transition={{ duration: .5 }} className="community-card">
+        <div initial={{ scale: 0, }} whileInView={{ scale: 1 }} transition={{ duration: .5 }} className="community-card">
             <section>
                 <div className="header" style={{
                     backgroundImage: `url(${BackendHost}/${response.community_banner})`
@@ -72,6 +69,6 @@ export default function CommunityCard(props) {
                     </div>
                 </div>
             </section>
-        </motion.div>
+        </div>
     )
 }

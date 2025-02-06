@@ -6,6 +6,7 @@
     overflow-y: auto;
     background: #fff;
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: space-between;
 
@@ -426,6 +427,12 @@
                 color: #fff;
                 background: $dark;
                 border: 1px solid #ffffff20;
+            }
+        }
+
+        .delete-form {
+            .link {
+                color: #ff0053;
             }
         }
     }

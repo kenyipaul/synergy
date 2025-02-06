@@ -57,7 +57,6 @@ export function EventView() {
                             </tr>
                         </tbody>
                     </table>
-                    { console.log(selectedEvent) }
                     <ul>
                         <li><b>Date Posted: </b>{new Date(selectedEvent.dateCreated).toLocaleString("us", { dateStyle: "long", timeStyle: "short" })}</li>
                     </ul>

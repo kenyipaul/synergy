@@ -1,5 +1,5 @@
-export const BackendHost = "http://localhost:3303"
-// export const BackendHost = "https://synergy-backend-jrh6.onrender.com"
+// export const BackendHost = "http://localhost:3303"
+export const BackendHost = "https://synergy-backend-jrh6.onrender.com"
 
 export const loginRoute = `${BackendHost}/api/login/`
 export const signupRoute = `${BackendHost}/api/signup/`

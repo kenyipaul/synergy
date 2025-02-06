@@ -137,7 +137,7 @@ function EventCard(props) {
                 <p className="description">{props.data.description}</p>
             </div>
             <div className="footer">
-                <button>Edit</button>
+                {/* <button>Edit</button> */}
                 { loading ? <button>Deleting...</button> : <button onClick={deleteEvent}>Delete Event</button> }
             </div>
         </motion.div>
